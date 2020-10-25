@@ -23,6 +23,9 @@ class MisconductType(CoreModel):
     misconduct_code = models.CharField(max_length=8)
     suggested_penalty = models.DecimalField(max_digits=12, decimal_places=1, null=True)
 
+    def __str__(self):
+        return self.title
+
 
 class MisconductReport(CoreModel):
     reporter = models.ForeignKey(UserAccount, related_name='reported_misconducts',  null=True, on_delete=models.SET_NULL)
@@ -32,6 +35,9 @@ class MisconductReport(CoreModel):
     penalty_amount = models.DecimalField(max_digits=12, decimal_places=1, null=True)
     penalty_status = models.IntegerField(choices=MisconductPenaltyStatus.choices, default=MisconductPenaltyStatus.OPEN)
     misconduct_type = models.ForeignKey(MisconductType, related_name='existing_misconducts', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.reporter} report on {self.reported_person} accused in {self.misconduct_type.title}."
 
     @classmethod
     def create_misconduct_report(cls, reporter, reported_person, misconduct_type, penalty_amount=None):
@@ -66,16 +72,18 @@ class MisconductReport(CoreModel):
         return
 
     def assign_report(self, user):
+        if not user.is_police:
+            raise ValueError('Can\'t assign report to someone not in police')
         self.officer_in_charge = user
         if self.misconduct_status < MisconductReportStatus.REVISED:
             self.misconduct_status = MisconductReportStatus.REVISED
-        assignment_message = f"Misconduct report {self.uuid} assigned."
+        assignment_message = f"Misconduct report {self.uuid} assigned. Officer in charge: {user.full_name}."
         self.reporter.send_message(assignment_message)
         self.reported_person.send_message(assignment_message)
         self.save()
 
     def decline_report(self):
-        closure_message = f"Misconduct report {self.uuid} was declined"
+        closure_message = f"Misconduct report {self.uuid} was declined."
         self.reported_person.send_message(closure_message)
         self.notify_officer(closure_message)
         self.penalty_status = MisconductPenaltyStatus.CLOSED

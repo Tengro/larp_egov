@@ -119,10 +119,14 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
 
     def get_full_name(self) -> str:
         if self.first_name and self.last_name:
-            full_name = f"{self.first_name} {self.last_name} <{self.email}>"
+            full_name = f"{self.first_name} {self.last_name}"
         else:
             full_name = self.get_short_name()
         return full_name
+
+    @property
+    def full_name(self):
+        return self.get_full_name
 
     @property
     def notification_salutation(self):

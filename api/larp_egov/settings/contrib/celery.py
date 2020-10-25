@@ -1,5 +1,6 @@
 from ..django import TIME_ZONE as DJANGO_TIME_ZONE
 from ..environment import env
+from celery.schedules import crontab
 
 
 CELERY_TASK_ALWAYS_EAGER = env.bool("LARP_EGOV_CELERY_TASK_ALWAYS_EAGER", default=False)
@@ -10,4 +11,52 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = DJANGO_TIME_ZONE
 
-CELERYBEAT_SCHEDULE = {}
+CELERYBEAT_SCHEDULE = {
+    'six_hour_subscriptions': {
+        'task': 'larp_egov.apps.banking.tasks.collect_six_hours_subscriptions',
+        'schedule': crontab(
+            minute='0',
+            hour='*/6'
+        ),
+    },
+    'twelve_hour_subscriptions': {
+        'task': 'larp_egov.apps.banking.tasks.collect_twelve_hours_subscriptions',
+        'schedule': crontab(
+            minute='0',
+            hour='*/12'
+        ),
+    },
+    'per_day_subscriptions': {
+        'task': 'larp_egov.apps.banking.tasks.collect_twenty_four_hours_subscriptions',
+        'schedule': crontab(
+            minute='0',
+            hour='0'
+        ),
+    },
+    'finish_transactions': {
+        'task': 'larp_egov.apps.banking.tasks.finish_pending_transactions',
+        'schedule': crontab(
+            minute='*/5',
+        ),
+    },
+    'detoriate_hacks': {
+        'task': 'larp_egov.apps.hacking.tasks.detoriate_active_hacks',
+        'schedule': crontab(
+            minute='*/5',
+        ),
+    },
+    'collect_penalties': {
+        'task': 'larp_egov.apps.law_enforcement.tasks.collect_penalties',
+        'schedule': crontab(
+            minute='0',
+            hour='*/3'
+        ),
+    },
+    'notify_assignments': {
+        'task': 'larp_egov.apps.law_enforcement.tasks.notify_unassigned_tasks',
+        'schedule': crontab(
+            minute='0',
+            hour='*/3'
+        ),
+    },
+}

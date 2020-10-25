@@ -21,7 +21,7 @@ class BankTransactionQuerySet(CoreQuerySet):
 
 class BankTransactionManager(CoreManager):
     def get_queryset(self):
-        return BankTransactionQuerySet(self.model, using=self._db)
+        return BankTransactionQuerySet(self.model, using=self._db).select_related('sender', 'reciever')
 
     def get_user_bank_history(self, user):
         return self.get_queryset().get_user_bank_history(user)

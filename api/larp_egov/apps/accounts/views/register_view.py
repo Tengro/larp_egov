@@ -1,7 +1,7 @@
 from django.views.generic.edit import FormView
 from larp_egov.apps.accounts.forms import RegisterForm
-from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
 
 
 def register(request):
@@ -9,8 +9,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Account created successfully')
-            new_user = authenticate(username=form.cleaned_data['username'],
+            new_user = authenticate(username=form.cleaned_data['email'],
                                     password=form.cleaned_data['password1'],
                                     )
             login(request, new_user)

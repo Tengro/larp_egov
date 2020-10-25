@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     # our apps
     "larp_egov.apps.common.apps.CommonConfig",
     "larp_egov.apps.accounts.apps.AccountConfig",
+    "larp_egov.apps.law_enforcement.apps.LawEnforcementConfig",
+    "larp_egov.apps.banking.apps.BankingConfig",
 ] + env.list("LARP_EGOV_DEV_INSTALLED_APPS", default=[])
 
 MIDDLEWARE = [
@@ -68,7 +70,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "larp_egov.wsgi.application"
 
-DATABASES = {"default": env.db("LARP_EGOV_DATABASE_URL", default="psql://postgres:atom_egov@database:5432/larp_egov_db")}
+DATABASES = {"default": env.db("LARP_EGOV_DATABASE_URL", default="psql://postgres:atom_egov@database:5431/larp_egov_db")}
 
 AUTH_USER_MODEL = "accounts.UserAccount"
 AUTH_PASSWORD_VALIDATORS = [

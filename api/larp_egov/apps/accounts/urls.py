@@ -18,6 +18,6 @@ urlpatterns = [
     # path("password/", ChangePasswordAPIView.as_view(), name="change-password"),
     # path("password/confirm/", ConfirmResetPasswordAPIView.as_view(), name="confirm-reset-password"),
     # path("password/reset/", ResetPasswordAPIView.as_view(), name="reset-password"),
+    path("deeplink/", DeeplinkView.as_view(), name='deeplink'),
     path("registration/", register, name="registration"),
-    path("deeplink/", DeeplinkView.as_view(), name='deeplink')
 ]

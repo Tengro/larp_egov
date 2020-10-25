@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: atom_egov
     image: postgres:12.1
     ports:
-      - 127.0.0.1:5432:5432/tcp
+      - 127.0.0.1:5431:5432/tcp
     restart: always
     volumes:
       - pg_data:/var/lib/postgresql/data:rw
@@ -18,7 +18,7 @@ services:
   redis:
     image: redis:5.0.9
     ports:
-      - 127.0.0.1:6378:6378/tcp
+      - 127.0.0.1:6371:6379/tcp
     restart: always
     volumes:
       - redis_data:/data:rw

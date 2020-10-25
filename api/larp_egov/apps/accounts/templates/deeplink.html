@@ -1,1 +1,5 @@
-HUI
+{% if user.telegram_id %}
+Your account is already deep-linked!
+{% else %}
+To deeplink your account, send "/register {{ user.character_id }}" without quotes to our bot: @bot_username
+{% endif %}

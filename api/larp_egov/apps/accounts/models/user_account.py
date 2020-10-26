@@ -101,6 +101,13 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
             "Designates whether this user should have access to hacker functionality."
         ),
     )
+    is_corporate_fiction_account = models.BooleanField(
+        gettext_lazy("hacker"),
+        default=False,
+        help_text=gettext_lazy(
+            "Designates whether this user is pure corporative fiction"
+        ),
+    )
     defence_level = models.IntegerField(default=0)
 
     objects = UserManager()
@@ -112,7 +119,11 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         ordering = ("first_name", "last_name")
 
     def __str__(self):
-        return self.email
+        return f"{self.full_name} [id {self.character_id}]"
+
+    @property
+    def display_data(self):
+        return self.__str__()
 
     def get_short_name(self) -> str:
         return str(self.email)
@@ -149,3 +160,28 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         self.bank_account = self.bank_account + amount
         self.send_message(message)
         self.save()
+
+    @property
+    def common_introspect_data(self):
+        id_string = f'Citizen ID: {self.character_id}'
+        name_string = f"Name: {self.full_name}."
+        work_string = f"Workplace: {self.place_of_work}."
+        date_of_birth = f"Date of birth: {self.date_of_birth}"
+        return f"{id_string}\n{name_string}\n{work_string}\n{date_of_birth}\n"
+
+    def get_user_introspect(self):
+        account_string = f"Available funds: {self.bank_account}"
+        defence_string = f"Personal data defence level: {self.defence_level}"
+        result = f"{self.common_introspect_data}{account_string}\n{defence_string}"
+        return result
+
+    def get_user_police_data(self):
+        police_comment_string = f'Police comment: {self.police_comment_field}'
+        result = f"{self.common_introspect_data}{police_comment_string}"
+        return result
+
+    def get_user_security_data(self):
+        introspect = self.get_user_introspect()
+        security_comment_string = f'Security comment: {self.security_comment_field}'
+        result = f"{introspect}\n{security_comment_string}"
+        return result

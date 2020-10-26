@@ -1,5 +1,5 @@
 from larp_egov import celery_app
-from larp_egov.apps.law_enforcement.models import MisconductReport, MisconductPenaltyStatus
+from larp_egov.apps.law_enforcement.models import MisconductReport, MisconductPenaltyStatus, MisconductReportStatus
 from larp_egov.apps.banking.models import BankTransaction
 from larp_egov.apps.accounts.models import UserAccount
 
@@ -7,6 +7,20 @@ from larp_egov.apps.accounts.models import UserAccount
 @celery_app.task
 def notify_unassigned_tasks():
     unassigned_tasks = MisconductReport.objects.filter(officer_in_charge=None)
+    for item in unassigned_tasks:
+        item.notify_unassigmnent_status()
+
+
+@celery_app.task
+def notify_unrevised_tasks():
+    unassigned_tasks = MisconductReport.objects.filter(misconduct_status=MisconductReportStatus.REVISED)
+    for item in unassigned_tasks:
+        item.notify_unassigmnent_status()
+
+
+@celery_app.task
+def notify_unresolved_tasks():
+    unassigned_tasks = MisconductReport.objects.filter(misconduct_status=MisconductReportStatus.PROCESSED)
     for item in unassigned_tasks:
         item.notify_unassigmnent_status()
 
@@ -25,6 +39,7 @@ def collect_penalties():
             )
             item.penalty_status = MisconductPenaltyStatus.CLOSED
             item.save()
+            item.finish_report()
         except ValueError:
             item.notify_officer(
                 f'Misconduct penalty from {item.reported_person.character_id} not collected; insufficient funds'

@@ -59,4 +59,18 @@ CELERYBEAT_SCHEDULE = {
             hour='*/3'
         ),
     },
+    'notify_revisions': {
+        'task': 'larp_egov.apps.law_enforcement.tasks.notify_unrevised_tasks',
+        'schedule': crontab(
+            minute='0',
+            hour='*/6'
+        ),
+    },
+    'notify_resolutions': {
+        'task': 'larp_egov.apps.law_enforcement.tasks.notify_unresolved_tasks',
+        'schedule': crontab(
+            minute='0',
+            hour='*/8'
+        ),
+    },
 }

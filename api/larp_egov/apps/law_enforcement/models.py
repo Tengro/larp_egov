@@ -26,6 +26,10 @@ class MisconductType(CoreModel):
     def __str__(self):
         return self.title
 
+    @property
+    def display_data(self):
+        return f"{self.title}; code: {self.misconduct_code}"
+
 
 class MisconductReport(CoreModel):
     reporter = models.ForeignKey(UserAccount, related_name='reported_misconducts',  null=True, on_delete=models.SET_NULL)
@@ -38,6 +42,34 @@ class MisconductReport(CoreModel):
 
     def __str__(self):
         return f"{self.reporter} report on {self.reported_person} accused in {self.misconduct_type.title}."
+
+    @property
+    def police_record_string(self):
+        reporter_string = f"Reporter: {self.reporter}."
+        reported_person = f"Reported: {self.reported_person}."
+        misconduct_type = f'Misconduct: {self.misconduct_type}.'
+        penalty = f"Penalty amount: {self.penalty_amount}."
+        report_status = f"Report status: {self.misconduct_status.label}."
+        penalty_status = f"Penalty status: {self.penalty_status}."
+        report_id = f"Report ID: {self.uuid}"
+        result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
+        if officer_in_charge:
+            result += f"\nOfficer in charge: {self.officer_in_charge}."
+        return result
+
+    @property
+    def anonymised_string(self):
+        reported_person = f"Reported: {self.reported_person}."
+        misconduct_type = f'Misconduct: {self.misconduct_type}.'
+        penalty = f"Penalty amount: {self.penalty_amount}."
+        report_status = f"Report status: {self.misconduct_status.label}."
+        penalty_status = f"Penalty status: {self.penalty_status}."
+        report_id = f"Report ID: {self.uuid}"
+        result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
+        if officer_in_charge:
+            result += f"\nOfficer in charge: {self.officer_in_charge.full_name}."
+        return result
+
 
     @classmethod
     def create_misconduct_report(cls, reporter, reported_person, misconduct_type, penalty_amount=None):
@@ -71,9 +103,19 @@ class MisconductReport(CoreModel):
             self.officer_in_charge.send_message(text)
         return
 
+    def notify_unrevised_report(self):
+        if self.officer_in_charge and self.misconduct_status == MisconductReportStatus.REVISED:
+            self.notify_officer(f"Misconduct {self.uuid} still on revision; decline or process it!")
+
+    def notify_unprocessed_report(self):
+        if self.officer_in_charge and self.misconduct_status == MisconductReportStatus.PROCESSED:
+            self.notify_officer(f"Misconduct {self.uuid} still in process!")
+
     def assign_report(self, user):
         if not user.is_police:
             raise ValueError('Can\'t assign report to someone not in police')
+        if self.officer_in_charge:
+            self.notify_officer(f'Misconduct report {self.uuid} was reassigned to {user}')
         self.officer_in_charge = user
         if self.misconduct_status < MisconductReportStatus.REVISED:
             self.misconduct_status = MisconductReportStatus.REVISED
@@ -101,6 +143,8 @@ class MisconductReport(CoreModel):
             self.penalty_status = MisconductPenaltyStatus.CLOSED_UNPAID
         if self.misconduct_status < MisconductReportStatus.FINISHED:
             self.misconduct_status = MisconductReportStatus.FINISHED
+        self.reported_person.send_message(f"Misconduct {self.uuid} finalized.")
+        self.notify_officer(f"Misconduct {self.uuid} finalized.")
         self.save()
 
     def set_penalty(self, penalty=None):
@@ -111,4 +155,10 @@ class MisconductReport(CoreModel):
             return
         self.penalty_status == MisconductPenaltyStatus.PROCESSED
         self.penalty_amount = penalty
+        penalty_message = f"Penalty for misconduct report {self.uuid} assigned. Penalty: {self.penalty_amount}"
+        self.reported_person.send_message(penalty_message)
+        self.notify_officer(penalty_message)
         self.save()
+
+    def set_auto_penalty(self):
+        self.set_penalty(self.misconduct_type.suggested_penalty)

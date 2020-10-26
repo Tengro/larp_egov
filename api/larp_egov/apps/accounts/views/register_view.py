@@ -9,9 +9,10 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            new_user = authenticate(username=form.cleaned_data['email'],
-                                    password=form.cleaned_data['password1'],
-                                    )
+            new_user = authenticate(
+                username=form.cleaned_data['email'],
+                password=form.cleaned_data['password1'],
+            )
             login(request, new_user)
             return redirect('deeplink')
 

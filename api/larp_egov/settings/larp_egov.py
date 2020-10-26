@@ -55,6 +55,7 @@ DJANGO_TELEGRAMBOT = {
     'BOTS' : [
         {
            'TOKEN': '742935576:AAEfGHM0cgqkBmN4AhfQhb_jkTenccVZVdk', #Your bot token.
+           'MESSAGEQUEUE_ENABLED': True,
 
            #'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
                                                    #updates you want your bot to receive. For example, specify

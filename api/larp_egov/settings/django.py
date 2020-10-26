@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "larp_egov.apps.accounts.apps.AccountConfig",
     "larp_egov.apps.law_enforcement.apps.LawEnforcementConfig",
     "larp_egov.apps.banking.apps.BankingConfig",
+    "larp_egov.apps.hacking.apps.HackingConfig",
 ] + env.list("LARP_EGOV_DEV_INSTALLED_APPS", default=[])
 
 MIDDLEWARE = [

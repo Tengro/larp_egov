@@ -21,7 +21,7 @@ class MisconductPenaltyStatus(models.IntegerChoices):
 class MisconductType(CoreModel):
     title = models.CharField(max_length=512)
     misconduct_code = models.CharField(max_length=8)
-    suggested_penalty = models.DecimalField(max_digits=12, decimal_places=1, null=True)
+    suggested_penalty = models.DecimalField(max_digits=12, decimal_places=1, null=True,  blank=True)
 
     def __str__(self):
         return self.title
@@ -36,7 +36,7 @@ class MisconductReport(CoreModel):
     reported_person = models.ForeignKey(UserAccount, related_name='misconduct_record', null=True, on_delete=models.SET_NULL)
     officer_in_charge = models.ForeignKey(UserAccount, related_name='assigned_misconducts', null=True,  on_delete=models.SET_NULL)
     misconduct_status = models.IntegerField(choices=MisconductReportStatus.choices, default=MisconductReportStatus.SENT)
-    penalty_amount = models.DecimalField(max_digits=12, decimal_places=1, null=True)
+    penalty_amount = models.DecimalField(max_digits=12, decimal_places=1, null=True, blank=True)
     penalty_status = models.IntegerField(choices=MisconductPenaltyStatus.choices, default=MisconductPenaltyStatus.OPEN)
     misconduct_type = models.ForeignKey(MisconductType, related_name='existing_misconducts', on_delete=models.CASCADE)
 

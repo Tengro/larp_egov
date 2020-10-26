@@ -9,7 +9,7 @@ from larp_egov.apps.hacking.config import (
 
 class HackingSession(CoreModel):
     hacker = models.ForeignKey(UserAccount, related_name='hack_sessions', on_delete=models.CASCADE)
-    target = models.ForeignKey(UserAccount, related_name='hack_attacks', on_delete=models.SET_NULL)
+    target = models.ForeignKey(UserAccount, related_name='hack_attacks', on_delete=models.CASCADE)
     ticks_remaining = models.IntegerField()
 
     @classmethod

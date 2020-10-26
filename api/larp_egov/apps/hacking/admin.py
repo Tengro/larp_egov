@@ -12,6 +12,7 @@ class HackingSessionAdmin(admin.ModelAdmin):
             'hacker',
             'target',
         )
+        return qs
 
 
 admin.site.register(HackingSession, HackingSessionAdmin)

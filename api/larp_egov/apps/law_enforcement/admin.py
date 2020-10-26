@@ -21,6 +21,7 @@ class MisconductReportAdmin(admin.ModelAdmin):
             'officer_in_charge',
             'misconduct_type'
         )
+        return qs
 
 
 admin.site.register(MisconductType, MisconductTypeAdmin)

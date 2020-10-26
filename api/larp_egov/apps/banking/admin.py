@@ -40,6 +40,7 @@ class CorporationAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request).select_related(
             'linked_account',
         )
+        return qs
 
 
 admin.site.register(Corporation, CorporationAdmin)

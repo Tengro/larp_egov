@@ -67,7 +67,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     )
     date_joined = models.DateTimeField(default=timezone.now)
     date_of_birth = models.DateField(null=True)
-    telegram_id = models.CharField(max_length=512, null=True)
+    telegram_id = models.CharField(max_length=512, null=True, blank=True)
     character_id = RandomCharField(length=8, lowercase=True, unique=True, null=True)
     place_of_work = models.CharField(max_length=512, null=True)
     bank_account = models.DecimalField(max_digits=12, decimal_places=1, null=True)
@@ -148,8 +148,9 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         return salutation
 
     def send_message(self, text):
-        dp = DjangoTelegramBot.dispatcher.bot
-        dp.sendMessage(self.telegram_id, text)
+        if self.telegram_id:
+            dp = DjangoTelegramBot.dispatcher.bot
+            dp.sendMessage(self.telegram_id, text)
 
     def withdraw(self, amount, message):
         self.bank_account = self.bank_account - amount

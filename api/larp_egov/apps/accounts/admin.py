@@ -36,4 +36,4 @@ class UserAdmin(DjangoUserAdmin):
     list_display = ("email", "first_name", "last_name", "is_staff", "is_active")
     search_fields = ("first_name", "last_name", "email", "telegram_id", "character_id")
     ordering = ("email",)
-    readonly_fields = ("telegram_id", "email", "character_id")
+    readonly_fields = ("character_id",)

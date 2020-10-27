@@ -19,7 +19,7 @@ def file_misconduct_report(update):
     user = get_user_by_character_id(user_code)
     if not user_code:
         return "Can\'t find user in database; report not filed"
-    misconduct_type = MisconductType.objects.filter(misconduct_code=miscondaut_type).first()
+    misconduct_type = MisconductType.objects.filter(misconduct_code=misconduct_type).first()
     if not misconduct_type:
         return "Can\'t find misconduct type of this code; report not filed"
     MisconductReport.create_misconduct_report(requester, user, miscondact_type)

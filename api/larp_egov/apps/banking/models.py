@@ -3,6 +3,7 @@ from django.utils.timezone import now
 from larp_egov.apps.common.models import CoreModel, CoreManager, CoreQuerySet
 from larp_egov.apps.accounts.models import UserAccount
 from larp_egov.apps.law_enforcement.models import MisconductReport
+from django_extensions.db.fields import RandomCharField
 
 
 class BankTransactionQuerySet(CoreQuerySet):
@@ -45,12 +46,13 @@ class BankTransaction(CoreModel):
     is_cancelled = models.BooleanField(default=False)
     time_finished = models.DateTimeField(null=True, blank=True)
     comment = models.CharField(max_length=512, blank=True, null=True)
+    transaction_id = RandomCharField(length=12, include_alpha=False, unique=True, null=True)
 
     objects = BankTransactionManager()
 
     @property
     def transaction_log(self):
-        return f"{self.uuid}|{self.sender} -> {self.reciever}: {self.amount}; {self.comment}"
+        return f"{self.transaction_id}|{self.sender} -> {self.reciever}: {self.amount}; {self.comment}"
 
     def user_transaction_log(self, user):
         sender = self.sender
@@ -59,7 +61,7 @@ class BankTransaction(CoreModel):
             reciever = 'ANONIMIZED'
         elif self.is_anonymous and self.reciever == user:
             sender = 'ANONIMIZED'
-        return f"{self.uuid}|{sender} -> {reciever}: {self.amount}; {self.comment}"
+        return f"{self.transaction_id}|{sender} -> {reciever}: {self.amount}; {self.comment}"
 
     @classmethod
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):
@@ -72,7 +74,7 @@ class BankTransaction(CoreModel):
             is_anonymous=is_anonymous,
             comment=comment
         )
-        creation_message = f'Transaction {transaction.uuid} created.'
+        creation_message = f'Transaction {transaction.transaction_id} created.'
         if comment:
             creation_message += f' Transaction comment: {comment}'
         sender.withdraw(transaction.amount, creation_message)
@@ -83,7 +85,7 @@ class BankTransaction(CoreModel):
     def cancel_transaction(self, reason=None):
         if self.is_cancelled or self.is_finished:
             return
-        cancell_message = f'Transaction {self.uuid} cancelled.'
+        cancell_message = f'Transaction {self.transaction_id} cancelled.'
         if reason:
             cancell_message += f' Reason: {reason}'
         self.sender.deposit(self.amount, cancell_message)
@@ -96,7 +98,7 @@ class BankTransaction(CoreModel):
     def finish_transaction(self):
         if self.is_finished or self.is_cancelled:
             return
-        approve_message = f'Transaction {self.uuid} successfully finished'
+        approve_message = f'Transaction {self.transaction_id} successfully finished'
         self.is_finished = True
         time_finished = now()
         self.save()
@@ -152,6 +154,7 @@ class BankSubscription(CoreModel):
         default=BankSubscriptionPeriodChoices.PER_DAY
     )
     limited_approval = models.BooleanField(default=False)
+    subscription_id = RandomCharField(length=4, include_alpha=False, unique=True, null=True)
 
     def extract_payments(self):
         service_account = UserAccount.objects.get_service_account()

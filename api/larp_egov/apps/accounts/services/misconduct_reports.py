@@ -33,7 +33,7 @@ def assign_report_to_yourself(update):
     if not validate_police(requester):
         return "You have no access to this command"
     report_id = update.message.text[8:]
-    report = MisconductReport.objects.filter(uuid=report_id).first()
+    report = MisconductReport.objects.filter(misconduct_id=report_id).first()
     if not report:
         return "No such report found. Check UUID please"
     report.assign_report(requester)
@@ -46,11 +46,9 @@ def decline_selected_report(update):
     if not validate_police(requester):
         return "You have no access to this command"
     report_id = update.message.text[8:]
-    report = MisconductReport.objects.filter(uuid=report_id).first()
+    report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID please"
-    if not report.officer_in_charge == requester:
-        return "You are not assigned officer!"
+        return "No such report found. Check UUID or assigned office of the report please"
     report.decline_report()
 
 
@@ -61,11 +59,9 @@ def process_assigned_report(update):
     if not validate_police(requester):
         return "You have no access to this command"
     report_id = update.message.text[8:]
-    report = MisconductReport.objects.filter(uuid=report_id).first()
+    report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID please"
-    if not report.officer_in_charge == requester:
-        return "You are not assigned officer!"
+        return "No such report found. Check UUID or assigned office of the report please"
     report.process_report()
 
 
@@ -76,11 +72,9 @@ def finish_assigned_report(update):
     if not validate_police(requester):
         return "You have no access to this command"
     report_id = update.message.text[8:]
-    report = MisconductReport.objects.filter(uuid=report_id).first()
+    report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID please"
-    if not report.officer_in_charge == requester:
-        return "You are not assigned officer!"
+        return "No such report found. Check UUID or assigned office of the report please"
     report.finish_report()
 
 
@@ -91,15 +85,13 @@ def set_penalty_to_report(update):
     if not validate_police(requester):
         return "You have no access to this command"
     report_id, penalty_amount = update.message.text[8:].split(' ')
-    report = MisconductReport.objects.filter(uuid=report_id).first()
+    report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID please"
+        return "No such report found. Check UUID or assigned office of the report please"
     try:
         penalty_amount = decimal.Decimal(penalty_amount)
     except decimal.InvalidOperation:
         return "Incoorrect penalty amount!"
-    if not report.officer_in_charge == requester:
-        return "You are not assigned officer!"
     report.set_penalty(penalty_amount)
 
 
@@ -110,9 +102,7 @@ def approve_autopenalty_to_report(update):
     if not validate_police(requester):
         return "You have no access to this command"
     report_id = update.message.text[8:]
-    report = MisconductReport.objects.filter(uuid=report_id).first()
+    report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID please"
-    if not report.officer_in_charge == requester:
-        return "You are not assigned officer!"
+        return "No such report found. Check UUID or assigned office of the report please"
     report.set_auto_penalty()

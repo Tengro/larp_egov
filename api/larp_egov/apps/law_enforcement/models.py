@@ -1,6 +1,7 @@
 from django.db import models
 from larp_egov.apps.common.models import CoreModel, CoreManager, CoreQuerySet
 from larp_egov.apps.accounts.models import UserAccount
+from django_extensions.db.fields import RandomCharField
 
 
 class MisconductReportStatus(models.IntegerChoices):
@@ -39,6 +40,7 @@ class MisconductReport(CoreModel):
     penalty_amount = models.DecimalField(max_digits=12, decimal_places=1, null=True, blank=True)
     penalty_status = models.IntegerField(choices=MisconductPenaltyStatus.choices, default=MisconductPenaltyStatus.OPEN)
     misconduct_type = models.ForeignKey(MisconductType, related_name='existing_misconducts', on_delete=models.CASCADE)
+    misconduct_id = RandomCharField(length=10, include_alpha=False, unique=True, null=True)
 
     def __str__(self):
         return f"{self.reporter} report on {self.reported_person} accused in {self.misconduct_type.title}."
@@ -51,7 +53,7 @@ class MisconductReport(CoreModel):
         penalty = f"Penalty amount: {self.penalty_amount}."
         report_status = f"Report status: {self.misconduct_status.label}."
         penalty_status = f"Penalty status: {self.penalty_status}."
-        report_id = f"Report ID: {self.uuid}"
+        report_id = f"Report ID: {self.misconduct_id}"
         result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
         if officer_in_charge:
             result += f"\nOfficer in charge: {self.officer_in_charge}."
@@ -64,7 +66,7 @@ class MisconductReport(CoreModel):
         penalty = f"Penalty amount: {self.penalty_amount}."
         report_status = f"Report status: {self.misconduct_status.label}."
         penalty_status = f"Penalty status: {self.penalty_status}."
-        report_id = f"Report ID: {self.uuid}"
+        report_id = f"Report ID: {self.misconduct_id}"
         result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
         if officer_in_charge:
             result += f"\nOfficer in charge: {self.officer_in_charge.full_name}."
@@ -94,7 +96,7 @@ class MisconductReport(CoreModel):
 
     def notify_unassigmnent_status(self, text=''):
         if not text:
-            text = f'Misconduct report {self.uuid} unassigned!'
+            text = f'Misconduct report {self.misconduct_id} unassigned!'
         for item in UserAccount.objects.get_police_officers():
             item.send_message(text)
 
@@ -105,27 +107,27 @@ class MisconductReport(CoreModel):
 
     def notify_unrevised_report(self):
         if self.officer_in_charge and self.misconduct_status == MisconductReportStatus.REVISED:
-            self.notify_officer(f"Misconduct {self.uuid} still on revision; decline or process it!")
+            self.notify_officer(f"Misconduct {self.misconduct_id} still on revision; decline or process it!")
 
     def notify_unprocessed_report(self):
         if self.officer_in_charge and self.misconduct_status == MisconductReportStatus.PROCESSED:
-            self.notify_officer(f"Misconduct {self.uuid} still in process!")
+            self.notify_officer(f"Misconduct {self.misconduct_id} still in process!")
 
     def assign_report(self, user):
         if not user.is_police:
             raise ValueError('Can\'t assign report to someone not in police')
         if self.officer_in_charge:
-            self.notify_officer(f'Misconduct report {self.uuid} was reassigned to {user}')
+            self.notify_officer(f'Misconduct report {self.misconduct_id} was reassigned to {user}')
         self.officer_in_charge = user
         if self.misconduct_status < MisconductReportStatus.REVISED:
             self.misconduct_status = MisconductReportStatus.REVISED
-        assignment_message = f"Misconduct report {self.uuid} assigned. Officer in charge: {user.full_name}."
+        assignment_message = f"Misconduct report {self.misconduct_id} assigned. Officer in charge: {user.full_name}."
         self.reporter.send_message(assignment_message)
         self.reported_person.send_message(assignment_message)
         self.save()
 
     def decline_report(self):
-        closure_message = f"Misconduct report {self.uuid} was declined."
+        closure_message = f"Misconduct report {self.misconduct_id} was declined."
         self.reported_person.send_message(closure_message)
         self.notify_officer(closure_message)
         self.penalty_status = MisconductPenaltyStatus.CLOSED
@@ -143,8 +145,8 @@ class MisconductReport(CoreModel):
             self.penalty_status = MisconductPenaltyStatus.CLOSED_UNPAID
         if self.misconduct_status < MisconductReportStatus.FINISHED:
             self.misconduct_status = MisconductReportStatus.FINISHED
-        self.reported_person.send_message(f"Misconduct {self.uuid} finalized.")
-        self.notify_officer(f"Misconduct {self.uuid} finalized.")
+        self.reported_person.send_message(f"Misconduct {self.misconduct_id} finalized.")
+        self.notify_officer(f"Misconduct {self.misconduct_id} finalized.")
         self.save()
 
     def set_penalty(self, penalty=None):
@@ -155,7 +157,7 @@ class MisconductReport(CoreModel):
             return
         self.penalty_status == MisconductPenaltyStatus.PROCESSED
         self.penalty_amount = penalty
-        penalty_message = f"Penalty for misconduct report {self.uuid} assigned. Penalty: {self.penalty_amount}"
+        penalty_message = f"Penalty for misconduct report {self.misconduct_id} assigned. Penalty: {self.penalty_amount}"
         self.reported_person.send_message(penalty_message)
         self.notify_officer(penalty_message)
         self.save()

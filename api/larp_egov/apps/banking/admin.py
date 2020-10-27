@@ -9,9 +9,9 @@ from larp_egov.apps.banking.models import (
 
 
 class BankTransactionAdmin(admin.ModelAdmin):
-    list_display = ['sender', 'reciever', 'amount', 'is_finished', 'is_cancelled',]
+    list_display = ['sender', 'reciever', 'amount', 'is_finished', 'is_cancelled', 'transaction_id']
     list_filter = ['sender', 'reciever', 'is_cancelled', 'is_finished']
-    readonly_fields = ['uuid', 'created', 'updated']
+    readonly_fields = ['uuid', 'created', 'updated', 'transaction_id']
 
 
 class BankUserSubscriptionIntermediaryInline(admin.StackedInline):
@@ -20,9 +20,9 @@ class BankUserSubscriptionIntermediaryInline(admin.StackedInline):
 
 
 class BankSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ['title', 'amount', 'is_governmental_tax', 'extraction_period', 'limited_approval',]
+    list_display = ['title', 'amount', 'is_governmental_tax', 'extraction_period', 'limited_approval', 'subscription_id']
     list_filter = ['is_governmental_tax', 'extraction_period', 'limited_approval',]
-    readonly_fields = ['uuid', 'created', 'updated']
+    readonly_fields = ['uuid', 'created', 'updated', 'subscription_id']
     inlines = [BankUserSubscriptionIntermediaryInline, ]
 
 

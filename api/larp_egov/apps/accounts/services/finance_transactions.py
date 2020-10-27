@@ -76,8 +76,8 @@ def cancel_transaction(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return "Seems like you aren't registered"
-    transaction_uuid = update.message.text[8:]
-    transaction = BankTransaction.objects.unresolved().filter(sender=requester).filter(uuid=transaction_uuid).first()
+    transaction_id = update.message.text[8:]
+    transaction = BankTransaction.objects.unresolved().filter(sender=requester).filter(transaction_id=transaction_id).first()
     if not transaction:
         return "Can\'t cancel transaction of selected UUID; check status/UUID"
     transaction.cancel_transaction()

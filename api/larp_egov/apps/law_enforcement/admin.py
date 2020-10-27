@@ -10,9 +10,9 @@ class MisconductTypeAdmin(admin.ModelAdmin):
 
 
 class MisconductReportAdmin(admin.ModelAdmin):
-    list_display = ['reporter', 'reported_person', 'officer_in_charge', 'misconduct_type', 'uuid']
+    list_display = ['reporter', 'reported_person', 'officer_in_charge', 'misconduct_type', 'misconduct_id']
     list_filter = ['reporter', 'reported_person', 'officer_in_charge', 'misconduct_type']
-    readonly_fields = ['uuid', 'created', 'updated']
+    readonly_fields = ['uuid', 'created', 'updated', 'misconduct_id']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request).select_related(

@@ -280,7 +280,7 @@ def main():
     dp.add_handler(CommandHandler("security_record", get_security_record))
     dp.add_handler(CommandHandler("master_data", get_master_data))
     dp.add_handler(CommandHandler("user_list", get_user_list))
-    # misconducts: 
+    # misconducts: CHECKED;
     dp.add_handler(CommandHandler("misconducts", get_user_own_misconducts))
     dp.add_handler(CommandHandler("police_misconducts", get_misconduct_records))
     dp.add_handler(CommandHandler("filed_misconducts", get_filed_misconducts))
@@ -290,7 +290,7 @@ def main():
     dp.add_handler(CommandHandler("assigned_misconducts", get_assigned_reports))
     dp.add_handler(CommandHandler("unassigned_misconducts", get_unassigned_reports))
     dp.add_handler(CommandHandler("police_records_full", bot_get_all_police_misconduct_reports))
-    # misconduct processing
+    # misconduct processing: CHECKED;
     dp.add_handler(CommandHandler("report", user_file_misconduct_report))
     dp.add_handler(CommandHandler("assign", assign_report))
     dp.add_handler(CommandHandler("close", decline_report))
@@ -318,7 +318,7 @@ def main():
     dp.add_handler(CommandHandler("request_subscription", request_subscription))
     dp.add_handler(CommandHandler("unsubscribe", stop_subscription))
     dp.add_handler(CommandHandler("forced_unsubscrbe", master_break_subscription))
-    # bank data
+    # bank data: CHECKED;
     dp.add_handler(CommandHandler("all_bank_history", get_full_bank_histoty))
     dp.add_handler(CommandHandler("bank_history", get_own_bank_history))
     dp.add_handler(CommandHandler("security_bank_history", get_bank_history))

@@ -43,6 +43,7 @@ def get_user_misconduct_reports(update):
     user = get_user_by_character_id(code)
     if not user:
         return "No such user exists"
+    requester.send_message('ohfuck')
     reports = MisconductReport.objects.filter(reported_person=user)
     if not reports:
         return "This person has clean record"

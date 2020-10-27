@@ -11,5 +11,6 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
-        context['bot_name'] = DjangoTelegramBot.dispatcher.bot.name
+        if not user.telegram_id:
+            context['bot_name'] = DjangoTelegramBot.dispatcher.bot.name
         return context

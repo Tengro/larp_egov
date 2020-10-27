@@ -254,6 +254,8 @@ def remove_from_corporation(bot, update):
 
 
 def error(bot, update, error):
+    user = UserAccount.objects.get_service_account()
+    user.send_message(f"Update {update} caused error {error}")
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 

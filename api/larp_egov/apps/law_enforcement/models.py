@@ -137,6 +137,7 @@ class MisconductReport(CoreModel):
     def process_report(self):
         if self.misconduct_status < MisconductReportStatus.PROCESSED:
             self.misconduct_status = MisconductReportStatus.PROCESSED
+        self.notify_officer('Report moved to processing state')
         self.save()
 
     def finish_report(self):
@@ -155,7 +156,7 @@ class MisconductReport(CoreModel):
         if self.misconduct_status != MisconductReportStatus.PROCESSED:
             self.notify_officer('Can\'t set penalty for not processed orders!')
             return
-        self.penalty_status == MisconductPenaltyStatus.PROCESSED
+        self.penalty_status = MisconductPenaltyStatus.PROCESSED
         self.penalty_amount = penalty
         penalty_message = f"Penalty for misconduct report {self.misconduct_id} assigned. Penalty: {self.penalty_amount}"
         self.reported_person.send_message(penalty_message)

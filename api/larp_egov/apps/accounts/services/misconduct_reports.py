@@ -91,7 +91,7 @@ def set_penalty_to_report(update):
     try:
         penalty_amount = decimal.Decimal(penalty_amount)
     except decimal.InvalidOperation:
-        return "Incoorrect penalty amount!"
+        return "Incorrect penalty amount!"
     report.set_penalty(penalty_amount)
 
 

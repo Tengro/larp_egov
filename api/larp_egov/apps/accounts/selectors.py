@@ -15,7 +15,7 @@ def get_all_admins():
 
 
 def get_user_by_telegram_id(telegram_id):
-    return UserAccount.objects.active().filter(character_id=character_id).first()
+    return UserAccount.objects.active().filter(telegram_id=telegram_id).first()
 
 
 def get_all_characters_in_game():

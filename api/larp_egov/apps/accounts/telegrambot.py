@@ -167,7 +167,7 @@ def get_user_filed_misconducts(bot, update):
     bot.sendMessage(update.message.chat_id, text=get_user_filed_misconduct_reports(update))
 
 
-def get_all_police_misconduct_reports(bot, update):
+def bot_get_all_police_misconduct_reports(bot, update):
     bot.sendMessage(update.message.chat_id, text=get_all_police_misconduct_reports(update))
 
 
@@ -273,14 +273,14 @@ def main():
     dp.add_handler(CommandHandler("register", register))
     dp.add_handler(CommandHandler("verify", verify))
     dp.add_handler(CommandHandler("delete", delete))
-    # introspections
+    # introspections: CHECKED
     dp.add_handler(CommandHandler("my_record", get_user_introspection))
     dp.add_handler(CommandHandler("public_record", get_public_record))
     dp.add_handler(CommandHandler("police_record", get_police_personal_record))
     dp.add_handler(CommandHandler("security_record", get_security_record))
     dp.add_handler(CommandHandler("master_data", get_master_data))
     dp.add_handler(CommandHandler("user_list", get_user_list))
-    # misconducts
+    # misconducts: 
     dp.add_handler(CommandHandler("misconducts", get_user_own_misconducts))
     dp.add_handler(CommandHandler("police_misconducts", get_misconduct_records))
     dp.add_handler(CommandHandler("filed_misconducts", get_filed_misconducts))
@@ -289,7 +289,7 @@ def main():
     dp.add_handler(CommandHandler("open_misconducts", get_open_assigned_reports))
     dp.add_handler(CommandHandler("assigned_misconducts", get_assigned_reports))
     dp.add_handler(CommandHandler("unassigned_misconducts", get_unassigned_reports))
-    dp.add_handler(CommandHandler("police_records_full", get_all_police_misconduct_reports))
+    dp.add_handler(CommandHandler("police_records_full", bot_get_all_police_misconduct_reports))
     # misconduct processing
     dp.add_handler(CommandHandler("report", user_file_misconduct_report))
     dp.add_handler(CommandHandler("assign", assign_report))

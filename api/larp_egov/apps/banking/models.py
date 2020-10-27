@@ -78,8 +78,6 @@ class BankTransaction(CoreModel):
         if comment:
             creation_message += f' Transaction comment: {comment}'
         sender.withdraw(transaction.amount, creation_message)
-        if not is_anonymous:
-            sender.send_message(creation_message)
         reciever.send_message(creation_message)
 
     def cancel_transaction(self, reason=None):
@@ -89,8 +87,6 @@ class BankTransaction(CoreModel):
         if reason:
             cancell_message += f' Reason: {reason}'
         self.sender.deposit(self.amount, cancell_message)
-        if not self.is_anonymous:
-            self.sender.send_message(cancell_message)
         self.reciever.send_message(cancell_message)
         self.is_cancelled = True
         self.save()
@@ -103,8 +99,6 @@ class BankTransaction(CoreModel):
         time_finished = now()
         self.save()
         self.reciever.send_message(approve_message)
-        if not self.is_anonymous:
-            self.sender.send_message(approve_message)
         self.reciever.deposit(self.amount, approve_message)
 
 

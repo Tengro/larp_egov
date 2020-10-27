@@ -72,7 +72,7 @@ def create_transaction(update, is_anonymous=False):
     try:
         BankTransaction.create_transaction(requester, user, amount, is_anonymous)
     except ValueError as e:
-        return e
+        return e.__dict__()
 
 
 def cancel_transaction(update):

@@ -11,7 +11,7 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = DJANGO_TIME_ZONE
 
-CELERYBEAT_SCHEDULE = {
+CELERY_BEAT_SCHEDULE = {
     'six_hour_subscriptions': {
         'task': 'larp_egov.apps.banking.tasks.collect_six_hours_subscriptions',
         'schedule': crontab(

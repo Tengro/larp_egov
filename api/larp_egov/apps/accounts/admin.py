@@ -29,7 +29,7 @@ class UserAdmin(DjangoUserAdmin):
         (gettext_lazy("Important dates"), {"fields": ("last_login", "date_joined")}),
         (
             gettext_lazy("Permissions"),
-            {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions", "is_verified")},
+            {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions", "is_verified", 'is_service_account', 'is_corporate_fiction_account')},
         ),
     )
     add_fieldsets = ((None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),)

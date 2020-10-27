@@ -43,7 +43,7 @@ class BankTransaction(CoreModel):
     is_anonymous = models.BooleanField(default=False)
     is_finished = models.BooleanField(default=False)
     is_cancelled = models.BooleanField(default=False)
-    time_finished = models.DateTimeField(null=True)
+    time_finished = models.DateTimeField(null=True, blank=True)
     comment = models.CharField(max_length=512, blank=True, null=True)
 
     objects = BankTransactionManager()

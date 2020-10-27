@@ -17,7 +17,7 @@ class BankTransactionQuerySet(CoreQuerySet):
         return self.filter(is_finished=False).filter(is_cancelled=False)
 
     def get_user_bank_history(self, user):
-        return self.finished().filter(models.Q(sender=user) | models.Q(reciever=user))
+        return self.filter(models.Q(sender=user) | models.Q(reciever=user))
 
 
 class BankTransactionManager(CoreManager):
@@ -51,8 +51,16 @@ class BankTransaction(CoreModel):
     objects = BankTransactionManager()
 
     @property
+    def trransaction_status(self):
+        if self.is_finished:
+            return 'FINISHED'
+        if self.is_cancelled:
+            return 'CANCELLED'
+        return 'PENDINIG'
+
+    @property
     def transaction_log(self):
-        return f"{self.transaction_id}|{self.sender} -> {self.reciever}: {self.amount}; {self.comment}"
+        return f"{self.transaction_id} | {self.sender} -> {self.reciever}: {self.amount}; status: {self.trransaction_status}; {self.comment}"
 
     def user_transaction_log(self, user):
         sender = self.sender
@@ -61,7 +69,7 @@ class BankTransaction(CoreModel):
             reciever = 'ANONIMIZED'
         elif self.is_anonymous and self.reciever == user:
             sender = 'ANONIMIZED'
-        return f"{self.transaction_id}|{sender} -> {reciever}: {self.amount}; {self.comment}"
+        return f"{self.transaction_id} | {sender} -> {reciever}: {self.amount}; status: {self.trransaction_status}; {self.comment}"
 
     @classmethod
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):

@@ -45,7 +45,7 @@ def decline_selected_report(update):
         return "Seems like you aren't registered"
     if not validate_police(requester):
         return "You have no access to this command"
-    report_id = update.message.text[8:]
+    report_id = update.message.text[7:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
         return "No such report found. Check report ID or assigned office of the report please"
@@ -58,7 +58,7 @@ def process_assigned_report(update):
         return "Seems like you aren't registered"
     if not validate_police(requester):
         return "You have no access to this command"
-    report_id = update.message.text[8:]
+    report_id = update.message.text[9:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
         return "No such report found. Check report ID or assigned office of the report please"
@@ -84,7 +84,7 @@ def set_penalty_to_report(update):
         return "Seems like you aren't registered"
     if not validate_police(requester):
         return "You have no access to this command"
-    report_id, penalty_amount = update.message.text[8:].split(' ')
+    report_id, penalty_amount = update.message.text[13:].split(' ')
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
         return "No such report found. Check report ID or assigned office of the report please"
@@ -101,7 +101,7 @@ def approve_autopenalty_to_report(update):
         return "Seems like you aren't registered"
     if not validate_police(requester):
         return "You have no access to this command"
-    report_id = update.message.text[8:]
+    report_id = update.message.text[13:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
         return "No such report found. Check report ID or assigned office of the report please"

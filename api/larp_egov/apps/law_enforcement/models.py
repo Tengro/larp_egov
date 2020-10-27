@@ -156,6 +156,9 @@ class MisconductReport(CoreModel):
         if self.misconduct_status != MisconductReportStatus.PROCESSED:
             self.notify_officer('Can\'t set penalty for not processed orders!')
             return
+        if self.penalty_status != MisconductPenaltyStatus.OPEN:
+            self.notify_officer('Penalty already set')
+            return
         self.penalty_status = MisconductPenaltyStatus.PROCESSED
         self.penalty_amount = penalty
         penalty_message = f"Penalty for misconduct report {self.misconduct_id} assigned. Penalty: {self.penalty_amount}"

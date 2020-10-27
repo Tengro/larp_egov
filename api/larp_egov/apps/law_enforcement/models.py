@@ -51,8 +51,8 @@ class MisconductReport(CoreModel):
         reported_person = f"Reported: {self.reported_person}."
         misconduct_type = f'Misconduct: {self.misconduct_type}.'
         penalty = f"Penalty amount: {self.penalty_amount}."
-        report_status = f"Report status: {self.misconduct_status.label}."
-        penalty_status = f"Penalty status: {self.penalty_status}."
+        report_status = f"Report status: {self.get_misconduct_status_display()}."
+        penalty_status = f"Penalty status: {self.get_penalty_status_display()}."
         report_id = f"Report ID: {self.misconduct_id}"
         result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
         if officer_in_charge:
@@ -64,8 +64,8 @@ class MisconductReport(CoreModel):
         reported_person = f"Reported: {self.reported_person}."
         misconduct_type = f'Misconduct: {self.misconduct_type}.'
         penalty = f"Penalty amount: {self.penalty_amount}."
-        report_status = f"Report status: {self.misconduct_status.label}."
-        penalty_status = f"Penalty status: {self.penalty_status}."
+        report_status = f"Report status: {self.get_misconduct_status_display()}."
+        penalty_status = f"Penalty status: {self.get_penalty_status_display()}."
         report_id = f"Report ID: {self.misconduct_id}"
         result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
         if officer_in_charge:

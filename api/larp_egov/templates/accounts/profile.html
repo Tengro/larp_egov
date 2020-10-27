@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Deep-linking{% endblock %}
+{% block content %}
+	{% if user.telegram_id %}
+	{% else %}
+	<h1>Deep-linking</h1>
+	<p>To deeplink your account, send "/register {{ user.character_id }}" without quotes to our bot: {{ bot_name }}</p>
+	{% endif %}
+
+	<h1>User Info</h1>
+	<p>Citizen ID: {{ user.character_id }}</p>
+	<p>Name: {{ user.full_name }}</p>
+	<p>Workplace: {{ user.place_of_work }}</p>
+	<p>Available funds: {{ user.bank_account }}</p>
+	<p>Personal data defence: {{ user.defence_level }}</p>
+
+	Todo: transaction history, open misconduct tickets, corporation membership, bot help
+{% endblock %}

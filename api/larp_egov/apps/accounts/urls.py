@@ -1,5 +1,6 @@
 from django.urls import path
-from larp_egov.apps.accounts.views import register, DeeplinkView
+from larp_egov.apps.accounts.views import register, UserProfileView, AtomLoginView
+from django.contrib.auth import views as auth_views
 
 # from larp_egov.apps.accounts.api.v1.views.login import LoginView, LogoutView
 # from larp_egov.apps.accounts.api.v1.views.password import (
@@ -18,6 +19,8 @@ urlpatterns = [
     # path("password/", ChangePasswordAPIView.as_view(), name="change-password"),
     # path("password/confirm/", ConfirmResetPasswordAPIView.as_view(), name="confirm-reset-password"),
     # path("password/reset/", ResetPasswordAPIView.as_view(), name="reset-password"),
-    path("deeplink/", DeeplinkView.as_view(), name='deeplink'),
     path("registration/", register, name="registration"),
+    path("login/", AtomLoginView.as_view(), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("profile/", UserProfileView.as_view(), name="profile")
 ]

@@ -1,2 +1,3 @@
 from .register_view import register
-from .deeplink import DeeplinkView
+from .login_view import AtomLoginView
+from .profile import UserProfileView

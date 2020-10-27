@@ -1,5 +1,5 @@
 import os
-
+from django.urls import reverse_lazy
 from .environment import env
 
 
@@ -68,6 +68,8 @@ TEMPLATES = [
         },
     }
 ]
+
+LOGIN_REDIRECT_URL = reverse_lazy('accounts:profile')
 
 WSGI_APPLICATION = "larp_egov.wsgi.application"
 

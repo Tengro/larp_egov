@@ -55,7 +55,7 @@ class MisconductReport(CoreModel):
         penalty_status = f"Penalty status: {self.get_penalty_status_display()}."
         report_id = f"Report ID: {self.misconduct_id}"
         result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
-        if officer_in_charge:
+        if self.officer_in_charge:
             result += f"\nOfficer in charge: {self.officer_in_charge}."
         return result
 
@@ -68,7 +68,7 @@ class MisconductReport(CoreModel):
         penalty_status = f"Penalty status: {self.get_penalty_status_display()}."
         report_id = f"Report ID: {self.misconduct_id}"
         result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
-        if officer_in_charge:
+        if self.officer_in_charge:
             result += f"\nOfficer in charge: {self.officer_in_charge.full_name}."
         return result
 

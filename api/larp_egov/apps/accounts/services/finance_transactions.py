@@ -67,8 +67,8 @@ def create_transaction(update, is_anonymous=False):
         return "Can\'t find user in database; report not filed"
     try:
         amount = decimal.Decimal(penalty_amount)
-    except decimal.InvalidOperation:
-        requester.send_message(f"{requester}, {user}, {amount}")
+    except BaseException as e:
+        requester.send_message(f"{requester}, {user}, {amount}, {e}")
         return "Incorrect amount!"
     BankTransaction.create_transaction(requester, user, amount, is_anonymous)
 

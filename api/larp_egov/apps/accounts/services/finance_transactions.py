@@ -71,10 +71,9 @@ def create_transaction(update, is_anonymous=False):
         return "Incorrect amount!"
     try:
         BankTransaction.create_transaction(requester, user, amount, is_anonymous)
-    except BaseException as e:
+    except ValueError as e:
         requester.send_message(f'Blyad! {e}')
-        requester.send_message(f'{e.__dict__}')
-        return e.__dict__
+        return f'{e}'
 
 
 def cancel_transaction(update):

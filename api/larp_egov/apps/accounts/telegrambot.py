@@ -97,7 +97,7 @@ def list_misconduct_types(bot, update):
     bot.sendMessage(update.message.chat_id, text=get_all_misconduct_types(update))
 
 
-def file_misconduct_report(bot, update):
+def user_file_misconduct_report(bot, update):
     result = file_misconduct_report(update)
     if result:
         bot.sendMessage(update.message.chat_id, text=result)
@@ -291,7 +291,7 @@ def main():
     dp.add_handler(CommandHandler("unsassigned_misconducts", get_unassigned_reports))
     dp.add_handler(CommandHandler("police_records_full", get_all_police_misconduct_reports))
     # misconduct processing
-    dp.add_handler(CommandHandler("report", file_misconduct_report))
+    dp.add_handler(CommandHandler("report", user_file_misconduct_report))
     dp.add_handler(CommandHandler("assign", assign_report))
     dp.add_handler(CommandHandler("close", decline_report))
     dp.add_handler(CommandHandler("process", process_report))

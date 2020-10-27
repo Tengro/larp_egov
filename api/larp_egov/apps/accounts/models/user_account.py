@@ -102,10 +102,17 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         ),
     )
     is_corporate_fiction_account = models.BooleanField(
-        gettext_lazy("hacker"),
+        gettext_lazy("corporative fiction"),
         default=False,
         help_text=gettext_lazy(
             "Designates whether this user is pure corporative fiction"
+        ),
+    )
+    complex_service_acc = models.BooleanField(
+        gettext_lazy("service acc"),
+        default=False,
+        help_text=gettext_lazy(
+            "Designates whether has ComplexHack property"
         ),
     )
     defence_level = models.IntegerField(default=0)

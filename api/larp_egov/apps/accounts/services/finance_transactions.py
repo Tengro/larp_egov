@@ -63,9 +63,9 @@ def create_transaction(update, is_anonymous=False):
     message = update.message.text[6:]
     user_code, amount = message.split(' ')
     user = get_user_by_character_id(user_code)
+    requester.send_message(f"{requester}, {user}, {amount}")
     if not user:
         return "Can\'t find user in database; report not filed"
-    requester.send_message(f"{requester}, {user}, {amount}")
     try:
         amount = decimal.Decimal(penalty_amount)
     except decimal.InvalidOperation:

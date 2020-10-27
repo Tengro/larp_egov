@@ -16,6 +16,7 @@ def file_misconduct_report(update):
         return "Seems like you aren't registered"
     message = update.message.text[8:]
     user_code, misconduct_type = message.split(' ')
+    requester.send_message(f'{user_code} | {misconduct_type}')
     user = get_user_by_character_id(user_code)
     if not user_code:
         return "Can\'t find user in database; report not filed"

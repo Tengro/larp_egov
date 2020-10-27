@@ -185,7 +185,10 @@ def get_own_bank_history(bot, update):
 
 
 def bot_create_transaction(bot, update):
-    result = create_transaction(update)
+    try:
+        result = create_transaction(update)
+    except BaseException as e:
+        bot.sendMessage(update.message.chat_id, text=e)
     if result:
         bot.sendMessage(update.message.chat_id, text=result)
 

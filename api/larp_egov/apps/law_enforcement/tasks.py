@@ -35,7 +35,7 @@ def collect_penalties():
                 item.reported_person,
                 service_account,
                 item.penalty_amount,
-                comment=f"Misconduct penalty for misconduct id {item.uuid}"
+                comment=f"Misconduct penalty for misconduct id {item.misconduct_id}"
             )
             item.penalty_status = MisconductPenaltyStatus.CLOSED
             item.save()

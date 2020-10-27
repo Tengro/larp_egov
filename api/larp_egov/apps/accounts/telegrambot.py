@@ -155,8 +155,8 @@ def get_misconduct_records(bot, update):
     bot.sendMessage(update.message.chat_id, text=get_user_misconduct_reports(update))
 
 
-def get_own_misconducts(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_own_misconducts(update))
+def get_user_own_misconducts(bot, update):
+    bot.sendMessage(update.message.chat_id, text=get_own_misconduct_reports(update))
 
 
 def get_filed_misconducts(bot, update):
@@ -281,14 +281,14 @@ def main():
     dp.add_handler(CommandHandler("master_data", get_master_data))
     dp.add_handler(CommandHandler("user_list", get_user_list))
     # misconducts
-    dp.add_handler(CommandHandler("misconducts", get_own_misconducts))
+    dp.add_handler(CommandHandler("misconducts", get_user_own_misconducts))
     dp.add_handler(CommandHandler("police_misconducts", get_misconduct_records))
     dp.add_handler(CommandHandler("filed_misconducts", get_filed_misconducts))
     dp.add_handler(CommandHandler("police_filed_misconducts", get_filed_misconduct_reports))
     dp.add_handler(CommandHandler("misconduct_types", list_misconduct_types))
     dp.add_handler(CommandHandler("open_misconducts", get_open_assigned_reports))
     dp.add_handler(CommandHandler("assigned_misconducts", get_assigned_reports))
-    dp.add_handler(CommandHandler("unsassigned_misconducts", get_unassigned_reports))
+    dp.add_handler(CommandHandler("unassigned_misconducts", get_unassigned_reports))
     dp.add_handler(CommandHandler("police_records_full", get_all_police_misconduct_reports))
     # misconduct processing
     dp.add_handler(CommandHandler("report", user_file_misconduct_report))

@@ -83,8 +83,8 @@ class MisconductReport(CoreModel):
             misconduct_type=misconduct_type,
             penalty_amount=penalty_amount
         )
-        item.notify_unassigmnent_status(text=f'Misconduct report {item.uuid} of the misconduct {misconduct_type.title} was created!')
-        creation_message = f'Misconduct report for {misconduct_type.title} id {item.uuid} was filed'
+        item.notify_unassigmnent_status(text=f'Misconduct report {item.misconduct_id} of the misconduct {misconduct_type.title} was created!')
+        creation_message = f'Misconduct report for {misconduct_type.title} id {item.misconduct_id} was filed'
         reporter.send_message(creation_message)
         reported_person.send_message(creation_message)
 

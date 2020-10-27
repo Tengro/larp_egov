@@ -73,7 +73,7 @@ def get_all_assigned_misconduct_reports(update):
         return "You have no access to this data"
     reports = MisconductReport.objects.filter(officer_in_charge=requester)
     if not reports:
-        return "You have assigned reports"
+        return "You have no assigned reports"
     return '\n\n'.join([x.police_record_string for x in reports])
 
 
@@ -87,7 +87,7 @@ def get_open_assigned_misconduct_reports(update):
         officer_in_charge=requester
     ).exclude(misconduct_status__in=[MisconductReportStatus.DECLINED, MisconductReportStatus.FINISHED])
     if not reports:
-        return "You have assigned reports"
+        return "You have no assigned reports"
     return '\n\n'.join([x.police_record_string for x in reports])
 
 

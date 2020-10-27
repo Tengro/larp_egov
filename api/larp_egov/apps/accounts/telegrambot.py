@@ -254,7 +254,7 @@ def main():
     dp.add_handler(CommandHandler("verify", verify))
     dp.add_handler(CommandHandler("delete", delete))
     # introspections
-    dp.add_handler(CommandHandler("me", get_introspection))
+    dp.add_handler(CommandHandler("my_record", get_introspection))
     dp.add_handler(CommandHandler("public_record", get_public_record))
     dp.add_handler(CommandHandler("police_record", get_police_personal_record))
     dp.add_handler(CommandHandler("security_record", get_security_record))

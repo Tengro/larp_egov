@@ -39,7 +39,7 @@ if "LOG_SQL" in LARP_EGOV_FEATURES:  # pragma: no cover
 
 DJANGO_TELEGRAMBOT = {
 
-    'MODE' : 'POLLING', #(Optional [str]) # The default value is WEBHOOK,
+    'MODE' : 'WEBHOOK', #(Optional [str]) # The default value is WEBHOOK,
                         # otherwise you may use 'POLLING'
                         # NB: if use polling you must provide to run
                         # a management command that starts a worker

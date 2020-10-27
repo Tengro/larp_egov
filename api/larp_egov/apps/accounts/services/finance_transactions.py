@@ -62,7 +62,7 @@ def create_transaction(update, is_anonymous=False):
         return "Seems like you aren't registered"
     message = update.message.text[6:]
     user_code, amount = message.split(' ')
-    assert False, (update.message.text, message, user_code, amount)
+    requester.send_message(f"{update.message.text}, {message}, {user_code}, {amount}")
     user = get_user_by_character_id(user_code)
     if not user:
         return "Can\'t find user in database; report not filed"

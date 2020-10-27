@@ -1,18 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Deep-linking{% endblock %}
+{% block title %}Профіль персонажа: {{ user.full_name }}{% endblock %}
 {% block content %}
 	{% if user.telegram_id %}
 	{% else %}
-	<h1>Deep-linking</h1>
-	<p>To deeplink your account, send "/register {{ user.character_id }}" without quotes to our bot: {{ bot_name }}</p>
+	<h1>Контакт з Телеграмом</h1>
+	<p>Для закінчення реєстрації та налаштування контакту між ботом і нашою системою "ТенгрОС - Електронний громадянин" надішліть команду "/register {{ user.character_id }}" без лапок нашму боту у Телеграмі {{ bot_name }}</p>
 	{% endif %}
 
-	<h1>User Info</h1>
-	<p>Citizen ID: {{ user.character_id }}</p>
-	<p>Name: {{ user.full_name }}</p>
-	<p>Workplace: {{ user.place_of_work }}</p>
-	<p>Available funds: {{ user.bank_account }}</p>
-	<p>Personal data defence: {{ user.defence_level }}</p>
+	<h1>Дані про громадянина</h1>
+	<p>ID громадянина: {{ user.character_id }}</p>
+	<p>Ім’я: {{ user.full_name }}</p>
+	<p>Місце роботи: {{ user.place_of_work }}</p>
+	<p>Наявні кошти: {{ user.bank_account }}</p>
+	<p>Рівень захисту особистих даних: {{ user.defence_level }}</p>
 
+	{% comment %}
 	Todo: transaction history, open misconduct tickets, corporation membership, bot help
+	{% endcomment %}
 {% endblock %}

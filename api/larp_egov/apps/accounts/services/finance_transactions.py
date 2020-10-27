@@ -72,7 +72,8 @@ def create_transaction(update, is_anonymous=False):
     try:
         BankTransaction.create_transaction(requester, user, amount, is_anonymous)
     except BaseException as e:
-        sender.send_message(f'Blyad! {e}')
+        requester.send_message(f'Blyad! {e}')
+        requester.send_message(f'{e.__dict__}')
         return e.__dict__
 
 

@@ -26,6 +26,13 @@ from larp_egov.apps.accounts.services.misconduct_reports import (
     set_penalty_to_report,
     approve_autopenalty_to_report
 )
+from larp_egov.apps.accounts.services.finance_transactions import (
+    get_own_bank_data,
+    get_user_bank_data,
+    get_full_bank_data,
+    create_transaction,
+    cancel_transaction
+)
 
 import logging
 logger = logging.getLogger(__name__)
@@ -165,17 +172,28 @@ def get_all_police_misconduct_reports(bot, update):
 
 
 # bank_interactions
+def get_full_bank_histoty(bot, update):
+    bot.sendMessage(update.message.chat_id, text=get_full_bank_data(update))
+
+
 def get_bank_history(bot, update):
-    pass
+    bot.sendMessage(update.message.chat_id, text=get_user_bank_data(update))
+
 
 def get_own_bank_history(bot, update):
-    pass
+    bot.sendMessage(update.message.chat_id, text=get_own_bank_data(update))
 
-def create_transaction(bot, update):
-    pass
 
-def cancel_transaction(bot, update):
-    pass
+def bot_create_transaction(bot, update):
+    result = create_transaction(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
+
+def bot_cancel_transaction(bot, update):
+    result = cancel_transaction(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
 
 # subscriptions_data
 def get_user_subscriptions(bot, update):
@@ -299,9 +317,10 @@ def main():
     dp.add_handler(CommandHandler("unsubscribe", stop_subscription))
     dp.add_handler(CommandHandler("forced_unsubscrbe", master_break_subscription))
     # bank data
+    dp.add_handler(CommandHandler("all_bank_history", get_full_bank_histoty))
     dp.add_handler(CommandHandler("bank_history", get_own_bank_history))
     dp.add_handler(CommandHandler("security_bank_history", get_bank_history))
-    dp.add_handler(CommandHandler("create_transaction", create_transaction))
-    dp.add_handler(CommandHandler("cancel_transaction", cancel_transaction))
+    dp.add_handler(CommandHandler("send", bot_create_transaction))
+    dp.add_handler(CommandHandler("cancel", bot_cancel_transaction))
     # log all errors
     dp.add_error_handler(error)

@@ -48,6 +48,19 @@ class BankTransaction(CoreModel):
 
     objects = BankTransactionManager()
 
+    @property
+    def transaction_log(self):
+        return f"{self.uuid}|{self.sender} -> {self.reciever}: {self.amount}; {self.comment}"
+
+    def user_transaction_log(self, user):
+        sender = self.sender
+        reciever = self.reciever
+        if self.is_anonymous and self.sender == user:
+            reciever = 'ANONIMIZED'
+        elif self.is_anonymous and self.reciever == user:
+            sender = 'ANONIMIZED'
+        return f"{self.uuid}|{sender} -> {reciever}: {self.amount}; {self.comment}"
+
     @classmethod
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):
         if sender.bank_account < amount:
@@ -63,15 +76,19 @@ class BankTransaction(CoreModel):
         if comment:
             creation_message += f' Transaction comment: {comment}'
         sender.withdraw(transaction.amount, creation_message)
+        if not is_anonymous:
+            sender.send_message(creation_message)
         reciever.send_message(creation_message)
 
-    def cancel_transaction(self, reason):
+    def cancel_transaction(self, reason=None):
         if self.is_cancelled or self.is_finished:
             return
         cancell_message = f'Transaction {self.uuid} cancelled.'
         if reason:
             cancell_message += f' Reason: {reason}'
         self.sender.deposit(self.amount, cancell_message)
+        if not self.is_anonymous:
+            self.sender.send_message(cancell_message)
         self.reciever.send_message(cancell_message)
         self.is_cancelled = True
         self.save()
@@ -83,7 +100,9 @@ class BankTransaction(CoreModel):
         self.is_finished = True
         time_finished = now()
         self.save()
-        self.sender.send_message(approve_message)
+        self.reciever.send_message(approve_message)
+        if not self.is_anonymous:
+            self.sender.send_message(approve_message)
         self.reciever.deposit(self.amount, approve_message)
 
 

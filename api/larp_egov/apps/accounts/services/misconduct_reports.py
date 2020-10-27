@@ -22,7 +22,7 @@ def file_misconduct_report(update):
     misconduct_type = MisconductType.objects.filter(misconduct_code=misconduct_type).first()
     if not misconduct_type:
         return "Can\'t find misconduct type of this code; report not filed"
-    MisconductReport.create_misconduct_report(requester, user, miscondact_type)
+    MisconductReport.create_misconduct_report(requester, user, misconduct_type)
     return None
 
 
@@ -35,7 +35,7 @@ def assign_report_to_yourself(update):
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID please"
+        return "No such report found. Check report ID please"
     report.assign_report(requester)
 
 
@@ -48,7 +48,7 @@ def decline_selected_report(update):
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID or assigned office of the report please"
+        return "No such report found. Check report ID or assigned office of the report please"
     report.decline_report()
 
 
@@ -61,7 +61,7 @@ def process_assigned_report(update):
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID or assigned office of the report please"
+        return "No such report found. Check report ID or assigned office of the report please"
     report.process_report()
 
 
@@ -74,7 +74,7 @@ def finish_assigned_report(update):
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID or assigned office of the report please"
+        return "No such report found. Check report ID or assigned office of the report please"
     report.finish_report()
 
 
@@ -87,7 +87,7 @@ def set_penalty_to_report(update):
     report_id, penalty_amount = update.message.text[8:].split(' ')
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID or assigned office of the report please"
+        return "No such report found. Check report ID or assigned office of the report please"
     try:
         penalty_amount = decimal.Decimal(penalty_amount)
     except decimal.InvalidOperation:
@@ -104,5 +104,5 @@ def approve_autopenalty_to_report(update):
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check UUID or assigned office of the report please"
+        return "No such report found. Check report ID or assigned office of the report please"
     report.set_auto_penalty()

@@ -65,7 +65,7 @@ def get_master_data(bot, update):
     bot.sendMessage(update.message.chat_id, text=get_master_introspection(update))
 
 
-def get_introspection(bot, update):
+def get_user_introspection(bot, update):
     bot.sendMessage(update.message.chat_id, text=get_introspection(update))
 
 
@@ -254,7 +254,7 @@ def main():
     dp.add_handler(CommandHandler("verify", verify))
     dp.add_handler(CommandHandler("delete", delete))
     # introspections
-    dp.add_handler(CommandHandler("my_record", get_introspection))
+    dp.add_handler(CommandHandler("my_record", get_user_introspection))
     dp.add_handler(CommandHandler("public_record", get_public_record))
     dp.add_handler(CommandHandler("police_record", get_police_personal_record))
     dp.add_handler(CommandHandler("security_record", get_security_record))

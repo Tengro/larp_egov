@@ -39,7 +39,7 @@ if "LOG_SQL" in LARP_EGOV_FEATURES:  # pragma: no cover
 
 DJANGO_TELEGRAMBOT = {
 
-    'MODE' : 'POLLING', #(Optional [str]) # The default value is WEBHOOK,
+    'MODE' : 'WEBHOOK', #(Optional [str]) # The default value is WEBHOOK,
                         # otherwise you may use 'POLLING'
                         # NB: if use polling you must provide to run
                         # a management command that starts a worker
@@ -54,7 +54,7 @@ DJANGO_TELEGRAMBOT = {
 
     'BOTS' : [
         {
-           'TOKEN': '742935576:AAEfGHM0cgqkBmN4AhfQhb_jkTenccVZVdk', #Your bot token.
+           'TOKEN': '1301788628:AAFxI1opEvSUyYdXlxq-pGe0xs3_6y0TQRs', #Your bot token.
 
            #'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
                                                    #updates you want your bot to receive. For example, specify

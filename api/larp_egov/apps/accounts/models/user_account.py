@@ -186,3 +186,10 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         security_comment_string = f'Security comment: {self.security_comment_field}'
         result = f"{introspect}\n{security_comment_string}"
         return result
+
+    def get_full_user_introspect(self):
+        introspect = self.get_user_introspect()
+        security_comment_string = f'Security comment: {self.security_comment_field}'
+        police_comment_string = f'Police comment: {self.police_comment_field}'
+        result = f"{introspect}\n{security_comment_string}\n{police_comment_string}"
+        return result

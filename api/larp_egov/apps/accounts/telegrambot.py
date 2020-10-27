@@ -4,7 +4,7 @@ from larp_egov.apps.accounts.services.deeplink import bind_user, delete_user, ve
 from larp_egov.apps.accounts.bot_tasks import notify_admins
 from larp_egov.apps.accounts.services.introspection import (
     get_introspection, get_police_data, get_security_data,
-    get_public_data, get_master_user_list
+    get_public_data, get_master_user_list, get_master_user_data
 )
 from larp_egov.apps.accounts.services.misconduct_history import (
     get_own_misconduct_reports,
@@ -62,7 +62,7 @@ def delete(bot, update):
 
 # introspection and general data
 def get_master_data(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_master_introspection(update))
+    bot.sendMessage(update.message.chat_id, text=get_master_user_data(update))
 
 
 def get_user_introspection(bot, update):

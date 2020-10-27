@@ -25,11 +25,11 @@ def get_master_user_data(update):
         return "Seems like you aren't registered"
     if not requester.is_staff:
         return "You have no access to this data"
-    code = update.message.text[14:]
+    code = update.message.text[13:]
     user = get_user_by_character_id(code)
     if not user:
         return "No such user exists"
-    return user.__dict__
+    return user.get_full_user_introspect()
 
 
 def get_public_data(update):

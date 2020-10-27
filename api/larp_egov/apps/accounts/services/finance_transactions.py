@@ -69,7 +69,10 @@ def create_transaction(update, is_anonymous=False):
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
         return "Incorrect amount!"
-    BankTransaction.create_transaction(requester, user, amount, is_anonymous)
+    try:
+        BankTransaction.create_transaction(requester, user, amount, is_anonymous)
+    except ValueError as e:
+        return e.message
 
 
 def cancel_transaction(update):

@@ -3,15 +3,7 @@ from larp_egov.apps.accounts.selectors import (
     get_all_characters_in_game
 )
 from larp_egov.apps.law_enforcement.models import MisconductReport, MisconductReportStatus, MisconductType
-from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER
-
-
-def validate_police(character):
-    return (character.is_police or character.is_security)
-
-
-def validate_security(character):
-    return character.is_security
+from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER, validate_police, validate_security
 
 
 def get_own_misconduct_reports(update):

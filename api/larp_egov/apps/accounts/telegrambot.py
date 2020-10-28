@@ -42,6 +42,21 @@ from larp_egov.apps.accounts.services.subscriptons import (
     user_stop_subscription,
     user_forced_subscription_stop
 )
+from larp_egov.apps.accounts.services.corporations import (
+    display_corporation_members,
+    display_all_corporations,
+    display_own_corporations,
+    display_user_corporations,
+    security_display_corporation_members,
+    make_corporation_deposit,
+    make_corporation_withdrawal,
+    display_corporation_financial_history,
+    display_security_corporation_financial_history,
+    add_user_to_corporation,
+    kick_user_from_corporation,
+    promote_user_in_corporation,
+    demote_user_in_corporation,
+)
 
 import logging
 logger = logging.getLogger(__name__)
@@ -244,37 +259,81 @@ def master_break_subscription(bot, update):
 
 # corporations_data
 def get_corporations(bot, update):
-    pass
+    result = display_user_corporations(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def get_own_corporations(bot, update):
-    pass
+    result = display_own_corporations(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def get_corporation_members_list(bot, update):
-    pass
+    result = display_corporation_members(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def get_corporation_finances(bot, update):
-    pass
+    result = make_corporation_withdrawal(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def pass_finances_to_corporation(bot, update):
-    pass
+    result = make_corporation_deposit(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def get_corporation_financial_history(bot, update):
-    pass
+    result = display_corporation_financial_history(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
 
-def get_corporation_public_data(bot, update):
-    pass
 
 def add_to_corporation(bot, update):
-    pass
+    result = add_user_to_corporation(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def promote_in_corporation(bot, update):
-    pass
+    result = promote_user_in_corporation(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def demote_in_corporation(bot, update):
-    pass
+    result = demote_user_in_corporation(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def remove_from_corporation(bot, update):
-    pass
+    result = kick_user_from_corporation(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
+
+def get_security_corporation_financial_history(bot, update):
+    result = display_security_corporation_financial_history(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
+
+def get_security_corporation_members_list(bot, update):
+    result = security_display_corporation_members(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
+
+def get_all_corporations(bot, update):
+    result = display_all_corporations(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
 
 
 def error(bot, update, error):
@@ -325,15 +384,17 @@ def main():
     # coproprations
     dp.add_handler(CommandHandler("corporations", get_own_corporations))
     dp.add_handler(CommandHandler("police_corporations", get_corporations))
+    dp.add_handler(CommandHandler("security_corporation_members", get_security_corporation_members_list))
     dp.add_handler(CommandHandler("corporation_members", get_corporation_members_list))
     dp.add_handler(CommandHandler("corporation_withdraw", get_corporation_finances))
     dp.add_handler(CommandHandler("corporation_deposit", pass_finances_to_corporation))
     dp.add_handler(CommandHandler("corporation_history", get_corporation_financial_history))
-    dp.add_handler(CommandHandler("corporation_public", get_corporation_public_data))
+    dp.add_handler(CommandHandler("security_corporation_history", get_security_corporation_financial_history))
     dp.add_handler(CommandHandler("add_corporation_member", add_to_corporation))
     dp.add_handler(CommandHandler("remove_corporation_member", remove_from_corporation))
     dp.add_handler(CommandHandler("promote_corporation_member", promote_in_corporation))
     dp.add_handler(CommandHandler("demote_corporation_member", demote_in_corporation))
+    dp.add_handler(CommandHandler("all_corporations", get_all_corporations))
     # subscriptions
     dp.add_handler(CommandHandler("all_subscriptions", get_all_subscriptions))
     dp.add_handler(CommandHandler("subscriptions", get_own_subscriptions))

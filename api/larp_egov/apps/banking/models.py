@@ -234,14 +234,18 @@ class BankSubscription(CoreModel):
 class CorporationStatus(models.IntegerChoices):
     AFFILIATED = 1, "Plain membership"
     MEMBER = 2, "Membership with funds access"
-    PRIVILEDGED_MEMBER = 3, "Membership with funds & "
-    EXECUTIVE = 4, "Excecutive (funds, list of members)"
+    PRIVILEDGED_MEMBER = 3, "Membership with funds & list of members"
+    EXECUTIVE = 4, "Excecutive (funds, list of members, status changes)"
 
 
 class CorporationMembership(CoreModel):
     corporation = models.ForeignKey('Corporation', on_delete=models.CASCADE)
     member = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     status = models.IntegerField(choices=CorporationStatus.choices, default=CorporationStatus.AFFILIATED)
+
+    @property
+    def display(self):
+        return f"{self.corporation.display}; {self.get_status_display()}"
 
 
 class Corporation(CoreModel):
@@ -250,19 +254,33 @@ class Corporation(CoreModel):
     title = models.CharField(max_length=512)
 
     @property
+    def display(self):
+        return f'{self.title}. Corporation ID: {self.corporation_id}'
+
+    @property
     def corporation_id(self):
         return self.linked_account.character_id
 
     @property
     def corporation_bank_account(self):
-        return self.linked_account.bank_account    
+        return self.linked_account.bank_account
 
-    def check_permission(self, user, lowest_level):
+    def check_permission(self, user, lowest_level, override_access=False):
         membership = CorporationMembership.objects.filter(corporation=self, member=user).first()
-        if not membership or membership.status < lowest_level:
+        if (not membership or membership.status < lowest_level) and not override_access:
             user.send_message('Action prohibited')
             return False
         return True
+
+    def display_members(self, user, override_access=False):
+        if not self.check_permission(user, CorporationStatus.PRIVILEDGED_MEMBER, override_access=override_access):
+            return
+        return '\n'.join([x.display for x in CorporationMembership.objects.filter(corporation=self)])
+
+    def display_transaction_history(self, user, override_access=False):
+        if not self.check_permission(user, CorporationStatus.EXECUTIVE, override_access=override_access):
+            return
+        return '\n\n'.join([x.user_transaction_log(user) for x in BankTransaction.objects.get_user_bank_history(self.linked_account).order_by('created')])
 
     def withdraw_funds(self, user, amount):
         if not self.check_permission(user, CorporationStatus.MEMBER):
@@ -277,15 +295,18 @@ class Corporation(CoreModel):
     def add_user(self, adder, user):
         if not self.check_permission(adder, CorporationStatus.EXECUTIVE):
             return
+        user.send_message(f"You were added to corporation {self.title}!")
         self.members.add(user)
 
     def remove_user(self, remover, user):
         if not self.check_permission(remover, CorporationStatus.EXECUTIVE):
             return
+        user.send_message(f"You were kicked from corporation {self.title}!")
         self.members.remove(user)
 
     def promote_user(self, promoter, user):
         if not self.check_permission(promoter, CorporationStatus.EXECUTIVE):
+            promoter.send_message("Your status is too low")
             return
         membership = CorporationMembership.objects.filter(corporation=self, member=user).first()
         if not membership:
@@ -299,7 +320,6 @@ class Corporation(CoreModel):
         promoter.send_message(f'User {user.character_id} was promoted!')
         user.send_message(f'You were promoted in corporation {self.title}')
         return
-
 
     def demote_user(self, demoter, user):
         if not self.check_permission(demoter, CorporationStatus.EXECUTIVE):

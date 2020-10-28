@@ -3,11 +3,7 @@ from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
 )
 from larp_egov.apps.banking.models import BankTransaction
-from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER
-
-
-def validate_security(character):
-    return character.is_security
+from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER, validate_security
 
 
 def get_own_bank_data(update):

@@ -15,14 +15,14 @@ def notify_unassigned_tasks():
 def notify_unrevised_tasks():
     unassigned_tasks = MisconductReport.objects.filter(misconduct_status=MisconductReportStatus.REVISED)
     for item in unassigned_tasks:
-        item.notify_unassigmnent_status()
+        item.notify_unassigmnent_status(f"Misconduct {item.misconduct_id} is still revised!")
 
 
 @celery_app.task
 def notify_unresolved_tasks():
     unassigned_tasks = MisconductReport.objects.filter(misconduct_status=MisconductReportStatus.PROCESSED)
     for item in unassigned_tasks:
-        item.notify_unassigmnent_status()
+        item.notify_unassigmnent_status(f"Misconduct {item.misconduct_id} is still processed!")
 
 
 @celery_app.task

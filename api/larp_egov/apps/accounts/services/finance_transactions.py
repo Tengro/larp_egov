@@ -3,6 +3,7 @@ from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
 )
 from larp_egov.apps.banking.models import BankTransaction
+from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER
 
 
 def validate_security(character):
@@ -12,7 +13,7 @@ def validate_security(character):
 def get_own_bank_data(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     return '\n\n'.join(
         [
             x.user_transaction_log(requester) for x in BankTransaction.objects.get_user_bank_history(requester).order_by('created')
@@ -23,9 +24,9 @@ def get_own_bank_data(update):
 def get_full_bank_data(update, override_permissions=False):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_security(requester) and not override_permissions:
-        return "You have no access to this data"
+        return NO_ACCESS_DATA
     return '\n\n'.join(
         [
             x.transaction_log for x in BankTransaction.objects.all().order_by('created')
@@ -36,13 +37,13 @@ def get_full_bank_data(update, override_permissions=False):
 def get_user_bank_data(update, override_permissions=False, is_full=False):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_security(requester) and not override_permissions:
-        return "You have no access to this data"
+        return NO_ACCESS_DATA
     code = update.message.text[23:]
     user = get_user_by_character_id(code)
     if not user:
-        return "No such user exists"
+        return NO_USER
     if not is_full:
         return '\n\n'.join(
             [
@@ -59,7 +60,7 @@ def get_user_bank_data(update, override_permissions=False, is_full=False):
 def create_transaction(update, is_anonymous=False):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     message = update.message.text[6:]
     user_code, amount = message.split(' ')
     user = get_user_by_character_id(user_code)
@@ -78,7 +79,7 @@ def create_transaction(update, is_anonymous=False):
 def cancel_transaction(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     transaction_id = update.message.text[8:]
     transaction = BankTransaction.objects.unresolved().filter(sender=requester).filter(transaction_id=transaction_id).first()
     if not transaction:

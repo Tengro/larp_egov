@@ -33,6 +33,15 @@ from larp_egov.apps.accounts.services.finance_transactions import (
     create_transaction,
     cancel_transaction
 )
+from larp_egov.apps.accounts.services.subscriptons import (
+    display_all_subscriptions,
+    display_own_subscriptions,
+    display_user_subscriptions,
+    approve_user_subscription,
+    user_request_subscription,
+    user_stop_subscription,
+    user_forced_subscription_stop
+)
 
 import logging
 logger = logging.getLogger(__name__)
@@ -195,27 +204,42 @@ def bot_cancel_transaction(bot, update):
     if result:
         bot.sendMessage(update.message.chat_id, text=result)
 
+
 # subscriptions_data
 def get_user_subscriptions(bot, update):
-    pass
+    bot.sendMessage(update.message.chat_id, text=display_user_subscriptions(update))
+
 
 def get_own_subscriptions(bot, update):
-    pass
+    bot.sendMessage(update.message.chat_id, text=display_own_subscriptions(update))
+
 
 def request_subscription(bot, update):
-    pass
+    result = user_request_subscription(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def get_all_subscriptions(bot, update):
-    pass
+    bot.sendMessage(update.message.chat_id, text=display_all_subscriptions(update))
+
 
 def stop_subscription(bot, update):
-    pass
+    result = user_stop_subscription(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def approve_subscription(bot, update):
-    pass
+    result = approve_user_subscription(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
+
 
 def master_break_subscription(bot, update):
-    pass
+    result = user_forced_subscription_stop(update)
+    if result:
+        bot.sendMessage(update.message.chat_id, text=result)
 
 
 # corporations_data

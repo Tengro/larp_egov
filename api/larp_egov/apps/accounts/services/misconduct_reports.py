@@ -4,6 +4,7 @@ from larp_egov.apps.accounts.selectors import (
     get_all_characters_in_game
 )
 from larp_egov.apps.law_enforcement.models import MisconductReport, MisconductReportStatus, MisconductType
+from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_ACCESS_COMMAND, NO_REPORT_FOUND
 
 
 def validate_police(character):
@@ -13,7 +14,7 @@ def validate_police(character):
 def file_misconduct_report(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     message = update.message.text[8:]
     user_code, misconduct_type = message.split(' ')
     user = get_user_by_character_id(user_code)
@@ -29,9 +30,9 @@ def file_misconduct_report(update):
 def assign_report_to_yourself(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_police(requester):
-        return "You have no access to this command"
+        return NO_ACCESS_COMMAND
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(misconduct_id=report_id).first()
     if not report:
@@ -42,52 +43,52 @@ def assign_report_to_yourself(update):
 def decline_selected_report(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_police(requester):
-        return "You have no access to this command"
+        return NO_ACCESS_COMMAND
     report_id = update.message.text[7:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check report ID or assigned office of the report please"
+        return NO_REPORT_FOUND
     report.decline_report()
 
 
 def process_assigned_report(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_police(requester):
-        return "You have no access to this command"
+        return NO_ACCESS_COMMAND
     report_id = update.message.text[9:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check report ID or assigned office of the report please"
+        return NO_REPORT_FOUND
     report.process_report()
 
 
 def finish_assigned_report(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_police(requester):
-        return "You have no access to this command"
+        return NO_ACCESS_COMMAND
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check report ID or assigned office of the report please"
+        return NO_REPORT_FOUND
     report.finish_report()
 
 
 def set_penalty_to_report(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_police(requester):
-        return "You have no access to this command"
+        return NO_ACCESS_COMMAND
     report_id, penalty_amount = update.message.text[13:].split(' ')
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check report ID or assigned office of the report please"
+        return NO_REPORT_FOUND
     try:
         penalty_amount = decimal.Decimal(penalty_amount)
     except decimal.InvalidOperation:
@@ -98,11 +99,11 @@ def set_penalty_to_report(update):
 def approve_autopenalty_to_report(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
-        return "Seems like you aren't registered"
+        return UNREGISTERED
     if not validate_police(requester):
-        return "You have no access to this command"
+        return NO_ACCESS_COMMAND
     report_id = update.message.text[13:]
     report = MisconductReport.objects.filter(officer_in_charge=requester, misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check report ID or assigned office of the report please"
+        return NO_REPORT_FOUND
     report.set_auto_penalty()

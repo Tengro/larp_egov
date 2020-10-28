@@ -70,7 +70,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     telegram_id = models.CharField(max_length=512, null=True, blank=True)
     character_id = RandomCharField(length=6, include_alpha=False, unique=True, null=True)
     place_of_work = models.CharField(max_length=512, null=True)
-    bank_account = models.DecimalField(max_digits=12, decimal_places=1, null=True)
+    bank_account = models.DecimalField(max_digits=12, decimal_places=1, default=0)
     is_verified = models.BooleanField(
         gettext_lazy("verified"),
         default=False,

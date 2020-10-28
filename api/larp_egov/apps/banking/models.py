@@ -104,9 +104,9 @@ class BankTransaction(CoreModel):
             return
         approve_message = f'Transaction {self.transaction_id} successfully finished'
         self.is_finished = True
-        time_finished = now()
+        self.time_finished = now()
         self.save()
-        self.reciever.send_message(approve_message)
+        self.sender.send_message(approve_message)
         self.reciever.deposit(self.amount, approve_message)
 
 
@@ -120,6 +120,7 @@ class BankUserSubscriptionIntermediary(CoreModel):
     subscriber = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     subscription = models.ForeignKey('BankSubscription', on_delete=models.CASCADE)
     is_approved = models.BooleanField(default=True)
+    subscription_request_id = RandomCharField(length=5, include_alpha=False, unique=True, null=True)
 
     def approve_subscription(self, user):
         if not user.is_staff:
@@ -158,6 +159,13 @@ class BankSubscription(CoreModel):
     limited_approval = models.BooleanField(default=False)
     subscription_id = RandomCharField(length=4, include_alpha=False, unique=True, null=True)
 
+    @property
+    def display(self):
+        result = f"{self.subscription_id}: {self.title}. {self.description}"
+        if self.is_governmental_tax:
+            result += " MANDATORY!"
+        return result
+
     def extract_payments(self):
         service_account = UserAccount.objects.get_service_account()
         for user in self.subscribers.all():
@@ -177,7 +185,10 @@ class BankSubscription(CoreModel):
             except ValueError:
                 self.process_payment_failure(user)
 
-    def cancel_subscription(self, user):
+    def cancel_subscription(self, user, forced=False):
+        if self.is_governmental_tax and not self.forced:
+            user.send_message("Can't cancel mandatory payment without AI permission. Contact AI")
+            return
         self.subscribers.remove(user)
 
     def create_subscription(self, user):
@@ -201,7 +212,7 @@ class BankSubscription(CoreModel):
     def notify_ai_for_approval(self, user):
         itermediary = BankUserSubscriptionIntermediary.objects.get(subscriber=self, is_approved=False, user=user)
         for user in UserAccount.objects.get_ai_accounts():
-            user.send_message(f'Subscription approval required for {user.id}, subscritpion type {self.title}, approval uuid: {itermediary.uuid}')
+            user.send_message(f'Subscription approval required for {user.id}, subscritpion type {self.title}, approval id: {itermediary.subscription_request_id}')
 
     def process_payment_failure(self, user):
         service_account = UserAccount.objects.get_service_account()

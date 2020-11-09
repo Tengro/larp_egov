@@ -54,7 +54,7 @@ DJANGO_TELEGRAMBOT = {
 
     'BOTS' : [
         {
-           'TOKEN': '1301788628:AAFxI1opEvSUyYdXlxq-pGe0xs3_6y0TQRs', #Your bot token.
+           'TOKEN': env.str("LARP_EGOV_BOT_TOKEN"), #Your bot token.
 
            #'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
                                                    #updates you want your bot to receive. For example, specify

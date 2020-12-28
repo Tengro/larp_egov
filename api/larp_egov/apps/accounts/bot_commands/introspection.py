@@ -2,7 +2,7 @@ from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
     get_all_characters_in_game
 )
-from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER, validate_security, validate_police
+from larp_egov.apps.common.bot_commands._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER, validate_security, validate_police
 
 
 def get_introspection(update):

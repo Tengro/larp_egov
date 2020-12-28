@@ -1,8 +1,9 @@
 from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
 )
+from django.utils.translation import ugettext_lazy as _
 from larp_egov.apps.banking.models import BankSubscription, BankUserSubscriptionIntermediary
-from ._common_texts import UNREGISTERED, NO_SUBSCRIPTION, NO_ACCESS_COMMAND, NO_ACCESS_DATA, validate_police
+from larp_egov.apps.common.bot_commands._common_texts import UNREGISTERED, NO_SUBSCRIPTION, NO_ACCESS_COMMAND, NO_ACCESS_DATA, validate_police
 
 
 def display_all_subscriptions(update):
@@ -55,7 +56,7 @@ def user_request_subscription(update):
     if not subscription:
         return NO_SUBSCRIPTION
     if BankUserSubscriptionIntermediary.objects.filter(subscriber=requester, subscription=subscription).exists():
-        return "You are already subscribed!"
+        return _("You are already subscribed!")
     subscription.create_subscription(requester)
 
 

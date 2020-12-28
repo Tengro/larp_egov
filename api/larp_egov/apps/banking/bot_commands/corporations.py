@@ -1,9 +1,10 @@
 import decimal
+from django.utils.translation import ugettext_lazy as _
 from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
 )
 from larp_egov.apps.banking.models import Corporation, CorporationMembership
-from ._common_texts import UNREGISTERED, NO_USER, NO_SUBSCRIPTION, NO_ACCESS_COMMAND, NO_ACCESS_DATA, NO_CORP, validate_police, validate_security
+from larp_egov.apps.common.bot_commands._common_texts import UNREGISTERED, NO_USER, NO_SUBSCRIPTION, NO_ACCESS_COMMAND, NO_ACCESS_DATA, NO_CORP, validate_police, validate_security
 
 
 def display_all_corporations(update):
@@ -69,7 +70,7 @@ def make_corporation_withdrawal(update, override_permissions=False):
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
-        return "Incorrect amount!"
+        return _("Incorrect amount!")
     try:
         corproration.withdraw_funds(requester, amount)
     except ValueError as e:
@@ -88,7 +89,7 @@ def make_corporation_deposit(update, override_permissions=False):
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
-        return "Incorrect amount!"
+        return _("Incorrect amount!")
     try:
         corproration.deposit_funds(requester, amount)
     except ValueError as e:

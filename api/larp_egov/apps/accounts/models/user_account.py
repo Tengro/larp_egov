@@ -6,6 +6,7 @@ from django.db import models
 from django_extensions.db.fields import RandomCharField
 from django.utils import timezone
 from django.utils.translation import gettext_lazy
+from django.utils.translation import ugettext_lazy as _
 from django_telegrambot.apps import DjangoTelegramBot
 
 from larp_egov.apps.common import models as core_models
@@ -170,33 +171,37 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         self.save()
 
     @property
+    def security_comment_string(self):
+        return _('Security comment: {security_comment_field}').format(security_comment_field=self.security_comment_field)
+
+    @property
+    def police_comment_string(self):
+        return _('Police comment: {police_comment_field}').format(police_comment_field=self.police_comment_field)
+
+    @property
     def common_introspect_data(self):
-        id_string = f'Citizen ID: {self.character_id}'
-        name_string = f"Name: {self.full_name}."
-        work_string = f"Workplace: {self.place_of_work}."
-        date_of_birth = f"Date of birth: {self.date_of_birth}"
+        id_string = _('Citizen ID: {character_id}').format(character_id=self.character_id)
+        name_string = _("Name: {full_name}.").format(full_name=self.full_name)
+        work_string = _("Workplace: {place_of_work}.").format(place_of_work=self.place_of_work)
+        date_of_birth = _("Date of birth: {date_of_birth}").format(date_of_birth=self.date_of_birth)
         return f"{id_string}\n{name_string}\n{work_string}\n{date_of_birth}\n"
 
     def get_user_introspect(self):
-        account_string = f"Available funds: {self.bank_account}"
-        defence_string = f"Personal data defence level: {self.defence_level}"
+        account_string = _("Available funds: {bank_account}").format(bank_account=self.bank_account)
+        defence_string = _("Personal data defence level: {defence_level}").format(defence_level=self.defence_level)
         result = f"{self.common_introspect_data}{account_string}\n{defence_string}"
         return result
 
     def get_user_police_data(self):
-        police_comment_string = f'Police comment: {self.police_comment_field}'
-        result = f"{self.common_introspect_data}{police_comment_string}"
+        result = f"{self.common_introspect_data}{self.police_comment_string}"
         return result
 
     def get_user_security_data(self):
         introspect = self.get_user_introspect()
-        security_comment_string = f'Security comment: {self.security_comment_field}'
-        result = f"{introspect}\n{security_comment_string}"
+        result = f"{introspect}\n{self.security_comment_string}"
         return result
 
     def get_full_user_introspect(self):
         introspect = self.get_user_introspect()
-        security_comment_string = f'Security comment: {self.security_comment_field}'
-        police_comment_string = f'Police comment: {self.police_comment_field}'
-        result = f"{introspect}\n{security_comment_string}\n{police_comment_string}"
+        result = f"{introspect}\n{self.security_comment_string}\n{self.police_comment_string}"
         return result

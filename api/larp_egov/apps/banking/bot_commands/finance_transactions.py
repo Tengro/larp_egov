@@ -1,9 +1,10 @@
 import decimal
+from django.utils.translation import ugettext_lazy as _
 from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
 )
 from larp_egov.apps.banking.models import BankTransaction
-from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER, validate_security
+from larp_egov.apps.common.bot_commands._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER, validate_security
 
 
 def get_own_bank_data(update):
@@ -61,11 +62,11 @@ def create_transaction(update, is_anonymous=False):
     user_code, amount = message.split(' ')
     user = get_user_by_character_id(user_code)
     if not user:
-        return "Can\'t find user in database; transaction not sent"
+        return _("Can\'t find user in database; transaction not sent")
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
-        return "Incorrect amount!"
+        return _("Incorrect amount!")
     try:
         BankTransaction.create_transaction(requester, user, amount, is_anonymous)
     except ValueError as e:
@@ -79,5 +80,5 @@ def cancel_transaction(update):
     transaction_id = update.message.text[8:]
     transaction = BankTransaction.objects.unresolved().filter(sender=requester).filter(transaction_id=transaction_id).first()
     if not transaction:
-        return "Can\'t cancel transaction of selected UUID; check status/UUID"
+        return _("Can\'t cancel transaction of selected UUID; check status/UUID")
     transaction.cancel_transaction()

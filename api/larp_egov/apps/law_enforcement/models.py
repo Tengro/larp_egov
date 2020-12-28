@@ -2,21 +2,22 @@ from django.db import models
 from larp_egov.apps.common.models import CoreModel, CoreManager, CoreQuerySet
 from larp_egov.apps.accounts.models import UserAccount
 from django_extensions.db.fields import RandomCharField
+from django.utils.translation import ugettext_lazy as _
 
 
 class MisconductReportStatus(models.IntegerChoices):
-    SENT = 0, "Report sent"
-    REVISED = 1, "Report revised"
-    DECLINED = 2, "Report declined"
-    PROCESSED = 3, "Report is being processed"
-    FINISHED = 4, "Report is finished"
+    SENT = 0, _("Report sent")
+    REVISED = 1, _("Report revised")
+    DECLINED = 2, _("Report declined")
+    PROCESSED = 3, _("Report is being processed")
+    FINISHED = 4, _("Report is finished")
 
 
 class MisconductPenaltyStatus(models.IntegerChoices):
-    OPEN = 0, "Penalty open"
-    PROCESSED = 1, "Penalty is active"
-    CLOSED = 2, "Penalty is paid"
-    CLOSED_UNPAID = 3, "Closed without payment"
+    OPEN = 0, _("Penalty open")
+    PROCESSED = 1, _("Penalty is active")
+    CLOSED = 2, _("Penalty is paid")
+    CLOSED_UNPAID = 3, _("Closed without payment")
 
 
 class MisconductType(CoreModel):
@@ -29,7 +30,7 @@ class MisconductType(CoreModel):
 
     @property
     def display_data(self):
-        return f"{self.title}; code: {self.misconduct_code}"
+        return _("{title}; code: {misconduct_code}").format(title=self.title, misconduct_code=self.misconduct_code)
 
 
 class MisconductReport(CoreModel):

@@ -1,10 +1,11 @@
 import decimal
+from django.utils.translation import ugettext_lazy as _
 from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
     get_all_characters_in_game
 )
 from larp_egov.apps.law_enforcement.models import MisconductReport, MisconductReportStatus, MisconductType
-from ._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_ACCESS_COMMAND, NO_REPORT_FOUND, validate_police
+from larp_egov.apps.common.bot_commands._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_ACCESS_COMMAND, NO_REPORT_FOUND, validate_police
 
 
 def file_misconduct_report(update):
@@ -15,10 +16,10 @@ def file_misconduct_report(update):
     user_code, misconduct_type = message.split(' ')
     user = get_user_by_character_id(user_code)
     if not user:
-        return "Can\'t find user in database; report not filed"
+        return _("Can\'t find user in database; report not filed")
     misconduct_type = MisconductType.objects.filter(misconduct_code=misconduct_type).first()
     if not misconduct_type:
-        return "Can\'t find misconduct type of this code; report not filed"
+        return _("Can\'t find misconduct type of this code; report not filed")
     MisconductReport.create_misconduct_report(requester, user, misconduct_type)
     return None
 
@@ -32,7 +33,7 @@ def assign_report_to_yourself(update):
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(misconduct_id=report_id).first()
     if not report:
-        return "No such report found. Check report ID please"
+        return _("No such report found. Check report ID please")
     report.assign_report(requester)
 
 
@@ -88,7 +89,7 @@ def set_penalty_to_report(update):
     try:
         penalty_amount = decimal.Decimal(penalty_amount)
     except decimal.InvalidOperation:
-        return "Incorrect penalty amount!"
+        return _("Incorrect penalty amount!")
     report.set_penalty(penalty_amount)
 
 

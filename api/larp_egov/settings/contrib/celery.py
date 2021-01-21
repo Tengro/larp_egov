@@ -45,6 +45,18 @@ CELERY_BEAT_SCHEDULE = {
             minute='*/5',
         ),
     },
+    'raise_heat_alarm': {
+        'task': 'larp_egov.apps.hacking.tasks.raise_system_heat_alarm',
+        'schedule': crontab(
+            minute='*/30',
+        ),
+    },
+    'disspate_heat': {
+        'task': 'larp_egov.apps.hacking.tasks.disspate_heat',
+        'schedule': crontab(
+            minute='0',
+        ),
+    },
     'collect_penalties': {
         'task': 'larp_egov.apps.law_enforcement.tasks.collect_penalties',
         'schedule': crontab(
@@ -74,7 +86,7 @@ CELERY_BEAT_SCHEDULE = {
         ),
     },
     'refresh_hook': {
-        'task': 'larp_egov.apps.common.tasts.refresh_hook',
+        'task': 'larp_egov.apps.common.tasks.refresh_hook',
         'schedule': crontab(
             minute='*/5'
         )

@@ -17,7 +17,7 @@ def display_own_subscriptions(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return UNREGISTERED
-    return "\n\n".join([x.display for x in requester.subscriptions.all()])
+    return "\n\n".join([x.display for x in requester.bankusersubscriptionintermediary_set.all()])
 
 
 def display_user_subscriptions(update, override_permissions=False):
@@ -30,7 +30,7 @@ def display_user_subscriptions(update, override_permissions=False):
         return NO_USER
     if not override_permissions and not validate_police(user):
         return NO_ACCESS_DATA
-    return "\n\n".join([x.display for x in user.subscriptions.all()])
+    return "\n\n".join([x.display for x in user.bankusersubscriptionintermediary_set.all()])
 
 
 def approve_user_subscription(update):
@@ -42,7 +42,7 @@ def approve_user_subscription(update):
     if not subscription:
         return NO_SUBSCRIPTION
     try:
-        subscription.approve_subscription(user)
+        subscription.approve_subscription(requester)
     except ValueError as e:
         return f"{e}"
 

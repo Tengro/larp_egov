@@ -20,7 +20,7 @@ class UserAdmin(DjangoUserAdmin):
         ),
         (
             gettext_lazy("Game related info"), 
-            {"fields": ("first_name", "last_name", "character_id", "date_of_birth", "place_of_work", "bank_account", "defence_level")}
+            {"fields": ("first_name", "last_name", "character_id", "date_of_birth", "place_of_work", "bank_account", "defence_level", "system_heat", "has_special_hack_value")}
         ),
         (
             gettext_lazy("Comment fields"), 

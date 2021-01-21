@@ -37,9 +37,23 @@ if "LOG_SQL" in LARP_EGOV_FEATURES:  # pragma: no cover
         },
     }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
 DJANGO_TELEGRAMBOT = {
 
-    'MODE' : 'POLLING', #(Optional [str]) # The default value is WEBHOOK,
+    'MODE' : env.str("LARP_EGOV_BOT_MODE", default='POLLING'), #(Optional [str]) # The default value is WEBHOOK,
                         # otherwise you may use 'POLLING'
                         # NB: if use polling you must provide to run
                         # a management command that starts a worker
@@ -51,6 +65,7 @@ DJANGO_TELEGRAMBOT = {
     #'WEBHOOK_CERTIFICATE' : 'cert.pem', # If your site use self-signed
                          #certificate, must be set with location of your public key
                          #certificate.(More info at https://core.telegram.org/bots/self-signed )
+
 
     'BOTS' : [
         {

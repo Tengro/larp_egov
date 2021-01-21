@@ -66,9 +66,9 @@ class BankTransaction(CoreModel):
         sender = self.sender
         reciever = self.reciever
         if self.is_anonymous and self.sender == user:
-            reciever = 'ANONIMIZED'
+            reciever = 'ANONIMYZED'
         elif self.is_anonymous and self.reciever == user:
-            sender = 'ANONIMIZED'
+            sender = 'ANONIMYZED'
         return f"{self.transaction_id} | {sender} -> {reciever}: {self.amount}; status: {self.trransaction_status}; {self.comment}"
 
     @classmethod
@@ -123,23 +123,31 @@ class BankUserSubscriptionIntermediary(CoreModel):
     subscription_request_id = RandomCharField(length=5, include_alpha=False, unique=True, null=True)
 
     def approve_subscription(self, user):
+        service_account = UserAccount.objects.get_service_account()
         if not user.is_staff:
             raise ValueError("Incorrect user")
         try:
             BankTransaction.create_transaction(
                 user,
                 service_account,
-                self.amount,
-                comment=f"Regular payment: {self.title}"
+                self.subscription.amount,
+                comment=f"Regular payment: {self.subscription.title}"
             )
         except ValueError:
-            subscriber.send_message('Insufficient funds for subscription approval')
-            user.send_message('Insufficient funds for subscription approval')
+            subscriber.send_message('Insufficient funds for subscription approval. Deleting request.')
+            user.send_message('Insufficient funds for subscription approval. Deleting request')
             self.delete()
             return
         self.is_approved = True
         self.save()
         self.subscriber.send_message(f'Your subscription for {self.subscription.title} was approved!')
+
+    @property
+    def display(self):
+        result = self.subscription.display
+        if not self.is_approved:
+            result += f"PENDING APPROVAL; REQUEST ID {self.subscription_request_id}"
+        return result
 
 
 class BankSubscription(CoreModel):
@@ -190,12 +198,14 @@ class BankSubscription(CoreModel):
             user.send_message("Can't cancel mandatory payment without AI permission. Contact AI")
             return
         self.subscribers.remove(user)
+        user.send_message(f"Subscription {self.title} was discontinued for you")
 
     def create_subscription(self, user):
         service_account = UserAccount.objects.get_service_account()
         if self.limited_approval:
             self.subscribers.add(user, through_defaults={'is_approved': False})
             self.notify_ai_for_approval(user)
+            user.send_message('Subscription request was sent to AI')
             return
         try:
             BankTransaction.create_transaction(
@@ -207,12 +217,14 @@ class BankSubscription(CoreModel):
         except ValueError:
             user.send_message('Insufficient funds for subscription')
             return
+        user.send_message('You are successfully subscribed!')
         self.subscribers.add(user)
 
     def notify_ai_for_approval(self, user):
-        itermediary = BankUserSubscriptionIntermediary.objects.get(subscriber=self, is_approved=False, user=user)
-        for user in UserAccount.objects.get_ai_accounts():
-            user.send_message(f'Subscription approval required for {user.id}, subscritpion type {self.title}, approval id: {itermediary.subscription_request_id}')
+        itermediary = BankUserSubscriptionIntermediary.objects.get(subscription=self, is_approved=False, subscriber=user)
+        ai_accounts = UserAccount.objects.get_ai_accounts()
+        for user in ai_accounts:
+            user.send_message(f'Subscription approval required for {user.character_id}, subscritpion type {self.title}, approval id: {itermediary.subscription_request_id}')
 
     def process_payment_failure(self, user):
         service_account = UserAccount.objects.get_service_account()
@@ -245,7 +257,7 @@ class CorporationMembership(CoreModel):
 
     @property
     def display(self):
-        return f"{self.corporation.display}; {self.get_status_display()}"
+        return f"{self.member}\n{self.corporation.display};\n{self.get_status_display()}"
 
 
 class Corporation(CoreModel):
@@ -255,7 +267,7 @@ class Corporation(CoreModel):
 
     @property
     def display(self):
-        return f'{self.title}. Corporation ID: {self.corporation_id}'
+        return f'{self.title}.\nCorporation ID: {self.corporation_id}'
 
     @property
     def corporation_id(self):
@@ -275,7 +287,7 @@ class Corporation(CoreModel):
     def display_members(self, user, override_access=False):
         if not self.check_permission(user, CorporationStatus.PRIVILEDGED_MEMBER, override_access=override_access):
             return
-        return '\n'.join([x.display for x in CorporationMembership.objects.filter(corporation=self)])
+        return '\n\n'.join([x.display for x in CorporationMembership.objects.filter(corporation=self)])
 
     def display_transaction_history(self, user, override_access=False):
         if not self.check_permission(user, CorporationStatus.EXECUTIVE, override_access=override_access):
@@ -326,13 +338,13 @@ class Corporation(CoreModel):
             return
         membership = CorporationMembership.objects.filter(corporation=self, member=user).first()
         if not membership:
-            promoter.send_message(f'User {user.character_id} is not member of organization!')
+            demoter.send_message(f'User {user.character_id} is not member of organization!')
             return
         if membership.status == CorporationStatus.AFFILIATED:
-            promoter.send_message(f'User {user.character_id} is already at lowest level!')
+            demoter.send_message(f'User {user.character_id} is already at lowest level!')
             return
         membership.status -= 1
         membership.save()
-        promoter.send_message(f'User {user.character_id} was demoted!')
+        demoter.send_message(f'User {user.character_id} was demoted!')
         user.send_message(f'You were demoted in corporation {self.title}')
         return

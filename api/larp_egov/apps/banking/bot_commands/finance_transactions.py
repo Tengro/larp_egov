@@ -44,12 +44,12 @@ def get_user_bank_data(update, override_permissions=False, is_full=False):
     if not is_full:
         return '\n\n'.join(
             [
-                x.user_transaction_log(user) for x in BankTransaction.objects.get_user_bank_history(requester).order_by('created')
+                x.user_transaction_log(user) for x in BankTransaction.objects.get_user_bank_history(user).order_by('created')
             ]
         )
     return '\n\n'.join(
             [
-                x.transaction_Log for x in BankTransaction.objects.get_user_bank_history(requester).order_by('created')
+                x.transaction_log for x in BankTransaction.objects.get_user_bank_history(user).order_by('created')
             ]
         )
 

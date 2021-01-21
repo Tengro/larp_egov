@@ -38,144 +38,144 @@ logger = logging.getLogger(__name__)
 
 
 # bank_interactions
-def get_full_bank_histoty(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_full_bank_data(update))
+def get_full_bank_histoty(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_full_bank_data(update))
 
 
-def get_bank_history(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_user_bank_data(update))
+def get_bank_history(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_user_bank_data(update))
 
 
-def get_own_bank_history(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_own_bank_data(update))
+def get_own_bank_history(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_own_bank_data(update))
 
 
-def bot_create_transaction(bot, update):
+def bot_create_transaction(update, context):
     result = create_transaction(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def bot_cancel_transaction(bot, update):
+def bot_cancel_transaction(update, context):
     result = cancel_transaction(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
 # subscriptions_data
-def get_user_subscriptions(bot, update):
-    bot.sendMessage(update.message.chat_id, text=display_user_subscriptions(update))
+def get_user_subscriptions(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=display_user_subscriptions(update))
 
 
-def get_own_subscriptions(bot, update):
-    bot.sendMessage(update.message.chat_id, text=display_own_subscriptions(update))
+def get_own_subscriptions(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=display_own_subscriptions(update))
 
 
-def request_subscription(bot, update):
+def request_subscription(update, context):
     result = user_request_subscription(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_all_subscriptions(bot, update):
-    bot.sendMessage(update.message.chat_id, text=display_all_subscriptions(update))
+def get_all_subscriptions(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=display_all_subscriptions(update))
 
 
-def stop_subscription(bot, update):
+def stop_subscription(update, context):
     result = user_stop_subscription(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def approve_subscription(bot, update):
+def approve_subscription(update, context):
     result = approve_user_subscription(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def master_break_subscription(bot, update):
+def master_break_subscription(update, context):
     result = user_forced_subscription_stop(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
 # corporations_data
-def get_corporations(bot, update):
+def get_corporations(update, context):
     result = display_user_corporations(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_own_corporations(bot, update):
+def get_own_corporations(update, context):
     result = display_own_corporations(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_corporation_members_list(bot, update):
+def get_corporation_members_list(update, context):
     result = display_corporation_members(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_corporation_finances(bot, update):
+def get_corporation_finances(update, context):
     result = make_corporation_withdrawal(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def pass_finances_to_corporation(bot, update):
+def pass_finances_to_corporation(update, context):
     result = make_corporation_deposit(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_corporation_financial_history(bot, update):
+def get_corporation_financial_history(update, context):
     result = display_corporation_financial_history(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def add_to_corporation(bot, update):
+def add_to_corporation(update, context):
     result = add_user_to_corporation(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def promote_in_corporation(bot, update):
+def promote_in_corporation(update, context):
     result = promote_user_in_corporation(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def demote_in_corporation(bot, update):
+def demote_in_corporation(update, context):
     result = demote_user_in_corporation(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def remove_from_corporation(bot, update):
+def remove_from_corporation(update, context):
     result = kick_user_from_corporation(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_security_corporation_financial_history(bot, update):
+def get_security_corporation_financial_history(update, context):
     result = display_security_corporation_financial_history(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_security_corporation_members_list(bot, update):
+def get_security_corporation_members_list(update, context):
     result = security_display_corporation_members(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_all_corporations(bot, update):
+def get_all_corporations(update, context):
     result = display_all_corporations(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
 def main():
@@ -186,6 +186,7 @@ def main():
     # To get Dispatcher related to a specific bot
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_token')     #get by bot token
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_username')  #get by bot username
+    # corporations: CHECKED
     dp.add_handler(CommandHandler("corporations", get_own_corporations))
     dp.add_handler(CommandHandler("police_corporations", get_corporations))
     dp.add_handler(CommandHandler("security_corporation_members", get_security_corporation_members_list))
@@ -199,7 +200,7 @@ def main():
     dp.add_handler(CommandHandler("promote_corporation_member", promote_in_corporation))
     dp.add_handler(CommandHandler("demote_corporation_member", demote_in_corporation))
     dp.add_handler(CommandHandler("all_corporations", get_all_corporations))
-    # subscriptions
+    # subscriptions: CHECKED
     dp.add_handler(CommandHandler("all_subscriptions", get_all_subscriptions))
     dp.add_handler(CommandHandler("subscriptions", get_own_subscriptions))
     dp.add_handler(CommandHandler("police_subscriptions", get_user_subscriptions))

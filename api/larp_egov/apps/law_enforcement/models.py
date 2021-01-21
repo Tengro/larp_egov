@@ -127,10 +127,11 @@ class MisconductReport(CoreModel):
         self.reported_person.send_message(assignment_message)
         self.save()
 
-    def decline_report(self):
+    def decline_report(self, silent=False):
         closure_message = f"Misconduct report {self.misconduct_id} was declined."
         self.reported_person.send_message(closure_message)
-        self.notify_officer(closure_message)
+        if not silent:
+            self.notify_officer(closure_message)
         self.penalty_status = MisconductPenaltyStatus.CLOSED
         self.misconduct_status = MisconductReportStatus.DECLINED
         self.save()
@@ -141,14 +142,16 @@ class MisconductReport(CoreModel):
         self.notify_officer('Report moved to processing state')
         self.save()
 
-    def finish_report(self):
+    def finish_report(self, silent=False):
         if self.penalty_status == MisconductPenaltyStatus.PROCESSED:
-            self.notify_officer('Penalty hasn\'t been processed! Closing without payment')
+            if not silent:
+                self.notify_officer('Penalty hasn\'t been processed! Closing without payment')
             self.penalty_status = MisconductPenaltyStatus.CLOSED_UNPAID
         if self.misconduct_status < MisconductReportStatus.FINISHED:
             self.misconduct_status = MisconductReportStatus.FINISHED
         self.reported_person.send_message(f"Misconduct {self.misconduct_id} finalized.")
-        self.notify_officer(f"Misconduct {self.misconduct_id} finalized.")
+        if not silent:
+            self.notify_officer(f"Misconduct {self.misconduct_id} finalized.")
         self.save()
 
     def set_penalty(self, penalty=None):

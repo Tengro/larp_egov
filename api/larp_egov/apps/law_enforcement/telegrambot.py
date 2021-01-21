@@ -26,82 +26,82 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def list_misconduct_types(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_all_misconduct_types(update))
+def list_misconduct_types(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_all_misconduct_types(update))
 
 
-def user_file_misconduct_report(bot, update):
+def user_file_misconduct_report(update, context):
     result = file_misconduct_report(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def assign_report(bot, update):
+def assign_report(update, context):
     result = assign_report_to_yourself(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def decline_report(bot, update):
+def decline_report(update, context):
     result = decline_selected_report(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def process_report(bot, update):
+def process_report(update, context):
     result = process_assigned_report(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def finish_report(bot, update):
+def finish_report(update, context):
     result = finish_assigned_report(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def set_penalty(bot, update):
+def set_penalty(update, context):
     result = set_penalty_to_report(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def approve_autopenalty(bot, update):
+def approve_autopenalty(update, context):
     result = approve_autopenalty_to_report(update)
     if result:
-        bot.sendMessage(update.message.chat_id, text=result)
+        context.bot.sendMessage(update.message.chat_id, text=result)
 
 
-def get_assigned_reports(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_all_assigned_misconduct_reports(update))
+def get_assigned_reports(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_all_assigned_misconduct_reports(update))
 
 
-def get_open_assigned_reports(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_open_assigned_misconduct_reports(update))
+def get_open_assigned_reports(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_open_assigned_misconduct_reports(update))
 
 
-def get_unassigned_reports(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_unassigned_misconduct_reports(update))
+def get_unassigned_reports(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_unassigned_misconduct_reports(update))
 
 
-def get_misconduct_records(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_user_misconduct_reports(update))
+def get_misconduct_records(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_user_misconduct_reports(update))
 
 
-def get_user_own_misconducts(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_own_misconduct_reports(update))
+def get_user_own_misconducts(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_own_misconduct_reports(update))
 
 
-def get_filed_misconducts(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_own_filed_misconducts(update))
+def get_filed_misconducts(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_own_filed_misconducts(update))
 
 
-def get_user_filed_misconducts(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_user_filed_misconduct_reports(update))
+def get_user_filed_misconducts(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_user_filed_misconduct_reports(update))
 
 
-def bot_get_all_police_misconduct_reports(bot, update):
-    bot.sendMessage(update.message.chat_id, text=get_all_police_misconduct_reports(update))
+def bot_get_all_police_misconduct_reports(update, context):
+    context.bot.sendMessage(update.message.chat_id, text=get_all_police_misconduct_reports(update))
 
 
 def main():

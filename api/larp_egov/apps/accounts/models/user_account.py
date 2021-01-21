@@ -39,7 +39,7 @@ class UserManager(core_models.CoreManager, BaseUserManager):
         return self.get_queryset().get(is_service_account=True)
 
     def get_ai_accounts(self):
-        return self.get_queryset().get(is_staff=True)
+        return self.get_queryset().filter(is_staff=True)
 
     def get_police_officers(self):
         return self.get_queryset().filter(is_police=True)
@@ -117,6 +117,9 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         ),
     )
     defence_level = models.IntegerField(default=0)
+    system_heat = models.IntegerField(default=0)
+    has_special_hack_value = models.BooleanField(default=False)
+    special_hack_pro_price = models.IntegerField(default=0)
 
     objects = UserManager()
 

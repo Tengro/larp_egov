@@ -124,14 +124,14 @@ def _corporation_preparation(update, number_to_skip, function_name):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return UNREGISTERED
-    code, corp_code = update.message.text[24:].split(' ')
+    copr_code, code = update.message.text[number_to_skip:].split(' ')
     user = get_user_by_character_id(code)
     if not user:
         return NO_USER
-    corproration = Corporation.objects.filter(linked_account__character_id=code).first()
+    corproration = Corporation.objects.filter(linked_account__character_id=copr_code).first()
     if not corproration:
         return NO_CORP
-    getattr(corproration, function_name)(requester, user)
+    return getattr(corproration, function_name)(requester, user)
 
 
 def add_user_to_corporation(update):

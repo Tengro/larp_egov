@@ -15,7 +15,8 @@ class HackingSession(CoreModel):
     @classmethod
     def begin_hack(cls, hacker, target, init_value):
         if cls.objects.filter(hacker=hacker, is_active=True).exists():
-            return ValueError("Another hack in progress!")
+            hacker.send_message("Another hack in progress!")
+            return
         # if hacker == target:
         #     return ValueError("You can't hack yourself!")
         ticks = BASE_HACK_TICKS - target.defence_level * DEFENCE_MULTIPLIER - init_value
@@ -28,16 +29,18 @@ class HackingSession(CoreModel):
         ticks = self.ticks_remaining - HACKER_FINISHING_VALUE
         self.is_active = False
         self.save()
+        self.hacker.send_message(f"Hack finished")
         if ticks <= 0:
             for user in UserAccount.objects.get_security_officers():
                 user.send_message(f'Hack attack registered! Attacker: {hacker.character_id}')
 
     def decrease_ticks(self, value):
         self.ticks_remaining -= value
-        if ticks <= 0:
+        if self.ticks_remaining <= 0:
             for user in UserAccount.objects.get_security_officers():
-                user.send_message(f'Hack attack registered! Attacker: {hacker.character_id}')
+                user.send_message(f'Hack attack registered! Attacker: {self.hacker}; Victim: {self.target}')
             self.is_active = False
             self.hacker.send_message(f'Connection drop. Alert raised.')
-        self.hacker.send_message(f"{self.ticks_remaining} system ticks available for this hack before raising alert.")
+        else:
+            self.hacker.send_message(f"{self.ticks_remaining} system ticks available for this hack before raising alert.")
         self.save()

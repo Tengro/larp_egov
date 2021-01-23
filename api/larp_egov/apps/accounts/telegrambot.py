@@ -6,6 +6,7 @@ from larp_egov.apps.accounts.bot_commands.introspection import (
     get_introspection, get_police_data, get_security_data,
     get_public_data, get_master_user_list, get_master_user_data
 )
+from larp_egov.apps.accounts.selectors import get_user_by_telegram_id
 
 import logging
 logger = logging.getLogger(__name__)
@@ -65,10 +66,16 @@ def get_user_list(update, context):
     context.bot.sendMessage(update.message.chat_id, text=get_master_user_list(update))
 
 
-def error(update, error):
-    from accounts.models import UserAccount
+def error(update, context):
+    from larp_egov.apps.accounts.models import UserAccount
     user = UserAccount.objects.get_service_account()
-    user.send_message(f"Update {update} caused error {error}")
+    if update.message:
+        message_text = update.message.text
+        telegram_id = update.message.chat_id
+        caused = get_user_by_telegram_id(telegram_id)
+        user.send_message(f"Update {message_text} from {caused} resulted in exception: {context.error}")
+    else:
+        user.send_message(f"Error {context.error}")
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 

@@ -29,30 +29,30 @@ def get_active_hack(update):
 
 def initiate_hack_noob(update, context):
     hacker = get_user_by_telegram_id(update.message.chat_id)
-    if not requester:
+    if not hacker:
         return UNREGISTERED
-    target = get_user_by_character_id(update.message.text[5:])
-    initiate_hack(hakcer, target, 'noob')
+    target = get_user_by_character_id(update.message.text[6:])
+    initiate_hack(hacker, target, 'noob')
 
 
 def initiate_hack_mid(update, context):
     hacker = get_user_by_telegram_id(update.message.chat_id)
-    if not requester:
+    if not hacker:
         return UNREGISTERED
-    target = get_user_by_character_id(update.message.text[5:])
-    initiate_hack(hakcer, target, 'middle')
+    target = get_user_by_character_id(update.message.text[6:])
+    initiate_hack(hacker, target, 'middle')
 
 
 def initiate_hack_pro(update, context):
     hacker = get_user_by_telegram_id(update.message.chat_id)
-    if not requester:
+    if not hacker:
         return UNREGISTERED
     target = get_user_by_character_id(update.message.text[5:])
-    initiate_hack(hakcer, target, 'pro')
+    initiate_hack(hacker, target, 'pro')
 
 
 def hack_create_report_noob(update, context):
-    message = update.message.text[5:]
+    message = update.message.text[20:]
     user_code, misconduct_type = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
@@ -62,7 +62,7 @@ def hack_create_report_noob(update, context):
 
 
 def hack_create_report_mid(update, context):
-    message = update.message.text[5:]
+    message = update.message.text[20:]
     user_code, misconduct_type = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
@@ -72,7 +72,7 @@ def hack_create_report_mid(update, context):
 
 
 def hack_create_report_pro(update, context):
-    message = update.message.text[5:]
+    message = update.message.text[14:]
     user_code, misconduct_type = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
@@ -82,7 +82,7 @@ def hack_create_report_pro(update, context):
 
 
 def hack_create_transaction_noob(update, context):
-    message = update.message.text[6:]
+    message = update.message.text[25:]
     user_code, amount = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
@@ -92,7 +92,7 @@ def hack_create_transaction_noob(update, context):
 
 
 def hack_create_transaction_mid(update, context):
-    message = update.message.text[6:]
+    message = update.message.text[25:]
     user_code, amount = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
@@ -102,7 +102,7 @@ def hack_create_transaction_mid(update, context):
 
 
 def hack_create_transaction_pro(update, context):
-    message = update.message.text[6:]
+    message = update.message.text[17:]
     user_code, amount = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
@@ -112,7 +112,7 @@ def hack_create_transaction_pro(update, context):
 
 
 def hack_decline_report_noob(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[21:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -121,7 +121,7 @@ def hack_decline_report_noob(update, context):
 
 
 def hack_decline_report_mid(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[21:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -130,7 +130,7 @@ def hack_decline_report_mid(update, context):
 
 
 def hack_decline_report_pro(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[15:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -139,7 +139,7 @@ def hack_decline_report_pro(update, context):
 
 
 def hack_delete_report_noob(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -148,7 +148,7 @@ def hack_delete_report_noob(update, context):
 
 
 def hack_delete_report_mid(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -157,7 +157,7 @@ def hack_delete_report_mid(update, context):
 
 
 def hack_delete_report_pro(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[14:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -166,7 +166,7 @@ def hack_delete_report_pro(update, context):
 
 
 def hack_finish_report_noob(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -175,7 +175,7 @@ def hack_finish_report_noob(update, context):
 
 
 def hack_finish_report_mid(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -184,7 +184,7 @@ def hack_finish_report_mid(update, context):
 
 
 def hack_finish_report_pro(update, context):
-    misconduct_id = update.message.text[5:]
+    misconduct_id = update.message.text[15:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
         context.bot.sendMessage(update.message.chat_id, text=hack)
@@ -397,4 +397,50 @@ def main():
 
     dp = DjangoTelegramBot.dispatcher
     # on different commands - answer in Telegram
+    # NOOB COMMANDS: TESTED
     dp.add_handler(CommandHandler("hack", initiate_hack_noob))
+    dp.add_handler(CommandHandler("hack_police", hack_user_police_data_noob))
+    dp.add_handler(CommandHandler("hack_security", hack_user_security_data_noob))
+    dp.add_handler(CommandHandler("hack_inspect", hack_inspect_special_noob))
+    dp.add_handler(CommandHandler("hack_special", hack_perform_special_noob))
+    dp.add_handler(CommandHandler("hack_corporations", hack_user_corporations_noob))
+    dp.add_handler(CommandHandler("hack_subscriptions", hack_user_subscriptions_noob))
+    dp.add_handler(CommandHandler("hack_bank_history", hack_user_bank_history_noob))
+    dp.add_handler(CommandHandler("hack_reports", hack_user_misconduct_records_noob))
+    dp.add_handler(CommandHandler("hack_report_create", hack_create_report_noob))
+    dp.add_handler(CommandHandler("hack_create_transaction", hack_create_transaction_noob))
+    dp.add_handler(CommandHandler("hack_report_decline", hack_decline_report_noob))
+    dp.add_handler(CommandHandler("hack_report_delete", hack_delete_report_noob))
+    dp.add_handler(CommandHandler("hack_report_finish", hack_finish_report_noob))
+    # MIDDLE COMMANDS
+    dp.add_handler(CommandHandler("h4ck", initiate_hack_mid))
+    dp.add_handler(CommandHandler("h4ck_p0lice", hack_user_police_data_mid))
+    dp.add_handler(CommandHandler("h4ck_secur1ty", hack_user_security_data_mid))
+    dp.add_handler(CommandHandler("h4ck_insp3ct", hack_inspect_special_mid))
+    dp.add_handler(CommandHandler("h4ck_speci4l", hack_perform_special_mid))
+    dp.add_handler(CommandHandler("h4ck_corp0rations", hack_user_corporations_mid))
+    dp.add_handler(CommandHandler("h4ck_subscr1ptions", hack_user_subscriptions_mid))
+    dp.add_handler(CommandHandler("h4ck_bank_hist0ry", hack_user_bank_history_mid))
+    dp.add_handler(CommandHandler("h4ck_rep0rts", hack_user_misconduct_records_mid))
+    dp.add_handler(CommandHandler("h4ck_rep0rt_creat3", hack_create_report_mid))
+    dp.add_handler(CommandHandler("h4ck_cre4te_transacti0n", hack_create_transaction_mid))
+    dp.add_handler(CommandHandler("h4ck_rep0rt_d3cline", hack_decline_report_mid))
+    dp.add_handler(CommandHandler("h4ck_rep0rt_d3lete", hack_delete_report_mid))
+    dp.add_handler(CommandHandler("h4ck_rep0rt_f1nish", hack_finish_report_mid))
+    # PRO COMMANDS
+    dp.add_handler(CommandHandler("hck", initiate_hack_pro))
+    dp.add_handler(CommandHandler("hck_plc", hack_user_police_data_pro))
+    dp.add_handler(CommandHandler("hck_scrt", hack_user_security_data_pro))
+    dp.add_handler(CommandHandler("hck_nspct", hack_inspect_special_pro))
+    dp.add_handler(CommandHandler("hck_spcl", hack_perform_special_pro))
+    dp.add_handler(CommandHandler("hck_crprtns", hack_user_corporations_pro))
+    dp.add_handler(CommandHandler("hck_sbscrptns", hack_user_subscriptions_pro))
+    dp.add_handler(CommandHandler("hck_bnk_hstr", hack_user_bank_history_pro))
+    dp.add_handler(CommandHandler("hck_rprts", hack_user_misconduct_records_pro))
+    dp.add_handler(CommandHandler("hck_rprt_crt", hack_create_report_pro))
+    dp.add_handler(CommandHandler("hck_crt_trnsctn", hack_create_transaction_pro))
+    dp.add_handler(CommandHandler("hck_rprt_dcln", hack_decline_report_pro))
+    dp.add_handler(CommandHandler("hck_rprt_dlt", hack_delete_report_pro))
+    dp.add_handler(CommandHandler("hck_rprt_fnsh", hack_finish_report_pro))
+    # Finish Hack
+    dp.add_handler(CommandHandler("finish_hack", hack_finish_hacking))

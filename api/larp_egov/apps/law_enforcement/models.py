@@ -132,7 +132,7 @@ class MisconductReport(CoreModel):
         self.reported_person.send_message(closure_message)
         if not silent:
             self.notify_officer(closure_message)
-        self.penalty_status = MisconductPenaltyStatus.CLOSED
+        self.penalty_status = MisconductPenaltyStatus.CLOSED_UNPAID
         self.misconduct_status = MisconductReportStatus.DECLINED
         self.save()
 

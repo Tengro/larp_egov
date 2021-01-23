@@ -11,6 +11,8 @@ def get_own_bank_data(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return UNREGISTERED
+    if not BankTransaction.objects.get_user_bank_history(requester).order_by('created').exists():
+        return "User has no bank transactions"
     return '\n\n'.join(
         [
             x.user_transaction_log(requester) for x in BankTransaction.objects.get_user_bank_history(requester).order_by('created')
@@ -24,6 +26,8 @@ def get_full_bank_data(update, override_permissions=False):
         return UNREGISTERED
     if not validate_security(requester) and not override_permissions:
         return NO_ACCESS_DATA
+    if not BankTransaction.objects.all().exists():
+        return "No bank transactions"
     return '\n\n'.join(
         [
             x.transaction_log for x in BankTransaction.objects.all().order_by('created')
@@ -41,6 +45,8 @@ def get_user_bank_data(update, override_permissions=False, is_full=False):
     user = get_user_by_character_id(code)
     if not user:
         return NO_USER
+    if not BankTransaction.objects.get_user_bank_history(requester).order_by('created').exists():
+        return "User has no bank transactions"
     if not is_full:
         return '\n\n'.join(
             [

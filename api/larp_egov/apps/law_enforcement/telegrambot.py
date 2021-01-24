@@ -94,7 +94,7 @@ def get_user_own_misconducts(update, context):
 
 
 def get_filed_misconducts(update, context):
-    safe_message_send(context.bot, update.message.chat_id, text=get_own_filed_misconducts(update))
+    safe_message_send(context.bot, update.message.chat_id, text=get_filed_misconduct_reports(update))
 
 
 def get_user_filed_misconducts(update, context):

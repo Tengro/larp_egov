@@ -194,7 +194,7 @@ class BankSubscription(CoreModel):
                 self.process_payment_failure(user)
 
     def cancel_subscription(self, user, forced=False):
-        if self.is_governmental_tax and not self.forced:
+        if self.is_governmental_tax and not forced:
             user.send_message("Can't cancel mandatory payment without AI permission. Contact AI")
             return
         self.subscribers.remove(user)

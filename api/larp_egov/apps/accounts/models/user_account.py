@@ -165,7 +165,6 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
             dp = DjangoTelegramBot.dispatcher.bot
             safe_message_send(dp, self.telegram_id, text)
 
-
     def withdraw(self, amount, message):
         self.bank_account = self.bank_account - amount
         self.send_message(message)

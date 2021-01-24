@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Заповнені вами скарги{% endblock %}
+{% block content %}
+<table>
+	<th>
+		<td>Порушник</td>
+		<td>Тип правопорушення</td>
+		<td>Обсяг штрафу</td>
+		<td>Статус розгляду правопорушення</td>
+		<td>Статус стягнення штрафу</td>
+		<td>ID скарги</td>
+		<td>Віповідальний офіцер полції</td>
+	</th>
+	{% for misconduct in object_list %}
+	<tr>
+		<td>{{ misconduct.reported_person }}</td>
+		<td>{{ misconduct.misconduct_type.title }}</td>
+		<td>{% if misconduct.penalty_amount %}{{ misconduct.penalty_amount }}{% else %}НЕ ВСТАНОВЛЕНО{% endif %}</td>
+		<td>{{ misconduct.get_misconduct_status_display }}</td>
+		<td>{{ misconduct.get_penalty_status_display }}</td>
+		<td>{{ misconduct.report_id }}</td>
+		<td>{% if misconduct.officer_in_charge %}{{ misconduct.officer_in_charge }}{% else %}Справа ще не передана на розгляд офіцеру{% endif %}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

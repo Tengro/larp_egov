@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Ваші корпорації{% endblock %}
+{% block content %}
+<table>
+	<th>
+		<td>Назва корпорації</td>
+		<td>ID корпорації</td>
+		<td>Ваш статус</td>
+	</th>
+	{% for corporation_membership in object_list %}
+	<tr>
+		<td>{{ corporation_membership.corporation.title }}</td>
+		<td>{{ corporation_membership.corporation.corporation_id }}</td>
+		<td>{{ corporation_membership.get_status_display }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

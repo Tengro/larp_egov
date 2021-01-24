@@ -1,3 +1,34 @@
-from django.shortcuts import render
+from django.views.generic.list import ListView
 
-# Create your views here.
+from larp_egov.apps.law_enforcement.models import (
+    MisconductReport, MisconductType
+)
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+class AllMisconductTypes(LoginRequiredMixin, ListView):
+    model = MisconductType
+
+    template_name = 'law_enforcement/misconduct_types.html'
+
+
+class PersonalFiledMisconducts(LoginRequiredMixin, ListView):
+    model = MisconductReport
+
+    template_name = 'law_enforcement/personal_filed_misconducts.html'
+
+    def get_queryset(self):
+        user = self.request.user
+        return MisconductReport.objects.filter(reporter=user)
+
+
+class PersonalMiscondutReports(LoginRequiredMixin, ListView):
+    model = MisconductReport
+
+    template_name = 'law_enforcement/personal_misconducts.html'
+
+    def get_queryset(self):
+        user = self.request.user
+        return MisconductReport.objects.filter(reported_person=user)
+
+# TODO: Add police views (all misconducts + filtering), add_report

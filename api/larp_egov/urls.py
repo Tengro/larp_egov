@@ -18,11 +18,15 @@ api_v1_urlpatterns = [
     )
 ]
 
-account_urls = [path("", include(("larp_egov.apps.accounts.urls", "accounts"), namespace="accounts"))]
+site_urls = [
+    path("", include(("larp_egov.apps.accounts.urls", "accounts"), namespace="accounts")),
+    path("banking/", include(("larp_egov.apps.banking.urls", "banking"), namespace="banking")),
+    path("law/", include(("larp_egov.apps.law_enforcement.urls", "law_enforcement"), namespace="law_enforcement")),
+]
 
 django_telegrambot_path = [re_path(r'^', include('django_telegrambot.urls')), ]
 
-urlpatterns = admin_urlpatterns + django_telegrambot_path + account_urls
+urlpatterns = admin_urlpatterns + django_telegrambot_path + site_urls
 
 # enable Swagger
 if "SWAGGER" in settings.LARP_EGOV_FEATURES:

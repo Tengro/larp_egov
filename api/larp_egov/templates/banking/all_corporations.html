@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Усі корпорації{% endblock %}
+{% block content %}
+<table>
+	<th>
+		<td>Назва корпорації</td>
+		<td>ID корпорації</td>
+	</th>
+	{% for corporation in object_list %}
+	<tr>
+		<td>{{ corporation.title }}</td>
+		<td>{{ corporation.corporation_id }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

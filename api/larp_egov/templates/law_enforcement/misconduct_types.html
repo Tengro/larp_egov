@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Усі види правопорушень{% endblock %}
+{% block content %}
+<table>
+	<th>
+		<td>Вид правопорушення</td>
+		<td>Код правопорушення</td>
+		<td>Встановлений за замовчуванням обсяг штрафу</td>
+	</th>
+	{% for misconduct in object_list %}
+	<tr>
+		<td>{{ misconduct.title }}</td>
+		<td>{{ misconduct.misconduct_code }}</td>
+		<td>{% if misconduct.suggested_penalty %}{{ misconduct.suggested_penalty }}{% else %}НЕ ВСТАНОВЛЕНО{% endif %}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

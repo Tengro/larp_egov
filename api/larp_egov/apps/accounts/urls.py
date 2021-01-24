@@ -1,7 +1,7 @@
 from django.urls import path
 from larp_egov.apps.accounts.views import (
     register, UserProfileView, AtomLoginView,
-    PoliceHelpView, SecurityHelpView, CommonHelpView,
+    CommonHelpView,
 )
 from django.contrib.auth import views as auth_views
 
@@ -27,6 +27,4 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("profile/", UserProfileView.as_view(), name="profile"),
     path("help/", CommonHelpView.as_view(), name="help"),
-    path("police/help/", PoliceHelpView.as_view(), name="police_help"),
-    path("security/help/", SecurityHelpView.as_view(), name="security_help")
 ]

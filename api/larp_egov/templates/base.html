@@ -7,6 +7,26 @@
 <div id="header">
     <span class="logo">TengrOS</span>
 </div>
+<div id="nav">
+	{% if user.is_authenticated and user.telegram_id %}
+	<h2>Загальне меню</h2>
+		<ul>
+			<li><a href="{% url 'help' %}">Довідкова сторінка</a></li>
+			<li><a href="{% url 'all_corporations' %}">Усі корпорації</a></li>
+			<li><a href="{% url 'subscriptions' %}">Усі пілписки, ліцензії та податки</a></li>
+			<li><a href="{% url 'all_misconducts' %}">Усі типи правопорушень</a></li>
+		</ul>
+
+	<h2>Особисте меню</h2>
+		<ul>
+			<li><a href="{% url 'personal_corporations' %}">Список корпорацій до яких ви належите</a></li>
+			<li><a href="{% url 'personal_subscriptions' %}">Список ваших ліцензій, підписок та податків</a></li>
+			<li><a href="{% url 'personal_transactions' %}">Ваші банківські транзакції</a></li>
+			<li><a href="{% url 'personal_reports' %}">Список ваших правопорушень</a></li>
+			<li><a href="{% url 'filed_personal_reports' %}">Список наданих вами скарг</a></li>
+		</ul>
+	{% endif %}
+</div>
 <div id="content">
     {% block content %}
     {% endblock %}

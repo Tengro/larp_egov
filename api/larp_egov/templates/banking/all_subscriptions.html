@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Усі ліцензії та податки{% endblock %}
+{% block content %}
+<table>
+	<th>
+		<td>Назва ліцензії</td>
+		<td>Код ліцензії</td>
+		<td>Опис ліцензії</td>
+		<td>Вартість ліцензії</td>
+		<td>Частота стягнень за ліцензію</td>
+		<td>Обмежений доступ?</td>
+		<td>Чи є несплата ліцензії правопорушенням?</td>
+	</th>
+	{% for subscription in object_list %}
+	<tr>
+		<td>{{ subscription.title }}</td>
+		<td>{{ subscription.subscription_id }}</td>
+		<td>{{ subscription.description }}</td>
+		<td>{{ subscription.amount }}</td>
+		<td>{{ subscription.get_extraction_period_display }}</td>
+		<td>{% if subscription.limited_approval %}ТАК{% else %}НІ{% endif %}/td>
+		<td>{% if subscription.is_governmental_tax %}ТАК{% else %}НІ{% endif %}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

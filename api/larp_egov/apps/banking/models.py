@@ -105,9 +105,9 @@ class BankTransaction(CoreModel):
         approve_message = f'Transaction {self.transaction_id} successfully finished'
         self.is_finished = True
         self.time_finished = now()
-        self.save()
         self.sender.send_message(approve_message)
         self.reciever.deposit(self.amount, approve_message)
+        self.save()
 
 
 class BankSubscriptionPeriodChoices(models.IntegerChoices):

@@ -77,6 +77,7 @@ def user_forced_subscription_stop(update):
         return UNREGISTERED
     if not requester.is_staff:
         return NO_ACCESS_COMMAND
+    message = update.message.text[19:]
     user_code, subscription = message.split(' ')
     user = get_user_by_character_id(user_code)
     if not user:

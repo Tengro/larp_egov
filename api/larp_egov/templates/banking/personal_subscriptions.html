@@ -2,7 +2,7 @@
 {% block title %}Особисті ліцензії та податки{% endblock %}
 {% block content %}
 <table>
-	<th>
+	<tr>
 		<td>Назва ліцензії</td>
 		<td>Код ліцензії</td>
 		<td>Опис ліцензії</td>
@@ -11,7 +11,7 @@
 		<td>Обмежений доступ?</td>
 		<td>Чи є несплата ліцензії правопорушенням?</td>
 		<td>Чи затверджене отримання ліцензії?<td>
-	</th>
+	</tr>
 	{% for personal_subscription in object_list %}
 	<tr>
 		<td>{{ personal_subscription.subscription.title }}</td>

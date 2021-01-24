@@ -2,7 +2,7 @@
 {% block title %}Ваші транзакції{% endblock %}
 {% block content %}
 <table>
-	<th>
+	<tr>
 		<td>Відправник</td>
 		<td>Отримувач</td>
 		<td>Сума</td>
@@ -10,7 +10,7 @@
 		<td>Час завершення</td>
 		<td>ID транзакції</td>
 		<td>Коментар (*функціонал у стадії розробки*)</td>
-	</th>
+	</tr>
 	{% for transaction in object_list %}
 	<tr>
 		<td>{% if transaction.is_anonymous and transaction.reciever == user %}НЕВІДОМО{% else %}{{ transaction.sender }}{% endif %}</td>

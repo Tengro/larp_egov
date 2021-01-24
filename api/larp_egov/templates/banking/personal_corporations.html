@@ -2,11 +2,11 @@
 {% block title %}Ваші корпорації{% endblock %}
 {% block content %}
 <table>
-	<th>
+	<tr>
 		<td>Назва корпорації</td>
 		<td>ID корпорації</td>
 		<td>Ваш статус</td>
-	</th>
+	</tr>
 	{% for corporation_membership in object_list %}
 	<tr>
 		<td>{{ corporation_membership.corporation.title }}</td>

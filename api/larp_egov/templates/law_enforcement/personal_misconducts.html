@@ -2,14 +2,14 @@
 {% block title %}Скарги на вас{% endblock %}
 {% block content %}
 <table>
-	<th>
+	<tr>
 		<td>Тип правопорушення</td>
 		<td>Обсяг штрафу</td>
 		<td>Статус розгляду правопорушення</td>
 		<td>Статус стягнення штрафу</td>
 		<td>ID скарги</td>
 		<td>Віповідальний офіцер полції</td>
-	</th>
+	</tr>
 	{% for misconduct in object_list %}
 	<tr>
 		<td>{{ misconduct.misconduct_type.title }}</td>

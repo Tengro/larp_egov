@@ -2,7 +2,7 @@
 {% block title %}Заповнені вами скарги{% endblock %}
 {% block content %}
 <table>
-	<th>
+	<tr>
 		<td>Порушник</td>
 		<td>Тип правопорушення</td>
 		<td>Обсяг штрафу</td>
@@ -10,7 +10,7 @@
 		<td>Статус стягнення штрафу</td>
 		<td>ID скарги</td>
 		<td>Віповідальний офіцер полції</td>
-	</th>
+	</tr>
 	{% for misconduct in object_list %}
 	<tr>
 		<td>{{ misconduct.reported_person }}</td>

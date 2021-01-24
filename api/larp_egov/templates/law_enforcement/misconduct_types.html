@@ -2,11 +2,11 @@
 {% block title %}Усі види правопорушень{% endblock %}
 {% block content %}
 <table>
-	<th>
+	<tr>
 		<td>Вид правопорушення</td>
 		<td>Код правопорушення</td>
 		<td>Встановлений за замовчуванням обсяг штрафу</td>
-	</th>
+	</tr>
 	{% for misconduct in object_list %}
 	<tr>
 		<td>{{ misconduct.title }}</td>

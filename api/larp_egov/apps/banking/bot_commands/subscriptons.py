@@ -82,7 +82,7 @@ def user_forced_subscription_stop(update):
     user = get_user_by_character_id(user_code)
     if not user:
         return NO_USER
-    subscription = BankSubscription.objects.filter(subscription_id=code).first()
+    subscription = BankSubscription.objects.filter(subscription_id=subscription).first()
     if not subscription:
         return NO_SUBSCRIPTION
     subscription.cancel_subscription(user, forced=True)

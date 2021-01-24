@@ -1,4 +1,5 @@
 from telegram.ext import CommandHandler, MessageHandler, Filters
+from larp_egov.apps.common.bot_commands.safe_message_send import safe_message_send
 from django_telegrambot.apps import DjangoTelegramBot
 from larp_egov.apps.accounts.services.deeplink import bind_user, delete_user, verify_user
 from larp_egov.apps.accounts.bot_tasks import notify_admins
@@ -13,57 +14,57 @@ logger = logging.getLogger(__name__)
 
 
 def help(update, context):
-    context.bot.sendMessage(update.message.chat_id, text='Help!')
+    safe_message_send(context.bot, update.message.chat_id, text='Help!')
 
 
 def register(update, context):
     success, result = bind_user(update)
     if not success:
-        context.bot.sendMessage(update.message.chat_id, text=result)
+        safe_message_send(context.bot, update.message.chat_id, text=result)
         return
     notify_admins(context.bot, result)
-    context.bot.sendMessage(update.message.chat_id, text="You've been successfully linked; await for verification")
+    safe_message_send(context.bot, update.message.chat_id, text="You've been successfully linked; await for verification")
 
 
 def verify(update, context):
     success, result = verify_user(update)
     if not success:
-        context.bot.sendMessage(update.message.chat_id, text=result)
+        safe_message_send(context.bot, update.message.chat_id, text=result)
         return
-    context.bot.sendMessage(result.telegram_id, text="Your character was successfully verified")
+    safe_message_send(context.bot, result.telegram_id, text="Your character was successfully verified")
 
 
 def delete(update, context):
     success, result = delete_user(update)
     if not success:
-        context.bot.sendMessage(update.message.chat_id, text=result)
+        safe_message_send(context.bot, update.message.chat_id, text=result)
         return
-    context.bot.sendMessage(result, text="Your character was deleted by administration")
+    safe_message_send(context.bot, result, text="Your character was deleted by administration")
 
 
 # introspection and general data
 def get_master_data(update, context):
-    context.bot.sendMessage(update.message.chat_id, text=get_master_user_data(update))
+    safe_message_send(context.bot, update.message.chat_id, text=get_master_user_data(update))
 
 
 def get_user_introspection(update, context):
-    context.bot.sendMessage(update.message.chat_id, text=get_introspection(update))
+    safe_message_send(context.bot, update.message.chat_id, text=get_introspection(update))
 
 
 def get_public_record(update, context):
-    context.bot.sendMessage(update.message.chat_id, text=get_public_data(update))
+    safe_message_send(context.bot, update.message.chat_id, text=get_public_data(update))
 
 
 def get_security_record(update, context):
-    context.bot.sendMessage(update.message.chat_id, text=get_security_data(update))
+    safe_message_send(context.bot, update.message.chat_id, text=get_security_data(update))
 
 
 def get_police_personal_record(update, context):
-    context.bot.sendMessage(update.message.chat_id, text=get_police_data(update))
+    safe_message_send(context.bot, update.message.chat_id, text=get_police_data(update))
 
 
 def get_user_list(update, context):
-    context.bot.sendMessage(update.message.chat_id, text=get_master_user_list(update))
+    safe_message_send(context.bot, update.message.chat_id, text=get_master_user_list(update))
 
 
 def error(update, context):

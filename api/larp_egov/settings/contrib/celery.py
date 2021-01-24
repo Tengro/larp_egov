@@ -85,10 +85,10 @@ CELERY_BEAT_SCHEDULE = {
             hour='*/8'
         ),
     },
-    'refresh_hook': {
-        'task': 'larp_egov.apps.common.tasks.refresh_hook',
-        'schedule': crontab(
-            minute='*/5'
-        )
-    }
+    # 'refresh_hook': {
+    #     'task': 'larp_egov.apps.common.tasks.refresh_hook',
+    #     'schedule': crontab(
+    #         minute='*/5'
+    #     )
+    # }
 }

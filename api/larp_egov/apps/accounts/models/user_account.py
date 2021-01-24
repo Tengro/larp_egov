@@ -8,6 +8,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy
 from django.utils.translation import ugettext_lazy as _
 from django_telegrambot.apps import DjangoTelegramBot
+from larp_egov.apps.common.bot_commands.safe_message_send import safe_message_send
+
 
 from larp_egov.apps.common import models as core_models
 from larp_egov.apps.common.models import CoreModel
@@ -161,7 +163,8 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     def send_message(self, text):
         if self.telegram_id:
             dp = DjangoTelegramBot.dispatcher.bot
-            dp.sendMessage(self.telegram_id, text)
+            safe_message_send(dp, self.telegram_id, text)
+
 
     def withdraw(self, amount, message):
         self.bank_account = self.bank_account - amount

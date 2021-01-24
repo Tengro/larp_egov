@@ -1,3 +1,4 @@
+from larp_egov.apps.common.bot_commands.safe_message_send import safe_message_send
 from larp_egov.apps.hacking.bot_commands.common import (
     initiate_hack, hack_create_report,
     hack_create_transaction, hack_decline_report, hack_delete_report,
@@ -56,9 +57,9 @@ def hack_create_report_noob(update, context):
     user_code, misconduct_type = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_create_report(hack, 'noob', user_code, misconduct_type))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_create_report(hack, 'noob', user_code, misconduct_type))
 
 
 def hack_create_report_mid(update, context):
@@ -66,9 +67,9 @@ def hack_create_report_mid(update, context):
     user_code, misconduct_type = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_create_report(hack, 'middle', user_code, misconduct_type))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_create_report(hack, 'middle', user_code, misconduct_type))
 
 
 def hack_create_report_pro(update, context):
@@ -76,9 +77,9 @@ def hack_create_report_pro(update, context):
     user_code, misconduct_type = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_create_report(hack, 'pro', user_code, misconduct_type))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_create_report(hack, 'pro', user_code, misconduct_type))
 
 
 def hack_create_transaction_noob(update, context):
@@ -86,9 +87,9 @@ def hack_create_transaction_noob(update, context):
     user_code, amount = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_create_transaction(hack, 'noob', user_code, amount))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_create_transaction(hack, 'noob', user_code, amount))
 
 
 def hack_create_transaction_mid(update, context):
@@ -96,9 +97,9 @@ def hack_create_transaction_mid(update, context):
     user_code, amount = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_create_transaction(hack, 'middle', user_code, amount))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_create_transaction(hack, 'middle', user_code, amount))
 
 
 def hack_create_transaction_pro(update, context):
@@ -106,288 +107,288 @@ def hack_create_transaction_pro(update, context):
     user_code, amount = message.split(' ')
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_create_transaction(hack, 'pro', user_code, amount))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_create_transaction(hack, 'pro', user_code, amount))
 
 
 def hack_decline_report_noob(update, context):
     misconduct_id = update.message.text[21:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_decline_report(hack, 'noob', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_decline_report(hack, 'noob', misconduct_id))
 
 
 def hack_decline_report_mid(update, context):
     misconduct_id = update.message.text[21:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_decline_report(hack, 'middle', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_decline_report(hack, 'middle', misconduct_id))
 
 
 def hack_decline_report_pro(update, context):
     misconduct_id = update.message.text[15:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_decline_report(hack, 'pro', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_decline_report(hack, 'pro', misconduct_id))
 
 
 def hack_delete_report_noob(update, context):
     misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_delete_report(hack, 'noob', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_delete_report(hack, 'noob', misconduct_id))
 
 
 def hack_delete_report_mid(update, context):
     misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_delete_report(hack, 'middle', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_delete_report(hack, 'middle', misconduct_id))
 
 
 def hack_delete_report_pro(update, context):
     misconduct_id = update.message.text[14:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_delete_report(hack, 'pro', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_delete_report(hack, 'pro', misconduct_id))
 
 
 def hack_finish_report_noob(update, context):
     misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_finish_report(hack, 'noob', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_finish_report(hack, 'noob', misconduct_id))
 
 
 def hack_finish_report_mid(update, context):
     misconduct_id = update.message.text[20:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_finish_report(hack, 'middle', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_finish_report(hack, 'middle', misconduct_id))
 
 
 def hack_finish_report_pro(update, context):
     misconduct_id = update.message.text[15:]
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_finish_report(hack, 'pro', misconduct_id))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_finish_report(hack, 'pro', misconduct_id))
 
 
 def hack_inspect_special_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_inspect_special(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_inspect_special(hack, 'noob'))
 
 
 def hack_inspect_special_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_inspect_special(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_inspect_special(hack, 'middle'))
 
 
 def hack_inspect_special_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_inspect_special(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_inspect_special(hack, 'pro'))
 
 
 def hack_perform_special_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_perform_special(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_perform_special(hack, 'noob'))
 
 
 def hack_perform_special_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_perform_special(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_perform_special(hack, 'middle'))
 
 
 def hack_perform_special_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_perform_special(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_perform_special(hack, 'pro'))
 
 
 def hack_user_corporations_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_corporations(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_corporations(hack, 'noob'))
 
 
 def hack_user_corporations_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_corporations(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_corporations(hack, 'middle'))
 
 
 def hack_user_corporations_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_corporations(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_corporations(hack, 'pro'))
 
 
 def hack_user_subscriptions_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_subscriptions(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_subscriptions(hack, 'noob'))
 
 
 def hack_user_subscriptions_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_subscriptions(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_subscriptions(hack, 'middle'))
 
 
 def hack_user_subscriptions_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_subscriptions(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_subscriptions(hack, 'pro'))
 
 
 def hack_user_bank_history_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_bank_history(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_bank_history(hack, 'noob'))
 
 
 def hack_user_bank_history_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_bank_history(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_bank_history(hack, 'middle'))
 
 
 def hack_user_bank_history_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_bank_history(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_bank_history(hack, 'pro'))
 
 
 def hack_user_misconduct_records_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_misconduct_records(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_misconduct_records(hack, 'noob'))
 
 
 def hack_user_misconduct_records_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_misconduct_records(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_misconduct_records(hack, 'middle'))
 
 
 def hack_user_misconduct_records_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_misconduct_records(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_misconduct_records(hack, 'pro'))
 
 
 def hack_user_police_data_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_police_data(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_police_data(hack, 'noob'))
 
 
 def hack_user_police_data_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_police_data(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_police_data(hack, 'middle'))
 
 
 def hack_user_police_data_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_police_data(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_police_data(hack, 'pro'))
 
 
 def hack_user_security_data_noob(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_security_data(hack, 'noob'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_security_data(hack, 'noob'))
 
 
 def hack_user_security_data_mid(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_security_data(hack, 'middle'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_security_data(hack, 'middle'))
 
 
 def hack_user_security_data_pro(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
-    context.bot.sendMessage(update.message.chat_id, text=hack_user_security_data(hack, 'pro'))
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_security_data(hack, 'pro'))
 
 
 def hack_finish_hacking(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
-        context.bot.sendMessage(update.message.chat_id, text=hack)
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
         return
     hack.finish_hack()
 

@@ -9,5 +9,5 @@ class BankTransactionFilter(django_filters.FilterSet):
         model = BankTransaction
         fields = [
             'amount', 'sender', 'reciever',
-            'is_finished', 'is_canceled',
+            'is_finished', 'is_cancelled',
         ]

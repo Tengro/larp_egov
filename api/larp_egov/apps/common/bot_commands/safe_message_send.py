@@ -10,6 +10,6 @@ def split_string(text, chars_per_string):
 
 
 def safe_message_send(bot, chat_id, text):
-    splitted_text = util.split_string(message, 4000)
+    splitted_text = split_string(message, 4080)
     for text in splitted_text:
         bot.sendMessage(chat_id, text)

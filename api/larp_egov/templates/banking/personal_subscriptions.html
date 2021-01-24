@@ -19,7 +19,7 @@
 		<td>{{ personal_subscription.subscription.description }}</td>
 		<td>{{ personal_subscription.subscription.amount }}</td>
 		<td>{{ personal_subscription.subscription.get_extraction_period_display }}</td>
-		<td>{% if personal_subscription.subscription.limited_approval %}ТАК{% else %}НІ{% endif %}/td>
+		<td>{% if personal_subscription.subscription.limited_approval %}ТАК{% else %}НІ{% endif %}</td>
 		<td>{% if personal_subscription.subscription.is_governmental_tax %}ТАК{% else %}НІ{% endif %}</td>
 		<td>{% if personal_subscription.is_approved %}ТАК{% else %}НІ{% endif %}</td>
 	</tr>

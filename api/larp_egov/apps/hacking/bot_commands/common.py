@@ -77,7 +77,7 @@ def hack_decline_report(hack, level, misconduct_id):
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
-    report = MisconductReport.objects.filter(misconduct_id=misconduct_id).first()
+    report = MisconductReport.objects.filter(reported_person=hack.target, misconduct_id=misconduct_id).first()
     if not report:
         return NO_REPORT_FOUND
     report.decline_report(silent=True)
@@ -89,7 +89,7 @@ def hack_finish_report(hack, level, misconduct_id):
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
-    report = MisconductReport.objects.filter(misconduct_id=misconduct_id).first()
+    report = MisconductReport.objects.filter(reported_person=hack.target, misconduct_id=misconduct_id).first()
     if not report:
         return NO_REPORT_FOUND
     report.finish_report(silent=True)
@@ -101,7 +101,7 @@ def hack_delete_report(hack, level, misconduct_id):
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
-    report = MisconductReport.objects.filter(misconduct_id=misconduct_id).first()
+    report = MisconductReport.objects.filter(reported_person=hack.target, misconduct_id=misconduct_id).first()
     if not report:
         return NO_REPORT_FOUND
     report.delete()

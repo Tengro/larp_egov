@@ -28,6 +28,9 @@
 			{% if user.is_authenticated and user.is_police %}
 			<li><a href="{% url 'law_enforcement:misconduct_dashboard' %}">Поліцейська база даних</a></li>
 			{% endif %}
+			{% if user.is_authenticated and user.is_security %}
+			<li><a href="{% url 'banking:banking_dashboard' %}">База даних банківських переказів (для СБ)</a></li>
+			{% endif %}
 		</ul>
 	{% endif %}
 </div>

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Ваші транзакції{% endblock %}
+{% block content %}
+<form action="" method="get">
+    {{ filter.form.as_p }}
+    <input type="submit" />
+</form>
+<table>
+	<tr>
+		<td>Відправник</td>
+		<td>Отримувач</td>
+		<td>Сума</td>
+		<td>Статус</td>
+		<td>Час завершення</td>
+		<td>ID транзакції</td>
+		<td>Коментар (*функціонал у стадії розробки*)</td>
+	</tr>
+	{% for transaction in filter.qs %}
+	<tr>
+		<td>{{ transaction.sender }}</td>
+		<td>{{ transaction.reciever }}</td>
+		<td>{{ transaction.amount }}</td>
+		<td>{{ transaction.trransaction_status }}</td>
+		<td>{% if transaction.time_finished %}{{ transaction.time_finished }}{% else %}{% endif %}</td>
+		<td>{{ transaction.transaction_id }}</td>
+		<td>{{ transaction.comment }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

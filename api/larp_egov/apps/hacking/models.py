@@ -14,6 +14,9 @@ class HackingSession(CoreModel):
 
     @classmethod
     def begin_hack(cls, hacker, target, init_value):
+        if not hacker.is_hacker:
+            hacker.send_message("C4n U h4ck? U c4nt!")
+            return
         if cls.objects.filter(hacker=hacker, is_active=True).exists():
             hacker.send_message("Another hack in progress!")
             return
@@ -32,7 +35,7 @@ class HackingSession(CoreModel):
         self.hacker.send_message(f"Hack finished")
         if ticks <= 0:
             for user in UserAccount.objects.get_security_officers():
-                user.send_message(f'Hack attack registered! Attacker: {hacker.character_id}')
+                user.send_message(f'Hack attack registered! Attacker: {self.hacker.character_id}')
 
     def decrease_ticks(self, value):
         self.ticks_remaining -= value

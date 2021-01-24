@@ -19,6 +19,7 @@
 
 	<h2>Особисте меню</h2>
 		<ul>
+			<li><a href="{% url 'accounts:profile' %}">Ваш профіль</a></li>
 			<li><a href="{% url 'banking:personal_corporations' %}">Список корпорацій до яких ви належите</a></li>
 			<li><a href="{% url 'banking:personal_subscriptions' %}">Список ваших ліцензій, підписок та податків</a></li>
 			<li><a href="{% url 'banking:personal_transactions' %}">Ваші банківські транзакції</a></li>

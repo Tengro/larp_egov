@@ -25,6 +25,9 @@
 			<li><a href="{% url 'banking:personal_transactions' %}">Ваші банківські транзакції</a></li>
 			<li><a href="{% url 'law_enforcement:personal_reports' %}">Список ваших правопорушень</a></li>
 			<li><a href="{% url 'law_enforcement:filed_personal_reports' %}">Список наданих вами скарг</a></li>
+			{% if user.is_authenticated and user.is_police %}
+			<li><a href="{% url 'law_enforcement:misconduct_dashboard' %}">Поліцейська база даних</a></li>
+			{% endif %}
 		</ul>
 	{% endif %}
 </div>

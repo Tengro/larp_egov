@@ -4,6 +4,8 @@ from larp_egov.apps.law_enforcement.models import (
     MisconductReport, MisconductType
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django_filters.views import FilterView
+from larp_egov.apps.law_enforcement.filters import MisconductReportFilter
 
 
 class AllMisconductTypes(LoginRequiredMixin, ListView):
@@ -30,5 +32,13 @@ class PersonalMiscondutReports(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         return MisconductReport.objects.filter(reported_person=user)
+
+
+class PoliceMisconductDashboard(LoginRequiredMixin, FilterView):
+    model = MisconductReport
+
+    template_name = 'law_enforcement/police_dashboard.html'
+    filterset_class = MisconductReportFilter
+
 
 # TODO: Add police views (all misconducts + filtering), add_report

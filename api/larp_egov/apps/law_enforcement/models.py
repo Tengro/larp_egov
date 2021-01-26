@@ -75,7 +75,7 @@ class MisconductReport(CoreModel):
 
 
     @classmethod
-    def create_misconduct_report(cls, reporter, reported_person, misconduct_type, penalty_amount=None):
+    def create_misconduct_report(cls, reporter, reported_person, misconduct_type, penalty_amount=None, is_silent=False):
         if not penalty_amount:
             penalty_amount = misconduct_type.suggested_penalty
         item = cls.objects.create(
@@ -86,7 +86,8 @@ class MisconductReport(CoreModel):
         )
         item.notify_unassigmnent_status(text=f'Misconduct report {item.misconduct_id} of the misconduct {misconduct_type.title} was created!')
         creation_message = f'Misconduct report for {misconduct_type.title} id {item.misconduct_id} was filed'
-        reporter.send_message(creation_message)
+        if not is_silent:
+            reporter.send_message(creation_message)
         reported_person.send_message(creation_message)
 
     @classmethod

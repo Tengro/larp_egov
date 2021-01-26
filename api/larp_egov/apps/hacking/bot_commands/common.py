@@ -119,7 +119,7 @@ def hack_create_report(hack, level, reported_id, misconduct_type):
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
-    MisconductReport.create_misconduct_report(hack.target, user, misconduct_type)
+    MisconductReport.create_misconduct_report(hack.target, user, misconduct_type, is_silent=True)
     return "Report successfuly created"
 
 

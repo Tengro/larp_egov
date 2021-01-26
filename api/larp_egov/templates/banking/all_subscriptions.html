@@ -18,7 +18,7 @@
 		<td>{{ subscription.description }}</td>
 		<td>{{ subscription.amount }}</td>
 		<td>{{ subscription.get_extraction_period_display }}</td>
-		<td>{% if subscription.limited_approval %}ТАК{% else %}НІ{% endif %}/td>
+		<td>{% if subscription.limited_approval %}ТАК{% else %}НІ{% endif %}</td>
 		<td>{% if subscription.is_governmental_tax %}ТАК{% else %}НІ{% endif %}</td>
 	</tr>
 	{% endfor %}

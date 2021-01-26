@@ -68,7 +68,7 @@ class MisconductReport(CoreModel):
         report_status = f"Report status: {self.get_misconduct_status_display()}."
         penalty_status = f"Penalty status: {self.get_penalty_status_display()}."
         report_id = f"Report ID: {self.misconduct_id}"
-        result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
+        result = f"{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
         if self.officer_in_charge:
             result += f"\nOfficer in charge: {self.officer_in_charge.full_name}."
         return result
@@ -157,6 +157,9 @@ class MisconductReport(CoreModel):
     def set_penalty(self, penalty=None):
         if not penalty:
             penalty = self.misconduct_type.suggested_penalty
+        if penalty < 0.1:
+            self.notify_officer("Can'\t set penalty: amount too low.")
+            return
         if self.misconduct_status != MisconductReportStatus.PROCESSED:
             self.notify_officer('Can\'t set penalty for not processed orders!')
             return

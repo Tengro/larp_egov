@@ -163,7 +163,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     def send_message(self, text):
         if self.telegram_id:
             dp = DjangoTelegramBot.dispatcher.bot
-            safe_message_send(dp, self.telegram_id, text)
+            safe_message_send(dp, self.telegram_id, str(text))
 
     def withdraw(self, amount, message):
         self.bank_account = self.bank_account - amount

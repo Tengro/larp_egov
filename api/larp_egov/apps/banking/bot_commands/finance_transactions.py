@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from larp_egov.apps.accounts.selectors import (
     get_user_by_character_id, get_user_by_telegram_id,
 )
+from larp_egov.apps.accounts.models import UserAccount
 from larp_egov.apps.banking.models import BankTransaction
 from larp_egov.apps.common.bot_commands._common_texts import UNREGISTERED, NO_ACCESS_DATA, NO_USER, validate_security
 
@@ -80,11 +81,15 @@ def create_transaction(update, is_anonymous=False):
 
 
 def cancel_transaction(update):
+
+    service_account = UserAccount.objects.get_service_account()
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return UNREGISTERED
     transaction_id = update.message.text[8:]
     transaction = BankTransaction.objects.unresolved().filter(sender=requester).filter(transaction_id=transaction_id).first()
     if not transaction:
-        return _("Can\'t cancel transaction of selected UUID; check status/UUID")
+        return str(_("Can\'t cancel transaction of selected UUID; check status/UUID"))
+    if transaction.reciever == service_account:
+        return str(_("Can\'t cancel transaction of selected UUID; transactions to TengrOS can't be cancelled"))
     transaction.cancel_transaction()

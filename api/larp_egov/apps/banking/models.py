@@ -75,6 +75,8 @@ class BankTransaction(CoreModel):
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):
         if sender.bank_account < amount:
             raise ValueError('Bank account insufficient')
+        if amount < 0.1:
+            raise ValueError('Value is too low!')
         transaction = cls.objects.create(
             sender=sender,
             reciever=reciever,

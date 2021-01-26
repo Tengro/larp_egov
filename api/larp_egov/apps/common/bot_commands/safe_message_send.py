@@ -6,6 +6,7 @@ def split_string(text, chars_per_string):
     :param chars_per_string: The number of characters per line the text is split into.
     :return: The splitted text as a list of strings.
     """
+    text = str(text)
     return [text[i:i + chars_per_string] for i in range(0, len(text), chars_per_string)]
 
 

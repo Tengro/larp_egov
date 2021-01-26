@@ -32,7 +32,7 @@ def hack_user_subscriptions(hack, level):
 
 
 def hack_user_security_data(hack, level):
-    OPERATION_VALUE = 1
+    OPERATION_VALUE = 2
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
@@ -59,7 +59,7 @@ def hack_user_misconduct_records(hack, level):
 
 
 def hack_user_bank_history(hack, level):
-    OPERATION_VALUE = 1
+    OPERATION_VALUE = 2
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
@@ -73,7 +73,7 @@ def hack_user_bank_history(hack, level):
 
 
 def hack_decline_report(hack, level, misconduct_id):
-    OPERATION_VALUE = 1
+    OPERATION_VALUE = 2
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
@@ -85,7 +85,7 @@ def hack_decline_report(hack, level, misconduct_id):
 
 
 def hack_finish_report(hack, level, misconduct_id):
-    OPERATION_VALUE = 1
+    OPERATION_VALUE = 3
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
@@ -97,7 +97,7 @@ def hack_finish_report(hack, level, misconduct_id):
 
 
 def hack_delete_report(hack, level, misconduct_id):
-    OPERATION_VALUE = 1
+    OPERATION_VALUE = 5
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return "Hack terminated"
@@ -124,7 +124,7 @@ def hack_create_report(hack, level, reported_id, misconduct_type):
 
 
 def hack_create_transaction(hack, level, reciever_id, amount):
-    OPERATION_VALUE = 1
+    OPERATION_VALUE = 5
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
@@ -148,7 +148,7 @@ def hack_inspect_special(hack, level):
         return "Hack terminated"
     if hack.target.has_special_hack_value:
         value = hack.target.special_hack_pro_price * HACK_LEVEL_COST_MAPPING[level]
-        return f"Target has special hack protocol; system tick cost: {value}"
+        return f"Target has special hack protocol; system tick cost: {value}/{value * 3}/{value *5} depending on command"
     return f"Target hasn't any special hack protocol"
 
 

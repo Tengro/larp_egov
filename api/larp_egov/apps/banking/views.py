@@ -5,7 +5,7 @@ from larp_egov.apps.banking.models import (
     Corporation, BankUserSubscriptionIntermediary,
     CorporationMembership
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from larp_egov.apps.banking.filters import BankTransactionFilter
 
 from django_filters.views import FilterView
@@ -53,10 +53,13 @@ class PersonalCorporationMembership(LoginRequiredMixin, ListView):
         return CorporationMembership.objects.filter(member=user).select_related('corporation')
 
 
-class SecurityBankingDashboard(LoginRequiredMixin, FilterView):
+class SecurityBankingDashboard(LoginRequiredMixin, UserPassesTestMixin, FilterView):
     model = BankTransaction
 
     template_name = 'banking/security_transactions_dashboard.html'
     filterset_class = BankTransactionFilter
+
+    def test_func(self):
+        return self.request.user.is_security
 
 # TODO: Add SubscriptionRequest, TransactionCreate, Transaction Cancel, security views (All transactions + filtering)

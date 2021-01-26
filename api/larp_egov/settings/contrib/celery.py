@@ -42,7 +42,7 @@ CELERY_BEAT_SCHEDULE = {
     'detoriate_hacks': {
         'task': 'larp_egov.apps.hacking.tasks.detoriate_active_hacks',
         'schedule': crontab(
-            minute='*/5',
+            minute='*/3',
         ),
     },
     'raise_heat_alarm': {

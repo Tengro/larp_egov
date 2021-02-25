@@ -101,7 +101,7 @@ USE_L10N = True
 USE_TZ = True
 LOCALE_PATHS = (rel("..", "..", "api", "locale"),)
 
-STATIC_URL = env.str("LARP_EGOV_STATIC_URL", default="/s/")
+STATIC_URL = env.str("LARP_EGOV_STATIC_URL", default="/static/")
 STATIC_ROOT = env.str("LARP_EGOV_STATIC_ROOT", default=rel("..", "..", "public", "static"))
 
 MEDIA_URL = env.str("LARP_EGOV_MEDIA_URL", default="/m/")

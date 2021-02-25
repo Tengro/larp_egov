@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/style.css' %}">
 </head>
 <body>
 <div id="header">
@@ -27,7 +29,10 @@
 			<li><a href="{% url 'law_enforcement:personal_reports' %}">Список ваших правопорушень</a></li>
 			<li><a href="{% url 'law_enforcement:filed_personal_reports' %}">Список наданих вами скарг</a></li>
 			<li><a href="{% url 'law_enforcement:file_report' %}">Створити скаргу на особу</a></li>
-			{% if user.is_authenticated %}
+		</ul>
+		{% if user.is_authenticated %}
+			<h2>Спецiалiзований доступ</h2>
+			<ul>
 				{% if user.is_police %}
 				<li><a href="{% url 'law_enforcement:misconduct_dashboard' %}">Поліцейська база даних</a></li>
 				{% endif %}
@@ -37,8 +42,8 @@
 				{% if user.is_police_or_security %}
 				<li><a href="{% url 'law_enforcement:account_list' %}">Список усіх зарєєстрованих осіб</a></li>
 				{% endif %}
-			{% endif %}
-		</ul>
+			</ul>
+		{% endif %}
 	{% endif %}
 </div>
 {% if messages %}
@@ -52,5 +57,27 @@
     {% block content %}
     {% endblock %}
 </div>
+<script>
+	const copyToClipboard = str => {
+		const el = document.createElement('textarea');
+		el.value = str;
+		document.body.appendChild(el);
+		el.select();
+		document.execCommand('copy');
+		document.body.removeChild(el);
+	};
+
+	const copyCommands = (element) => {
+		console.log(element);
+		let text = element.innerText;
+		copyToClipboard(text);
+	};
+
+	let commands = document.getElementsByClassName("copy");
+
+	for (let i = 0; i < commands.length; i++) {
+		commands[i].addEventListener('click', copyCommands(commands[i]), false);
+	}
+</script>
 </body>
 </html>

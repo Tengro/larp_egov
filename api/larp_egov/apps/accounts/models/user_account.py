@@ -182,23 +182,23 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
 
     @property
     def security_comment_string(self):
-        return _('Security comment: {security_comment_field}').format(security_comment_field=self.security_comment_field)
+        return _('Коментар служби безпеки: {security_comment_field}').format(security_comment_field=self.security_comment_field)
 
     @property
     def police_comment_string(self):
-        return _('Police comment: {police_comment_field}').format(police_comment_field=self.police_comment_field)
+        return _('Коментар поліції: {police_comment_field}').format(police_comment_field=self.police_comment_field)
 
     @property
     def common_introspect_data(self):
-        id_string = _('Citizen ID: {character_id}').format(character_id=self.character_id)
-        name_string = _("Name: {full_name}.").format(full_name=self.full_name)
-        work_string = _("Workplace: {place_of_work}.").format(place_of_work=self.place_of_work)
-        date_of_birth = _("Date of birth: {date_of_birth}").format(date_of_birth=self.date_of_birth)
+        id_string = _('ID користувача: {character_id}').format(character_id=self.character_id)
+        name_string = _("Ім'я: {full_name}.").format(full_name=self.full_name)
+        work_string = _("Місце роботи: {place_of_work}.").format(place_of_work=self.place_of_work)
+        date_of_birth = _("Дата народження: {date_of_birth}").format(date_of_birth=self.date_of_birth)
         return f"{id_string}\n{name_string}\n{work_string}\n{date_of_birth}\n"
 
     def get_user_introspect(self):
-        account_string = _("Available funds: {bank_account}").format(bank_account=self.bank_account)
-        defence_string = _("Personal data defence level: {defence_level}").format(defence_level=self.defence_level)
+        account_string = _("Кошти на рахунку: {bank_account}").format(bank_account=self.bank_account)
+        defence_string = _("Рівень захисту особистих даних: {defence_level}").format(defence_level=self.defence_level)
         result = f"{self.common_introspect_data}{account_string}\n{defence_string}"
         return result
 

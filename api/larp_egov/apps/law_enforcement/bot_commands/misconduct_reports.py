@@ -16,10 +16,10 @@ def file_misconduct_report(update):
     user_code, misconduct_type = message.split(' ')
     user = get_user_by_character_id(user_code)
     if not user:
-        return _("Can\'t find user in database; report not filed")
+        return _("Не можу знайти такого користувача у базі даних. Скаргу не надіслано.")
     misconduct_type = MisconductType.objects.filter(misconduct_code=misconduct_type).first()
     if not misconduct_type:
-        return _("Can\'t find misconduct type of this code; report not filed")
+        return _("Не можу знайти код правопорушення у базі даних. Скаргу не надіслано")
     MisconductReport.create_misconduct_report(requester, user, misconduct_type)
     return None
 
@@ -33,7 +33,7 @@ def assign_report_to_yourself(update):
     report_id = update.message.text[8:]
     report = MisconductReport.objects.filter(misconduct_id=report_id).first()
     if not report:
-        return _("No such report found. Check report ID please")
+        return _("Скарги з таким номером не знайдено. Перевірте ІД скарги")
     report.assign_report(requester)
 
 
@@ -89,7 +89,7 @@ def set_penalty_to_report(update):
     try:
         penalty_amount = decimal.Decimal(penalty_amount)
     except decimal.InvalidOperation:
-        return _("Incorrect penalty amount!")
+        return _("Некоректна сума стягнення!")
     report.set_penalty(penalty_amount)
 
 

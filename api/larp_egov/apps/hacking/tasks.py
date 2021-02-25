@@ -19,7 +19,7 @@ def raise_system_heat_alarm():
     security_officers = UserAccount.objects.get_security_officers()
     for user in UserAccount.objects.filter(system_heat__gte=HEAT_ALERT_LEVEL):
         for officer in security_officers:
-            officer.send_message(f"User {user.characrer_id} generated critical amount of system heat. Hacking activity suspected.")
+            officer.send_message(f"Користувач {user.characrer_id} проявляе підозрілу мережеву поведінку. Можлива хакерська активність.")
 
 
 @celery_app.task

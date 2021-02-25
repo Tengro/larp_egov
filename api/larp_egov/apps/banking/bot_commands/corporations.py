@@ -89,7 +89,7 @@ def make_corporation_deposit(update):
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
-        return _("Incorrect amount!")
+        return _("Некоректна сума!")
     try:
         corproration.deposit_funds(requester, amount)
     except ValueError as e:

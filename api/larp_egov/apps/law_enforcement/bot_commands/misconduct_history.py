@@ -13,7 +13,7 @@ def get_own_misconduct_reports(update):
         return UNREGISTERED
     reports = MisconductReport.objects.filter(reported_person=requester)
     if not reports:
-        return _("You have clean record")
+        return _("На вас немає скарг")
     return '\n\n'.join([x.anonymised_string for x in reports])
 
 
@@ -23,7 +23,7 @@ def get_filed_misconduct_reports(update):
         return UNREGISTERED
     reports = MisconductReport.objects.filter(reporter=requester)
     if not reports:
-        return _("You have filed no reports")
+        return _("Ви не подавали скарг")
     return '\n\n'.join([x.police_record_string for x in reports])
 
 
@@ -39,7 +39,7 @@ def get_user_misconduct_reports(update):
         return NO_USER
     reports = MisconductReport.objects.filter(reported_person=user)
     if not reports:
-        return _("This person has clean record")
+        return _("На користувача не було подано скарг")
     return '\n\n'.join([x.police_record_string for x in reports])
 
 
@@ -55,7 +55,7 @@ def get_user_filed_misconduct_reports(update):
         return NO_USER
     reports = MisconductReport.objects.filter(reporter=user)
     if not reports:
-        return _("This person filed no reports")
+        return _("користувач не подавав скарг")
     return '\n\n'.join([x.police_record_string for x in reports])
 
 
@@ -67,7 +67,7 @@ def get_all_assigned_misconduct_reports(update):
         return NO_ACCESS_DATA
     reports = MisconductReport.objects.filter(officer_in_charge=requester)
     if not reports:
-        return _("You have no assigned reports")
+        return _("На вас немає закріплених скарг")
     return '\n\n'.join([x.police_record_string for x in reports])
 
 
@@ -81,7 +81,7 @@ def get_open_assigned_misconduct_reports(update):
         officer_in_charge=requester
     ).exclude(misconduct_status__in=[MisconductReportStatus.DECLINED, MisconductReportStatus.FINISHED])
     if not reports:
-        return _("You have no assigned reports")
+        return _("На вас немає відкритих закріплених скарг")
     return '\n\n'.join([x.police_record_string for x in reports])
 
 
@@ -93,7 +93,7 @@ def get_unassigned_misconduct_reports(update):
         return NO_ACCESS_DATA
     reports = MisconductReport.objects.filter(officer_in_charge=None)
     if not reports:
-        return _("No assigned reports in database!")
+        return _("У базі даних немає нерозподілених скарг")
     return '\n\n'.join([x.police_record_string for x in reports])
 
 

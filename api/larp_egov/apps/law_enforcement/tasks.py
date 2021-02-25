@@ -15,14 +15,14 @@ def notify_unassigned_tasks():
 def notify_unrevised_tasks():
     unassigned_tasks = MisconductReport.objects.filter(misconduct_status=MisconductReportStatus.REVISED)
     for item in unassigned_tasks:
-        item.notify_unassigmnent_status(f"Misconduct {item.misconduct_id} is still revised!")
+        item.notify_unassigmnent_status(f"Скарга {item.misconduct_id} все ще на розгляді!")
 
 
 @celery_app.task
 def notify_unresolved_tasks():
     unassigned_tasks = MisconductReport.objects.filter(misconduct_status=MisconductReportStatus.PROCESSED)
     for item in unassigned_tasks:
-        item.notify_unassigmnent_status(f"Misconduct {item.misconduct_id} is still processed!")
+        item.notify_unassigmnent_status(f"Скарга {item.misconduct_id} все ще в обробці!")
 
 
 @celery_app.task
@@ -35,12 +35,12 @@ def collect_penalties():
                 item.reported_person,
                 service_account,
                 item.penalty_amount,
-                comment=f"Misconduct penalty for misconduct id {item.misconduct_id}"
+                comment=f"Стягнення за скаргою {item.misconduct_id}"
             )
             item.penalty_status = MisconductPenaltyStatus.CLOSED
             item.save()
             item.finish_report()
         except ValueError:
             item.notify_officer(
-                f'Misconduct penalty from {item.reported_person.character_id} not collected; insufficient funds'
+                f'Не стягнуто суму стягнення з {item.reported_person.character_id}; недостатньо коштів'
             )

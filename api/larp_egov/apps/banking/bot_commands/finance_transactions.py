@@ -13,7 +13,7 @@ def get_own_bank_data(update):
     if not requester:
         return UNREGISTERED
     if not BankTransaction.objects.get_user_bank_history(requester).order_by('created').exists():
-        return "User has no bank transactions"
+        return "Немає банківських транзакцій"
     return '\n\n'.join(
         [
             x.user_transaction_log(requester) for x in BankTransaction.objects.get_user_bank_history(requester).order_by('created')
@@ -28,7 +28,7 @@ def get_full_bank_data(update, override_permissions=False):
     if not validate_security(requester) and not override_permissions:
         return NO_ACCESS_DATA
     if not BankTransaction.objects.all().exists():
-        return "No bank transactions"
+        return "Немає банківських транзакцій"
     return '\n\n'.join(
         [
             x.transaction_log for x in BankTransaction.objects.all().order_by('created')
@@ -47,7 +47,7 @@ def get_user_bank_data(update, override_permissions=False, is_full=False):
     if not user:
         return NO_USER
     if not BankTransaction.objects.get_user_bank_history(requester).order_by('created').exists():
-        return "User has no bank transactions"
+        return "Немає банківських транзакцій"
     if not is_full:
         return '\n\n'.join(
             [
@@ -76,11 +76,11 @@ def create_transaction(update, is_anonymous=False):
         comment = ' '.join(result_data[2:])
     user = get_user_by_character_id(user_code)
     if not user:
-        return _("Can\'t find user in database; transaction not sent")
+        return _("Користувач з таким ID не знайдений. Транзакція не надіслана")
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
-        return _("Incorrect amount!")
+        return _("Сума не розпізнана")
     try:
         BankTransaction.create_transaction(requester, user, amount, is_anonymous, comment)
     except ValueError as e:
@@ -96,7 +96,7 @@ def cancel_transaction(update):
     transaction_id = update.message.text[8:]
     transaction = BankTransaction.objects.unresolved().filter(sender=requester).filter(transaction_id=transaction_id).first()
     if not transaction:
-        return str(_("Can\'t cancel transaction of selected UUID; check status/UUID"))
+        return str(_("Не можу знайти відповідну транзакціию. Перевірте ІД транзакції"))
     if transaction.reciever == service_account:
-        return str(_("Can\'t cancel transaction of selected UUID; transactions to TengrOS can't be cancelled"))
+        return str(_("Транзакції на рахунок TengrOS не можуть бути відмінені"))
     transaction.cancel_transaction()

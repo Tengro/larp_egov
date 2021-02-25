@@ -63,7 +63,7 @@ def hack_user_misconduct_records(hack, level):
         return HACK_TERMINATED
     reports = MisconductReport.objects.filter(reported_person=hack.target)
     if not reports:
-        return _("This person has clean record")
+        return _("Немає скарг на користувача")
     return '\n\n'.join([x.police_record_string for x in reports])
 
 
@@ -73,7 +73,7 @@ def hack_user_bank_history(hack, level):
     if not hack.is_active:
         return HACK_TERMINATED
     if not BankTransaction.objects.get_user_bank_history(hack.target).order_by('created').exists():
-        return _("User has no bank history")
+        return _("У користувача немає банківської історії")
     return '\n\n'.join(
         [
             x.user_transaction_log(hack.target) for x in BankTransaction.objects.get_user_bank_history(hack.target).order_by('created')
@@ -102,7 +102,7 @@ def hack_finish_report(hack, level, misconduct_id):
     if not report:
         return NO_REPORT_FOUND
     report.finish_report(silent=True)
-    return _("Report successfuly finished")
+    return _("Розгляд скарги успішно завершено")
 
 
 def hack_delete_report(hack, level, misconduct_id):
@@ -114,22 +114,22 @@ def hack_delete_report(hack, level, misconduct_id):
     if not report:
         return NO_REPORT_FOUND
     report.delete()
-    return _("Report successfuly deleted")
+    return _("Скаргу успішно видалено")
 
 
 def hack_create_report(hack, level, reported_id, misconduct_type):
     OPERATION_VALUE = 1
     user = get_user_by_character_id(reported_id)
     if not user:
-        return str(_("Can\'t find user in database; report not filed"))
+        return str(_("Немає такого користувача у базі даних. Скаргу не відправлено."))
     misconduct_type = MisconductType.objects.filter(misconduct_code=misconduct_type).first()
     if not misconduct_type:
-        return str(_("Can\'t find misconduct type of this code; report not filed"))
+        return str(_("Немає такого типу правопорушень у базі даних. Скаргу не відправлено"))
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return HACK_TERMINATED
     MisconductReport.create_misconduct_report(hack.target, user, misconduct_type, is_silent=True)
-    return _("Report successfuly created")
+    return _("Скаргу успішно відправлено")
 
 
 def hack_create_transaction(hack, level, reciever_id, amount):
@@ -137,17 +137,17 @@ def hack_create_transaction(hack, level, reciever_id, amount):
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
-        return str(_("Incorrect amount!"))
+        return str(_("Некоректна сума"))
     if amount > hack.target.bank_account:
-        return str(_('Bank account insufficient'))
+        return str(_('Недостатньо коштів на рахунку'))
     user = get_user_by_character_id(reciever_id)
     if not user:
-        return str(_("Can\'t find user in database; transaction not sent"))
+        return str(_("Не можу знайти отримувача у базі даних; транзакція не надіслана"))
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return HACK_TERMINATED
     BankTransaction.create_transaction(hack.target, user, amount, is_anonymous=True)
-    return _("Transaction is successful")
+    return _("Tранзакцію успішно створено")
 
 
 def hack_inspect_special(hack, level):
@@ -157,7 +157,7 @@ def hack_inspect_special(hack, level):
         return HACK_TERMINATED
     if hack.target.has_special_hack_value:
         value = hack.target.special_hack_pro_price * HACK_LEVEL_COST_MAPPING[level]
-        return _("Target has special hack protocol; system tick cost: {value}/{value_1}/{value_2} depending on command".format(
+        return _("Ціль можливо зламати особливим методом; вартість: {value}/{value_1}/{value_2} залежно від команди".format(
             value=value, value_1=value * 3, value_2=value * 5)
         )
     return _("Target hasn't any special hack protocol")
@@ -166,8 +166,8 @@ def hack_inspect_special(hack, level):
 def hack_perform_special(hack, level):
     OPERATION_VALUE = hack.target.special_hack_pro_price
     if not hack.target.has_special_hack_value:
-        return _("No special protocol in target detected; command not executed")
+        return _("Немає особливого протоклу зламу; команду не виконано")
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return HACK_TERMINATED
-    return _("Please, contact gamemasters immidiately (successful hack of {char_id})".format(char_id=hack.target.character_id))
+    return _("Проведено особливий злам користувача {char_id}. Негайно знайдіть майстрів".format(char_id=hack.target.character_id))

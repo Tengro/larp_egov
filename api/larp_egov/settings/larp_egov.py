@@ -12,6 +12,8 @@ LARP_EGOV_AUTH_COOKIE_NAME = env.str("LARP_EGOV_AUTH_COOKIE_NAME", default="a")
 # Reset password link lifetime interval (in seconds). By default: 1 hour.
 LARP_EGOV_RESET_PASSWORD_EXPIRATION_DELTA = timedelta(seconds=env.int("LARP_EGOV_RESET_PASSWORD_EXPIRATION_DELTA", default=3600))
 
+LIVE_SUBSCRIPTIONS = False
+
 if "LOG_SQL" in LARP_EGOV_FEATURES:  # pragma: no cover
     LOGGING = {
         "version": 1,

@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils.timezone import now
 from larp_egov.apps.common.models import CoreModel, CoreManager, CoreQuerySet
 from larp_egov.apps.accounts.models import UserAccount
@@ -53,10 +54,10 @@ class BankTransaction(CoreModel):
     @property
     def trransaction_status(self):
         if self.is_finished:
-            return 'FINISHED'
+            return 'ЗАВЕРШЕНО'
         if self.is_cancelled:
-            return 'CANCELLED'
-        return 'PENDINIG'
+            return 'ВІДМІНЕНО'
+        return 'НА РОЗГЛЯДІ'
 
     @property
     def transaction_log(self):
@@ -66,17 +67,17 @@ class BankTransaction(CoreModel):
         sender = self.sender
         reciever = self.reciever
         if self.is_anonymous and self.sender == user:
-            reciever = 'ANONIMYZED'
+            reciever = 'АНОНІМ'
         elif self.is_anonymous and self.reciever == user:
-            sender = 'ANONIMYZED'
+            sender = 'АНОНІМ'
         return f"{self.transaction_id} | {sender} -> {reciever}: {self.amount}; status: {self.trransaction_status}; {self.comment}"
 
     @classmethod
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):
         if sender.bank_account < amount:
-            raise ValueError('Bank account insufficient')
+            raise ValueError('Недостатньо коштів на рахунку')
         if amount <= 0:
-            raise ValueError('Value is too low!')
+            raise ValueError('Занадто мале значення!')
         transaction = cls.objects.create(
             sender=sender,
             reciever=reciever,
@@ -87,16 +88,16 @@ class BankTransaction(CoreModel):
         transaction.send_creation_message()
 
     def send_creation_message(self):
-        creation_message = f'Transaction {self.transaction_id} created.'
+        creation_message = f'Транзакція {self.transaction_id} створена.'
         if self.comment:
-            creation_message += f' Transaction comment: {self.comment}'
+            creation_message += f' Коментар до транзакції: {self.comment}'
         self.sender.withdraw(self.amount, creation_message)
         self.reciever.send_message(creation_message)
 
     def cancel_transaction(self, reason=None):
         if self.is_cancelled or self.is_finished:
             return
-        cancell_message = f'Transaction {self.transaction_id} cancelled.'
+        cancell_message = f'Транзакцію {self.transaction_id} відмінено.'
         if reason:
             cancell_message += f' Reason: {reason}'
         self.sender.deposit(self.amount, cancell_message)
@@ -107,7 +108,7 @@ class BankTransaction(CoreModel):
     def finish_transaction(self):
         if self.is_finished or self.is_cancelled:
             return
-        approve_message = f'Transaction {self.transaction_id} successfully finished'
+        approve_message = f'Транзакцію {self.transaction_id} успішно завершено'
         self.is_finished = True
         self.time_finished = now()
         self.sender.send_message(approve_message)
@@ -116,9 +117,9 @@ class BankTransaction(CoreModel):
 
 
 class BankSubscriptionPeriodChoices(models.IntegerChoices):
-    SIX = 6, "Once per six hours"
-    TWELVE = 12, "Once per twelve hours"
-    PER_DAY = 24, "Once per 24 hours"
+    SIX = 6, "Раз на шість годин"
+    TWELVE = 12, "Раз на дванадцять годин"
+    PER_DAY = 24, "Раз на двадцять чотири години"
 
 
 class BankUserSubscriptionIntermediary(CoreModel):
@@ -136,22 +137,22 @@ class BankUserSubscriptionIntermediary(CoreModel):
                 user,
                 service_account,
                 self.subscription.amount,
-                comment=f"Regular payment: {self.subscription.title}"
+                comment=f"Регулярний платіж: {self.subscription.title}"
             )
         except ValueError:
-            subscriber.send_message('Insufficient funds for subscription approval. Deleting request.')
-            user.send_message('Insufficient funds for subscription approval. Deleting request')
+            subscriber.send_message('Недостатньо коштів на рахунку. Запит відхилено.')
+            user.send_message('Недостатньо коштів на рахунку. Запит відхилено.')
             self.delete()
             return
         self.is_approved = True
         self.save()
-        self.subscriber.send_message(f'Your subscription for {self.subscription.title} was approved!')
+        self.subscriber.send_message(f'Ваш запит на ліцензію {self.subscription.title} задовольнили.')
 
     @property
     def display(self):
         result = self.subscription.display
         if not self.is_approved:
-            result += f"PENDING APPROVAL; REQUEST ID {self.subscription_request_id}"
+            result += f"ОЧІКУЄ НА РОЗГЛЯД; ID ЗАПИТУ {self.subscription_request_id}"
         return result
 
 
@@ -176,10 +177,12 @@ class BankSubscription(CoreModel):
     def display(self):
         result = f"{self.subscription_id}: {self.title}. {self.description}"
         if self.is_governmental_tax:
-            result += " MANDATORY!"
+            result += " ОБОВ'ЯЗКОВИЙ ПЛАТІЖ!"
         return result
 
     def extract_payments(self):
+        if not settings.LIVE_SUBSCRIPTIONS:
+            return
         service_account = UserAccount.objects.get_service_account()
         for user in self.subscribers.all():
             intermediary = BankUserSubscriptionIntermediary.objects.filter(
@@ -193,43 +196,43 @@ class BankSubscription(CoreModel):
                     user,
                     service_account,
                     self.amount,
-                    comment=f"Regular payment: {self.title}"
+                    comment=f"Регулярний платіж: {self.title}"
                 )
             except ValueError:
                 self.process_payment_failure(user)
 
     def cancel_subscription(self, user, forced=False):
         if self.is_governmental_tax and not forced:
-            user.send_message("Can't cancel mandatory payment without AI permission. Contact AI")
+            user.send_message("Обов'язковий платіж неможливо відмінити без дозвошу ШІ. Зв'язжіться з ШІ")
             return
         self.subscribers.remove(user)
-        user.send_message(f"Subscription {self.title} was discontinued for you")
+        user.send_message(f"Дія ліцензії {self.title} зупинена за вашим запитом")
 
     def create_subscription(self, user):
         service_account = UserAccount.objects.get_service_account()
         if self.limited_approval:
             self.subscribers.add(user, through_defaults={'is_approved': False})
             self.notify_ai_for_approval(user)
-            user.send_message('Subscription request was sent to AI')
+            user.send_message('Запит на ліцензію надіслано до ШІ')
             return
         try:
             BankTransaction.create_transaction(
                 user,
                 service_account,
                 self.amount,
-                comment=f"Regular payment: {self.title}"
+                comment=f"Регулярний платіж: {self.title}"
             )
         except ValueError:
-            user.send_message('Insufficient funds for subscription')
+            user.send_message('Недостатньо коштів для отримання ліцензії')
             return
-        user.send_message('You are successfully subscribed!')
+        user.send_message('Ліцензію надано!')
         self.subscribers.add(user)
 
     def notify_ai_for_approval(self, user):
         itermediary = BankUserSubscriptionIntermediary.objects.get(subscription=self, is_approved=False, subscriber=user)
         ai_accounts = UserAccount.objects.get_ai_accounts()
         for user in ai_accounts:
-            user.send_message(f'Subscription approval required for {user.character_id}, subscritpion type {self.title}, approval id: {itermediary.subscription_request_id}')
+            user.send_message(f'Необхідно підтвердити ліцензію для {user.character_id}, тип ліцензії {self.title}, id запиту: {itermediary.subscription_request_id}')
 
     def process_payment_failure(self, user):
         service_account = UserAccount.objects.get_service_account()
@@ -239,20 +242,20 @@ class BankSubscription(CoreModel):
                 user,
                 service_account,
                 user.bank_account,
-                comment=f"Regular payment: {self.title}; partial"
+                comment=f"Регулярний обов'язковий платіж: {self.title}; частина"
             )
             MisconductReport.create_tax_related_report(user, insufficient_payment)
-            user.send_message(f'Subscription {self.title} unpaid; misconduct filed')
+            user.send_message(f'Платіж {self.title} не сплачено; скарга на несплату надіслана автоматично')
         else:
             self.cancel_subscription(user)
-            user.send_message(f'Subscription {self.title} discontinued; insufficient funds')
+            user.send_message(f'Ліцензію {self.title} зупинено через несплату')
 
 
 class CorporationStatus(models.IntegerChoices):
-    AFFILIATED = 1, "Plain membership"
-    MEMBER = 2, "Membership with funds access"
-    PRIVILEDGED_MEMBER = 3, "Membership with funds & list of members"
-    EXECUTIVE = 4, "Excecutive (funds, list of members, status changes)"
+    AFFILIATED = 1, "Членство"
+    MEMBER = 2, "Членство з доступом до фінансів"
+    PRIVILEDGED_MEMBER = 3, "Членство з доступом до фінансів та списку учасників"
+    EXECUTIVE = 4, "Повне необмежене членство"
 
 
 class CorporationMembership(CoreModel):
@@ -272,7 +275,7 @@ class Corporation(CoreModel):
 
     @property
     def display(self):
-        return f'{self.title}.\nCorporation ID: {self.corporation_id}'
+        return f'{self.title}.\nID корпорації: {self.corporation_id}'
 
     @property
     def corporation_id(self):
@@ -285,7 +288,7 @@ class Corporation(CoreModel):
     def check_permission(self, user, lowest_level, override_access=False):
         membership = CorporationMembership.objects.filter(corporation=self, member=user).first()
         if (not membership or membership.status < lowest_level) and not override_access:
-            user.send_message(_('Action prohibited'))
+            user.send_message(_('Недостатній рівень доступу'))
             return False
         return True
 
@@ -302,7 +305,7 @@ class Corporation(CoreModel):
     def display_account_data(self, user, override_access=False):
         if not self.check_permission(user, CorporationStatus.EXECUTIVE, override_access=override_access):
             return
-        return _("{title}. \n Corporation ID {corporation_id}. \n Available funds: {funds}.".format(
+        return _("{title}. \nID корпорації {corporation_id}. \nСтан рахунку: {funds}.".format(
             title=self.title, corporation_id=self.corporation_id, funds=self.corporation_bank_account,
         ))
 
@@ -319,30 +322,30 @@ class Corporation(CoreModel):
     def add_user(self, adder, user):
         if not self.check_permission(adder, CorporationStatus.EXECUTIVE):
             return
-        user.send_message(f"You were added to corporation {self.title}!")
+        user.send_message(f"Вас було додано до корпорації {self.title}!")
         self.members.add(user)
 
     def remove_user(self, remover, user):
         if not self.check_permission(remover, CorporationStatus.EXECUTIVE):
             return
-        user.send_message(f"You were kicked from corporation {self.title}!")
+        user.send_message(f"Вас було викинуто з корпорації {self.title}!")
         self.members.remove(user)
 
     def promote_user(self, promoter, user):
         if not self.check_permission(promoter, CorporationStatus.EXECUTIVE):
-            promoter.send_message("Your status is too low")
+            promoter.send_message("Вашого статусу недостатньо")
             return
         membership = CorporationMembership.objects.filter(corporation=self, member=user).first()
         if not membership:
-            promoter.send_message(f'User {user.character_id} is not member of organization!')
+            promoter.send_message(f'Користвуач {user.character_id} не є членом корпорації!')
             return
         if membership.status == CorporationStatus.EXECUTIVE:
-            promoter.send_message(f'User {user.character_id} is already at highest level!')
+            promoter.send_message(f'Користвуач {user.character_id} уже найвищого рівня!')
             return
         membership.status += 1
         membership.save()
-        promoter.send_message(f'User {user.character_id} was promoted!')
-        user.send_message(f'You were promoted in corporation {self.title}')
+        promoter.send_message(f'Користвуача {user.character_id} підвищено!')
+        user.send_message(f'Вас підвищили у корпорації {self.title}!')
         return
 
     def demote_user(self, demoter, user):
@@ -350,13 +353,13 @@ class Corporation(CoreModel):
             return
         membership = CorporationMembership.objects.filter(corporation=self, member=user).first()
         if not membership:
-            demoter.send_message(f'User {user.character_id} is not member of organization!')
+            demoter.send_message(f'Користвуач {user.character_id} не є членом корпорації!')
             return
         if membership.status == CorporationStatus.AFFILIATED:
-            demoter.send_message(f'User {user.character_id} is already at lowest level!')
+            demoter.send_message(f'Корстувач {user.character_id} уже найнижчого рівня!')
             return
         membership.status -= 1
         membership.save()
-        demoter.send_message(f'User {user.character_id} was demoted!')
-        user.send_message(f'You were demoted in corporation {self.title}')
+        demoter.send_message(f'Користвуача {user.character_id} понижено!')
+        user.send_message(f'Вас понизили у корпорації {self.title}')
         return

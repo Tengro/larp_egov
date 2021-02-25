@@ -74,8 +74,9 @@ class BankTransactionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateV
     success_url = reverse_lazy("banking:personal_transactions")
     success_message = _("Transaction successfully made")
 
-    def form_valid(self, form):
-        form.instance.sender = self.request.user
-        return super().form_valid(form)
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        setattr(form, 'sender', self.request.user)
+        return form
 
 #TODO: VALIDATION FOR TRANSACTION

@@ -23,7 +23,7 @@ def register(update, context):
         safe_message_send(context.bot, update.message.chat_id, text=result)
         return
     notify_admins(context.bot, result)
-    safe_message_send(context.bot, update.message.chat_id, text="You've been successfully linked; await for verification")
+    safe_message_send(context.bot, update.message.chat_id, text="Користувача зарєестровано.")
 
 
 def verify(update, context):

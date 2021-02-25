@@ -6,18 +6,18 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class MisconductReportStatus(models.IntegerChoices):
-    SENT = 0, _("Report sent")
-    REVISED = 1, _("Report revised")
-    DECLINED = 2, _("Report declined")
-    PROCESSED = 3, _("Report is being processed")
-    FINISHED = 4, _("Report is finished")
+    SENT = 0, _("Скаргу надіслано")
+    REVISED = 1, _("Скаргу розглянуто")
+    DECLINED = 2, _("Скаргу відхилено")
+    PROCESSED = 3, _("Скарга у обробці")
+    FINISHED = 4, _("Скаргу закрито")
 
 
 class MisconductPenaltyStatus(models.IntegerChoices):
-    OPEN = 0, _("Penalty open")
-    PROCESSED = 1, _("Penalty is active")
-    CLOSED = 2, _("Penalty is paid")
-    CLOSED_UNPAID = 3, _("Closed without payment")
+    OPEN = 0, _("Стягнення не опрацьоване")
+    PROCESSED = 1, _("Стягнення у процесі опрацювання")
+    CLOSED = 2, _("Стягнення сплачено")
+    CLOSED_UNPAID = 3, _("Скаргу закрито без сплати Стягнення")
 
 
 class MisconductType(CoreModel):
@@ -48,29 +48,29 @@ class MisconductReport(CoreModel):
 
     @property
     def police_record_string(self):
-        reporter_string = f"Reporter: {self.reporter}."
-        reported_person = f"Reported: {self.reported_person}."
-        misconduct_type = f'Misconduct: {self.misconduct_type}.'
-        penalty = f"Penalty amount: {self.penalty_amount}."
-        report_status = f"Report status: {self.get_misconduct_status_display()}."
-        penalty_status = f"Penalty status: {self.get_penalty_status_display()}."
-        report_id = f"Report ID: {self.misconduct_id}"
+        reporter_string = f"Подано скаргу: {self.reporter}."
+        reported_person = f"Скарга на: {self.reported_person}."
+        misconduct_type = f'Тип правопорушення: {self.misconduct_type}.'
+        penalty = f"Обсяг стягнення: {self.penalty_amount}."
+        report_status = f"Статус розгляду скарги: {self.get_misconduct_status_display()}."
+        penalty_status = f"Статус стягнення: {self.get_penalty_status_display()}."
+        report_id = f"ID скарги: {self.misconduct_id}"
         result = f"{reporter_string}\n{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
         if self.officer_in_charge:
-            result += f"\nOfficer in charge: {self.officer_in_charge}."
+            result += f"\nВідповідальний офіцер поліцї: {self.officer_in_charge}."
         return result
 
     @property
     def anonymised_string(self):
-        reported_person = f"Reported: {self.reported_person}."
-        misconduct_type = f'Misconduct: {self.misconduct_type}.'
-        penalty = f"Penalty amount: {self.penalty_amount}."
-        report_status = f"Report status: {self.get_misconduct_status_display()}."
-        penalty_status = f"Penalty status: {self.get_penalty_status_display()}."
-        report_id = f"Report ID: {self.misconduct_id}"
+        reported_person = f"Скарга на: {self.reported_person}."
+        misconduct_type = f'Тип правопорушення: {self.misconduct_type}.'
+        penalty = f"Обсяг стягнення: {self.penalty_amount}."
+        report_status = f"Статус розгляду скарги: {self.get_misconduct_status_display()}."
+        penalty_status = f"Статус стягнення: {self.get_penalty_status_display()}."
+        report_id = f"ID скарги: {self.misconduct_id}"
         result = f"{reported_person}\n{misconduct_type}\n{penalty}\n{report_status}\n{penalty_status}\n{report_id}"
         if self.officer_in_charge:
-            result += f"\nOfficer in charge: {self.officer_in_charge.full_name}."
+            result += f"\nВідповідальний офіцер поліцї: {self.officer_in_charge.full_name}."
         return result
 
     @classmethod
@@ -79,7 +79,7 @@ class MisconductReport(CoreModel):
             penalty_amount = misconduct_type.suggested_penalty
         if reported_person.is_corporate_fiction_account or reported_person.is_fiction_account or reported_person.is_service_account:
             if not is_silent:
-                reporter.send_message(_("You can't report misconducts on service accounts directly!"))
+                reporter.send_message(_("Ви не можете надсилати скарги на технічні акаунти"))
                 return
         item = cls.objects.create(
             reporter=reporter,
@@ -96,15 +96,15 @@ class MisconductReport(CoreModel):
         cls.create_misconduct_report(service_account, reported_person, misconduct_type, penalty_amount)
 
     def send_report_notifications(self, is_silent=False):
-        self.notify_unassigmnent_status(text=f'Misconduct report {self.misconduct_id} of the misconduct {self.misconduct_type.title} was created!')
-        creation_message = f'Misconduct report for {self.misconduct_type.title} id {self.misconduct_id} was filed'
+        self.notify_unassigmnent_status(text=f'Створено скаргу {self.misconduct_id}; звинувачення у правопорушенні {self.misconduct_type.title}!')
+        creation_message = f'Скаргу за {self.misconduct_type.title} створено. ІД скарги {self.misconduct_id}'
         if not is_silent:
             self.reporter.send_message(creation_message)
         self.reported_person.send_message(creation_message)
 
     def notify_unassigmnent_status(self, text=''):
         if not text:
-            text = f'Misconduct report {self.misconduct_id} unassigned!'
+            text = f'Скаргу {self.misconduct_id} не розподілено!'
         for item in UserAccount.objects.get_police_officers():
             item.send_message(text)
 
@@ -115,27 +115,27 @@ class MisconductReport(CoreModel):
 
     def notify_unrevised_report(self):
         if self.officer_in_charge and self.misconduct_status == MisconductReportStatus.REVISED:
-            self.notify_officer(f"Misconduct {self.misconduct_id} still on revision; decline or process it!")
+            self.notify_officer(f"Скарга {self.misconduct_id} все ще на розгляді; відхиліть чи переведіть у обробку!")
 
     def notify_unprocessed_report(self):
         if self.officer_in_charge and self.misconduct_status == MisconductReportStatus.PROCESSED:
-            self.notify_officer(f"Misconduct {self.misconduct_id} still in process!")
+            self.notify_officer(f"Скарга {self.misconduct_id} все ще в обробці; суму не стягнено!")
 
     def assign_report(self, user):
         if not user.is_police:
-            raise ValueError('Can\'t assign report to someone not in police')
+            raise ValueError('Неможливо розподілити скаргу не-поліцейському')
         if self.officer_in_charge:
-            self.notify_officer(f'Misconduct report {self.misconduct_id} was reassigned to {user}')
+            self.notify_officer(f'Скаргу {self.misconduct_id} було перерозподілено на {user}')
         self.officer_in_charge = user
         if self.misconduct_status < MisconductReportStatus.REVISED:
             self.misconduct_status = MisconductReportStatus.REVISED
-        assignment_message = f"Misconduct report {self.misconduct_id} assigned. Officer in charge: {user.full_name}."
+        assignment_message = f"Скаргу {self.misconduct_id} розподілено. Відповідальний офіцер: {user.full_name}."
         self.reporter.send_message(assignment_message)
         self.reported_person.send_message(assignment_message)
         self.save()
 
     def decline_report(self, silent=False):
-        closure_message = f"Misconduct report {self.misconduct_id} was declined."
+        closure_message = f"Скаргу {self.misconduct_id} було відхилено після розгляду."
         self.reported_person.send_message(closure_message)
         if not silent:
             self.notify_officer(closure_message)
@@ -146,36 +146,36 @@ class MisconductReport(CoreModel):
     def process_report(self):
         if self.misconduct_status < MisconductReportStatus.PROCESSED:
             self.misconduct_status = MisconductReportStatus.PROCESSED
-        self.notify_officer('Report moved to processing state')
+        self.notify_officer('Скарга надійшла в обробку стягнення')
         self.save()
 
     def finish_report(self, silent=False):
         if self.penalty_status == MisconductPenaltyStatus.PROCESSED:
             if not silent:
-                self.notify_officer('Penalty hasn\'t been processed! Closing without payment')
+                self.notify_officer('Стягнення не було сплачено! Закрито без сплати стягнення')
             self.penalty_status = MisconductPenaltyStatus.CLOSED_UNPAID
         if self.misconduct_status < MisconductReportStatus.FINISHED:
             self.misconduct_status = MisconductReportStatus.FINISHED
-        self.reported_person.send_message(f"Misconduct {self.misconduct_id} finalized.")
+        self.reported_person.send_message(f"Скаргу {self.misconduct_id} закрито.")
         if not silent:
-            self.notify_officer(f"Misconduct {self.misconduct_id} finalized.")
+            self.notify_officer(f"Скаргу {self.misconduct_id} закрито.")
         self.save()
 
     def set_penalty(self, penalty=None):
         if not penalty:
             penalty = self.misconduct_type.suggested_penalty
         if penalty < 0.1:
-            self.notify_officer("Can'\t set penalty: amount too low.")
+            self.notify_officer("Неможливо встановити занадто низький обсяг штрафу.")
             return
         if self.misconduct_status != MisconductReportStatus.PROCESSED:
-            self.notify_officer('Can\'t set penalty for not processed orders!')
+            self.notify_officer('Неможливо встановити стягнення для скарги, но не в обробці!')
             return
         if self.penalty_status != MisconductPenaltyStatus.OPEN:
-            self.notify_officer('Penalty already set')
+            self.notify_officer('Обсяг стягнення уже встановлено!')
             return
         self.penalty_status = MisconductPenaltyStatus.PROCESSED
         self.penalty_amount = penalty
-        penalty_message = f"Penalty for misconduct report {self.misconduct_id} assigned. Penalty: {self.penalty_amount}"
+        penalty_message = f"Встановлено стягнення за скаргою {self.misconduct_id} у обсязі: {self.penalty_amount}"
         self.reported_person.send_message(penalty_message)
         self.notify_officer(penalty_message)
         self.save()

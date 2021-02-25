@@ -15,35 +15,35 @@ class HackingSession(CoreModel):
     @classmethod
     def begin_hack(cls, hacker, target, init_value):
         if not hacker.is_hacker:
-            hacker.send_message("C4n U h4ck? U c4nt!")
+            hacker.send_message("Хіба ж ти хакер?..")
             return
         if cls.objects.filter(hacker=hacker, is_active=True).exists():
-            hacker.send_message("Another hack in progress!")
+            hacker.send_message("У вас уже є незавершений активний злам.")
             return
         # if hacker == target:
         #     return ValueError("You can't hack yourself!")
         ticks = BASE_HACK_TICKS - target.defence_level * DEFENCE_MULTIPLIER - init_value
         cls.objects.create(hacker=hacker, target=target, ticks_remaining=ticks)
         hacker.system_heat += HACK_HEAT_INCREASE
-        hacker.send_message(f"{ticks} system ticks available for this hack before raising alert. Current total system heat: {hacker.system_heat}")
+        hacker.send_message(f"Залишилося {ticks} доступних системних тіків до дострокової зупинки зламу і підняття тривоги. Рівень системної підозрілості: {hacker.system_heat}")
         hacker.save()
 
     def finish_hack(self):
         ticks = self.ticks_remaining - HACKER_FINISHING_VALUE
         self.is_active = False
         self.save()
-        self.hacker.send_message(f"Hack finished")
+        self.hacker.send_message(f"Злам завершено")
         if ticks <= 0:
             for user in UserAccount.objects.get_security_officers():
-                user.send_message(f'Hack attack registered! Attacker: {self.hacker.character_id}')
+                user.send_message(f'Зареєстровано хакерську атаку! Нападник: {self.hacker.character_id}')
 
     def decrease_ticks(self, value):
         self.ticks_remaining -= value
         if self.ticks_remaining <= 0:
             for user in UserAccount.objects.get_security_officers():
-                user.send_message(f'Hack attack registered! Attacker: {self.hacker}; Victim: {self.target}')
+                user.send_message(f'Зареєстровано хакерську атаку! Нападник: {self.hacker}; жертва: {self.target}')
             self.is_active = False
-            self.hacker.send_message(f'Connection drop. Alert raised.')
+            self.hacker.send_message(f'Відключення. Піднято тривогу.')
         else:
-            self.hacker.send_message(f"{self.ticks_remaining} system ticks available for this hack before raising alert.")
+            self.hacker.send_message(f"Залишилося {self.ticks_remaining} доступних системних тіків до дострокової зупинки зламу і підняття тривоги.")
         self.save()

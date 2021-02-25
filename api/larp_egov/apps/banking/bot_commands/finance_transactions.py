@@ -72,7 +72,7 @@ def create_transaction(update, is_anonymous=False):
         comment = ''
     elif len(result_data) > 2:
         user_code = result_data[0]
-        amount = [1]
+        amount = result_data[1]
         comment = ' '.join(result_data[:2])
     user = get_user_by_character_id(user_code)
     if not user:

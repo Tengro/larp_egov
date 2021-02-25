@@ -2,7 +2,36 @@
 {% block title %}База даних скарг поліції{% endblock %}
 {% block content %}
 <form action="" method="get">
-    {{ filter.form.as_p }}
+	<div class="fieldWrapper">
+	    {{ filter.form.reporter.errors }}
+	    <label for="id_reporter">Особа що подала скаргу:</label>
+	    {{ filter.form.reporter }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.reported_person.errors }}
+	    <label for="id_reported_person">Особа на яку подано скаргу:</label>
+	    {{ filter.form.reported_person }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.officer_in_charge.errors }}
+	    <label for="id_officer_in_charge">Офіцер що розглядає скаргу:</label>
+	    {{ filter.form.officer_in_charge }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.misconduct_status.errors }}
+	    <label for="id_misconduct_status">Статус скарги:</label>
+	    {{ filter.form.misconduct_status }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.penalty_status.errors }}
+	    <label for="id_penalty_status">Статус стягнення:</label>
+	    {{ filter.form.penalty_status }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.misconduct_type.errors }}
+	    <label for="id_misconduct_type">Тип правопорушення:</label>
+	    {{ filter.form.misconduct_type }}
+	</div>
     <input type="submit" />
 </form>
 <table>
@@ -24,7 +53,7 @@
 		<td>{% if misconduct.penalty_amount %}{{ misconduct.penalty_amount }}{% else %}НЕ ВСТАНОВЛЕНО{% endif %}</td>
 		<td>{{ misconduct.get_misconduct_status_display }}</td>
 		<td>{{ misconduct.get_penalty_status_display }}</td>
-		<td>{{ misconduct.report_id }}</td>
+		<td>{{ misconduct.misconduct_id }}</td>
 		<td>{% if misconduct.officer_in_charge %}{{ misconduct.officer_in_charge }}{% else %}Справа ще не передана на розгляд офіцеру{% endif %}</td>
 	</tr>
 	{% endfor %}

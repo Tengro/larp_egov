@@ -6,8 +6,13 @@ from larp_egov.apps.banking.models import (
     CorporationMembership
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from larp_egov.apps.banking.filters import BankTransactionFilter
+from larp_egov.apps.banking.forms import BankTransactionModelForm
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
 
+from django.utils.translation import ugettext_lazy as _
 from django_filters.views import FilterView
 
 
@@ -62,4 +67,15 @@ class SecurityBankingDashboard(LoginRequiredMixin, UserPassesTestMixin, FilterVi
     def test_func(self):
         return self.request.user.is_security
 
-# TODO: Add SubscriptionRequest, TransactionCreate, Transaction Cancel, security views (All transactions + filtering)
+
+class BankTransactionCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    form_class = BankTransactionModelForm
+    template_name = 'banking/create_transaction.html'
+    success_url = reverse_lazy("banking:personal_transactions")
+    success_message = _("Transaction successfully made")
+
+    def form_valid(self, form):
+        form.instance.sender = self.request.user
+        return super().form_valid(form)
+
+#TODO: VALIDATION FOR TRANSACTION

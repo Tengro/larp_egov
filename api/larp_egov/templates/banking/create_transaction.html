@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Створити транзакцію{% endblock %}
+{% block content %}
+<form method="post">{% csrf_token %}
+	{{ form.non_field_errors }}
+	<div class="fieldWrapper">
+	    {{ form.reciever.errors }}
+	    <label for="id_reciever">Отримувач:</label>
+	    {{ form.reciever }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ form.amount.errors }}
+	    <label for="id_amount">Сума:</label>
+	    {{ form.amount }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ form.comment.errors }}
+	    <label for="id_comment">Коментар:</label>
+	    {{ form.comment }}
+	</div>
+    <input type="submit" value="Створити транзакцію">
+</form>
+{% endblock %}

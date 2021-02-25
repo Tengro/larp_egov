@@ -75,7 +75,7 @@ class BankTransaction(CoreModel):
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):
         if sender.bank_account < amount:
             raise ValueError('Bank account insufficient')
-        if amount < 0.1:
+        if amount <= 0:
             raise ValueError('Value is too low!')
         transaction = cls.objects.create(
             sender=sender,
@@ -84,11 +84,14 @@ class BankTransaction(CoreModel):
             is_anonymous=is_anonymous,
             comment=comment
         )
-        creation_message = f'Transaction {transaction.transaction_id} created.'
-        if comment:
-            creation_message += f' Transaction comment: {comment}'
-        sender.withdraw(transaction.amount, creation_message)
-        reciever.send_message(creation_message)
+        transaction.send_creation_message()
+
+    def send_creation_message(self):
+        creation_message = f'Transaction {self.transaction_id} created.'
+        if self.comment:
+            creation_message += f' Transaction comment: {self.comment}'
+        self.sender.withdraw(self.amount, creation_message)
+        self.reciever.send_message(creation_message)
 
     def cancel_transaction(self, reason=None):
         if self.is_cancelled or self.is_finished:
@@ -282,7 +285,7 @@ class Corporation(CoreModel):
     def check_permission(self, user, lowest_level, override_access=False):
         membership = CorporationMembership.objects.filter(corporation=self, member=user).first()
         if (not membership or membership.status < lowest_level) and not override_access:
-            user.send_message('Action prohibited')
+            user.send_message(_('Action prohibited'))
             return False
         return True
 
@@ -295,6 +298,13 @@ class Corporation(CoreModel):
         if not self.check_permission(user, CorporationStatus.EXECUTIVE, override_access=override_access):
             return
         return '\n\n'.join([x.user_transaction_log(user) for x in BankTransaction.objects.get_user_bank_history(self.linked_account).order_by('created')])
+
+    def display_account_data(self, user, override_access=False):
+        if not self.check_permission(user, CorporationStatus.EXECUTIVE, override_access=override_access):
+            return
+        return _("{title}. \n Corporation ID {corporation_id}. \n Available funds: {funds}.".format(
+            title=self.title, corporation_id=self.corporation_id, funds=self.corporation_bank_account,
+        ))
 
     def withdraw_funds(self, user, amount):
         if not self.check_permission(user, CorporationStatus.MEMBER):

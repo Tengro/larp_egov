@@ -73,28 +73,34 @@ class MisconductReport(CoreModel):
             result += f"\nOfficer in charge: {self.officer_in_charge.full_name}."
         return result
 
-
     @classmethod
     def create_misconduct_report(cls, reporter, reported_person, misconduct_type, penalty_amount=None, is_silent=False):
         if not penalty_amount:
             penalty_amount = misconduct_type.suggested_penalty
+        if reported_person.is_corporate_fiction_account or reported_person.is_fiction_account or reported_person.is_service_account:
+            if not is_silent:
+                reporter.send_message(_("You can't report misconducts on service accounts directly!"))
+                return
         item = cls.objects.create(
             reporter=reporter,
             reported_person=reported_person,
             misconduct_type=misconduct_type,
             penalty_amount=penalty_amount
         )
-        item.notify_unassigmnent_status(text=f'Misconduct report {item.misconduct_id} of the misconduct {misconduct_type.title} was created!')
-        creation_message = f'Misconduct report for {misconduct_type.title} id {item.misconduct_id} was filed'
-        if not is_silent:
-            reporter.send_message(creation_message)
-        reported_person.send_message(creation_message)
+        item.send_report_notifications(is_silent)
 
     @classmethod
     def create_tax_related_report(cls, reported_person, penalty_amount):
         misconduct_type = MisconductType.objects.get_or_create(misconduct_code='TAX_FAIL')
         service_account = UserAccount.objects.get_service_account()
         cls.create_misconduct_report(service_account, reported_person, misconduct_type, penalty_amount)
+
+    def send_report_notifications(self, is_silent=False):
+        self.notify_unassigmnent_status(text=f'Misconduct report {self.misconduct_id} of the misconduct {self.misconduct_type.title} was created!')
+        creation_message = f'Misconduct report for {self.misconduct_type.title} id {self.misconduct_id} was filed'
+        if not is_silent:
+            self.reporter.send_message(creation_message)
+        self.reported_person.send_message(creation_message)
 
     def notify_unassigmnent_status(self, text=''):
         if not text:

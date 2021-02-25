@@ -32,6 +32,7 @@ from larp_egov.apps.banking.bot_commands.corporations import (
     kick_user_from_corporation,
     promote_user_in_corporation,
     demote_user_in_corporation,
+    display_corporation_account_data,
 )
 
 import logging
@@ -179,6 +180,12 @@ def get_all_corporations(update, context):
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+def get_own_account_data(update, context):
+    result = display_corporation_account_data(update)
+    if result:
+        safe_message_send(context.bot, update.message.chat_id, text=result)
+
+
 def main():
     logger.info("Loading handlers for telegram bot")
 
@@ -200,6 +207,7 @@ def main():
     dp.add_handler(CommandHandler("remove_corporation_member", remove_from_corporation))
     dp.add_handler(CommandHandler("promote_corporation_member", promote_in_corporation))
     dp.add_handler(CommandHandler("demote_corporation_member", demote_in_corporation))
+    dp.add_handler(CommandHandler("display_account_data", get_own_account_data))
     dp.add_handler(CommandHandler("all_corporations", get_all_corporations))
     # subscriptions: CHECKED
     dp.add_handler(CommandHandler("all_subscriptions", get_all_subscriptions))

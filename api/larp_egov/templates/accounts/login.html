@@ -4,8 +4,8 @@
     <h1>Логін</h1>
     <p>Введіть дані для входу до системи</p>
     <form action="." method="post">
-        {{ form.as_p }}
+        {{ form.as_div }}
         {% csrf_token %}
-        <p><input type="submit" value="Log-in"></p>
+        <p><input type="submit" value="Увійти в систему"></p>
     </form>
 {% endblock %}

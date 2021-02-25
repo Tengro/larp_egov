@@ -47,7 +47,7 @@ class UserManager(core_models.CoreManager, BaseUserManager):
         return self.get_queryset().filter(is_police=True)
 
     def get_security_officers(self):
-        return self.get_queryset().filter(is_security=True) 
+        return self.get_queryset().filter(is_security=True)
 
 
 class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
@@ -122,6 +122,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     system_heat = models.IntegerField(default=0)
     has_special_hack_value = models.BooleanField(default=False)
     special_hack_pro_price = models.IntegerField(default=0)
+    is_fiction_account = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -151,6 +152,10 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     @property
     def full_name(self):
         return self.get_full_name()
+
+    @property
+    def is_police_or_security(self):
+        return (self.is_police or self.is_security)
 
     @property
     def notification_salutation(self):

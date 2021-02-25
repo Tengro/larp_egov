@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Поскаржитися на особу{% endblock %}
+{% block content %}
+<form method="post">{% csrf_token %}
+	{{ form.non_field_errors }}
+	<div class="fieldWrapper">
+	    {{ form.reported_person.errors }}
+	    <label for="id_reported_person">Особа, на яку створюється скарга:</label>
+	    {{ form.reported_person }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ form.misconduct_type.errors }}
+	    <label for="id_misconduct_type">Тип правопорушення:</label>
+	    {{ form.misconduct_type }}
+	</div>
+    <input type="submit" value="Створити скаргу">
+</form>
+{% endblock %}

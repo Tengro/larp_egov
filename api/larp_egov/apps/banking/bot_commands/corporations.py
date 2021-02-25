@@ -29,7 +29,7 @@ def display_user_corporations(update):
     user = get_user_by_character_id(code)
     if not user:
         return NO_USER
-    if not validate_police(user) and not override_permissions:
+    if not validate_police(user):
         return NO_ACCESS_DATA
     return "\n\n".join([x.display for x in CorporationMembership.objects.filter(member=user)])
 
@@ -45,7 +45,7 @@ def display_corporation_members(update):
     return corproration.display_members(requester)
 
 
-def security_display_corporation_members(update, override_permissions=False):
+def security_display_corporation_members(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return UNREGISTERED
@@ -58,7 +58,7 @@ def security_display_corporation_members(update, override_permissions=False):
     return corproration.display_members(requester, override_access=True)
 
 
-def make_corporation_withdrawal(update, override_permissions=False):
+def make_corporation_withdrawal(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return UNREGISTERED
@@ -77,7 +77,7 @@ def make_corporation_withdrawal(update, override_permissions=False):
         return f'{e}'
 
 
-def make_corporation_deposit(update, override_permissions=False):
+def make_corporation_deposit(update):
     requester = get_user_by_telegram_id(update.message.chat_id)
     if not requester:
         return UNREGISTERED
@@ -156,3 +156,14 @@ def demote_user_in_corporation(update):
     result = _corporation_preparation(update, 27, 'demote_user')
     if result:
         return result
+
+
+def display_corporation_account_data(update):
+    requester = get_user_by_telegram_id(update.message.chat_id)
+    if not requester:
+        return UNREGISTERED
+    code = update.message.text[22:]
+    corproration = Corporation.objects.filter(linked_account__character_id=code).first()
+    if not corproration:
+        return NO_CORP
+    return corproration.display_account_data(requester)

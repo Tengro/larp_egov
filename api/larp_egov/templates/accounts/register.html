@@ -4,7 +4,7 @@
     <h1>Реєстрація</h1>
     <p>Заповніть наступну форму. E-mail може бути уявним (вигадайте щось що краще підходить для умов гри)</p>
     <form action="." method="post">
-        {{ form.as_p }}
+        {{ form.as_div }}
         {% csrf_token %}
         <p><input type="submit" value="Register"></p>
     </form>

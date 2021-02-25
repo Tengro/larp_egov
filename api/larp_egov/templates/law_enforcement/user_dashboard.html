@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Список зарєєстрованих осіб{% endblock %}
+{% block content %}
+<table>
+	<tr>
+		<td>Ім'я</td>
+		<td>Прізвище</td>
+		<td>Дата народження</td>
+		<td>Місце роботи</td>
+		<td>Особистий ID</td>
+		<td>Коментар</td>
+	</tr>
+	{% for person in person_list %}
+	<tr>
+		<td>{{ person.first_name }}</td>
+		<td>{{ person.last_name }}</td>
+		<td>{{ person.date_of_birth }}</td>
+		<td>{{ person.place_of_work }}</td>
+		<td>{{ person.character_id }}</td>
+		<td>{% if user.is_police %}{{ person.police_comment_field }}<a href="{% url 'law_enforcement:police_comment_edit' character_id=person.character_id %}">||ЗМІНИТИ/ДОДАТИ КОМЕНТАР||</a>{% endif %}{% if user.is_security %}{{ person.security_comment_field }}<a href="{% url 'law_enforcement:security_comment_edit' character_id=person.character_id %}">||ЗМІНИТИ/ДОДАТИ КОМЕНТАР||</a>{% endif %}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

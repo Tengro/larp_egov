@@ -23,17 +23,31 @@
 			<li><a href="{% url 'banking:personal_corporations' %}">Список корпорацій до яких ви належите</a></li>
 			<li><a href="{% url 'banking:personal_subscriptions' %}">Список ваших ліцензій, підписок та податків</a></li>
 			<li><a href="{% url 'banking:personal_transactions' %}">Ваші банківські транзакції</a></li>
+			<li><a href="{% url 'banking:create_transaction' %}">Створити транзакцію</a></li>
 			<li><a href="{% url 'law_enforcement:personal_reports' %}">Список ваших правопорушень</a></li>
 			<li><a href="{% url 'law_enforcement:filed_personal_reports' %}">Список наданих вами скарг</a></li>
-			{% if user.is_authenticated and user.is_police %}
-			<li><a href="{% url 'law_enforcement:misconduct_dashboard' %}">Поліцейська база даних</a></li>
-			{% endif %}
-			{% if user.is_authenticated and user.is_security %}
-			<li><a href="{% url 'banking:banking_dashboard' %}">База даних банківських переказів (для СБ)</a></li>
+			<li><a href="{% url 'law_enforcement:file_report' %}">Створити скаргу на особу</a></li>
+			{% if user.is_authenticated %}
+				{% if user.is_police %}
+				<li><a href="{% url 'law_enforcement:misconduct_dashboard' %}">Поліцейська база даних</a></li>
+				{% endif %}
+				{% if user.is_security %}
+				<li><a href="{% url 'banking:banking_dashboard' %}">База даних банківських переказів (для СБ)</a></li>
+				{% endif %}
+				{% if user.is_police_or_security %}
+				<li><a href="{% url 'law_enforcement:account_list' %}">Список усіх зарєєстрованих осіб</a></li>
+				{% endif %}
 			{% endif %}
 		</ul>
 	{% endif %}
 </div>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 <div id="content">
     {% block content %}
     {% endblock %}

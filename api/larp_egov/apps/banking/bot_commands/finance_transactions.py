@@ -66,7 +66,14 @@ def create_transaction(update, is_anonymous=False):
     if not requester:
         return UNREGISTERED
     message = update.message.text[6:]
-    user_code, amount = message.split(' ')
+    result_data = message.split(' ')
+    if len(result_data) == 2:
+        user_code, amount = result_data
+        comment = ''
+    elif len(result_data) > 2:
+        user_code = result_data[0]
+        amount = [1]
+        comment = ' '.join(result_data[:2])
     user = get_user_by_character_id(user_code)
     if not user:
         return _("Can\'t find user in database; transaction not sent")
@@ -75,7 +82,7 @@ def create_transaction(update, is_anonymous=False):
     except decimal.InvalidOperation:
         return _("Incorrect amount!")
     try:
-        BankTransaction.create_transaction(requester, user, amount, is_anonymous)
+        BankTransaction.create_transaction(requester, user, amount, is_anonymous, comment)
     except ValueError as e:
         return f'{e}'
 

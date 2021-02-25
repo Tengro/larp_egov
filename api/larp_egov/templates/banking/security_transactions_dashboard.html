@@ -2,7 +2,32 @@
 {% block title %}Ваші транзакції{% endblock %}
 {% block content %}
 <form action="" method="get">
-    {{ filter.form.as_p }}
+	<div class="fieldWrapper">
+	    {{ filter.form.amount.errors }}
+	    <label for="id_amount">Сума транзакції</label>
+	    {{ filter.form.amount }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.sender.errors }}
+	    <label for="id_sender">Відправник:</label>
+	    {{ filter.form.sender }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.reciever.errors }}
+	    <label for="id_reciever">Отримувач:</label>
+	    {{ filter.form.reciever }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.is_finished.errors }}
+	    <label for="id_is_finished">Завершено?</label>
+	    {{ filter.form.is_finished }}
+	</div>
+	<div class="fieldWrapper">
+	    {{ filter.form.is_cancelled.errors }}
+	    <label for="id_is_cancelled">Відмінено?</label>
+	    {{ filter.form.is_cancelled }}
+	</div>
+
     <input type="submit" />
 </form>
 <table>
@@ -13,7 +38,7 @@
 		<td>Статус</td>
 		<td>Час завершення</td>
 		<td>ID транзакції</td>
-		<td>Коментар (*функціонал у стадії розробки*)</td>
+		<td>Коментар</td>
 	</tr>
 	{% for transaction in filter.qs %}
 	<tr>

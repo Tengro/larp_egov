@@ -18,8 +18,8 @@
 		<td>{% if misconduct.penalty_amount %}{{ misconduct.penalty_amount }}{% else %}НЕ ВСТАНОВЛЕНО{% endif %}</td>
 		<td>{{ misconduct.get_misconduct_status_display }}</td>
 		<td>{{ misconduct.get_penalty_status_display }}</td>
-		<td>{{ misconduct.report_id }}</td>
-		<td>{% if misconduct.officer_in_charge %}{{ misconduct.officer_in_charge }}{% else %}Справа ще не передана на розгляд офіцеру{% endif %}</td>
+		<td>{{ misconduct.misconduct_id }}</td>
+		<td>{% if misconduct.officer_in_charge %}{{ misconduct.officer_in_charge }}{% else %}Справу ще не передано на розгляд офіцеру{% endif %}</td>
 	</tr>
 	{% endfor %}
 </table>

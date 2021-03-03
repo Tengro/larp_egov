@@ -17,4 +17,4 @@ def throttling_decorator(func):
                 requester.requests_made_since_last_purge += 1
                 requester.save()
             return func(update, context)
-    return wrapper
+    return wrapper_bot_function

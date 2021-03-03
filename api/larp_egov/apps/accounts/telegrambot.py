@@ -10,8 +10,8 @@ from larp_egov.apps.accounts.bot_commands.introspection import (
 from larp_egov.apps.accounts.selectors import get_user_by_telegram_id
 
 import logging
-from common.utils.throttling import throttling_decorator
-from common.utils.help import get_help_message
+from larp_egov.apps.common.utils.throttling import throttling_decorator
+from larp_egov.apps.common.utils.help import get_help_message
 logger = logging.getLogger(__name__)
 
 

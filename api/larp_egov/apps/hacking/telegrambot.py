@@ -16,7 +16,7 @@ from django_telegrambot.apps import DjangoTelegramBot
 from larp_egov.apps.hacking.config import HACK_LEVEL_COST_MAPPING
 from larp_egov.apps.common.bot_commands._common_texts import UNREGISTERED, NO_ACTIVE_HACK
 import logging
-from common.utils.throttling import throttling_decorator
+from larp_egov.apps.common.utils.throttling import throttling_decorator
 logger = logging.getLogger(__name__)
 
 

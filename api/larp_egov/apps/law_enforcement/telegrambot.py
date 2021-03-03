@@ -24,7 +24,7 @@ from larp_egov.apps.law_enforcement.bot_commands.misconduct_reports import (
 )
 
 import logging
-from common.utils.throttling import throttling_decorator
+from larp_egov.apps.common.utils.throttling import throttling_decorator
 logger = logging.getLogger(__name__)
 
 

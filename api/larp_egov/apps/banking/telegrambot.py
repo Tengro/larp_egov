@@ -36,28 +36,34 @@ from larp_egov.apps.banking.bot_commands.corporations import (
 )
 
 import logging
+from common.utils.throttling import throttling_decorator
 logger = logging.getLogger(__name__)
 
 
 # bank_interactions
+@throttling_decorator
 def get_full_bank_histoty(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_full_bank_data(update))
 
 
+@throttling_decorator
 def get_bank_history(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_user_bank_data(update))
 
 
+@throttling_decorator
 def get_own_bank_history(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_own_bank_data(update))
 
 
+@throttling_decorator
 def bot_create_transaction(update, context):
     result = create_transaction(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def bot_cancel_transaction(update, context):
     result = cancel_transaction(update)
     if result:
@@ -65,24 +71,29 @@ def bot_cancel_transaction(update, context):
 
 
 # subscriptions_data
+@throttling_decorator
 def get_user_subscriptions(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=display_user_subscriptions(update))
 
 
+@throttling_decorator
 def get_own_subscriptions(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=display_own_subscriptions(update))
 
 
+@throttling_decorator
 def request_subscription(update, context):
     result = user_request_subscription(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_all_subscriptions(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=display_all_subscriptions(update))
 
 
+@throttling_decorator
 def stop_subscription(update, context):
     result = user_stop_subscription(update)
     if result:
@@ -102,84 +113,98 @@ def master_break_subscription(update, context):
 
 
 # corporations_data
+@throttling_decorator
 def get_corporations(update, context):
     result = display_user_corporations(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_own_corporations(update, context):
     result = display_own_corporations(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_corporation_members_list(update, context):
     result = display_corporation_members(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_corporation_finances(update, context):
     result = make_corporation_withdrawal(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def pass_finances_to_corporation(update, context):
     result = make_corporation_deposit(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_corporation_financial_history(update, context):
     result = display_corporation_financial_history(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def add_to_corporation(update, context):
     result = add_user_to_corporation(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def promote_in_corporation(update, context):
     result = promote_user_in_corporation(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def demote_in_corporation(update, context):
     result = demote_user_in_corporation(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def remove_from_corporation(update, context):
     result = kick_user_from_corporation(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_security_corporation_financial_history(update, context):
     result = display_security_corporation_financial_history(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_security_corporation_members_list(update, context):
     result = security_display_corporation_members(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_all_corporations(update, context):
     result = display_all_corporations(update)
     if result:
         safe_message_send(context.bot, update.message.chat_id, text=result)
 
 
+@throttling_decorator
 def get_own_account_data(update, context):
     result = display_corporation_account_data(update)
     if result:

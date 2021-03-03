@@ -27,6 +27,10 @@ class HackingSession(CoreModel):
         hacker.system_heat += HACK_HEAT_INCREASE
         hacker.send_message(f"Залишилося {ticks} доступних системних тіків до дострокової зупинки зламу і підняття тривоги. Рівень системної підозрілості: {hacker.system_heat}")
         hacker.save()
+        if target.custom_hack_beginning_text_field:
+            hacker.send_message(target.custom_hack_beginning_text_field)
+        if target.is_warned_of_hack_attack:
+            target.send_message("Зареєстровано хакерську атаку на ваш акаунт!!!")
 
     def finish_hack(self):
         ticks = self.ticks_remaining - HACKER_FINISHING_VALUE

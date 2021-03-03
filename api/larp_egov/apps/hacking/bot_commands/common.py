@@ -170,4 +170,26 @@ def hack_perform_special(hack, level):
     hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
     if not hack.is_active:
         return HACK_TERMINATED
+    if hack.target.custom_special_hack_text_field:
+        return "Проведено особливий злам користувача {char_id}. Результат: {result}".format(
+            char_id=hack.target.character_id,
+            result=hack.target.custom_special_hack_text_field
+        )
     return _("Проведено особливий злам користувача {char_id}. Негайно знайдіть майстрів".format(char_id=hack.target.character_id))
+
+
+def perform_active_countermeasures(user):
+    user.send_message("Використовуються заходи активної протидії...")
+    active_sesstions = user.hack_attacks.filter(is_active=True)
+    for session in active_sesstions:
+        session.is_active = False
+        session.save()
+        session.hacker.system_heat += 1
+        session.hacker.save()
+        session.hacker.send_message(f"Ціль використала засоби активної протидії зламу. Злам перервано. Рівень вашої підозрілої активності підвищено до {session.hacker.system_heat}")
+    user.send_message("Цілісність захисту відновлено, відміняю підозрілі транзакції...")
+    for transaction in user.sent_transactions.filter(is_finished=False).filter(is_cancelled=False):
+        transaction.cancel_transaction(reason="Відмінена автоматично як підозріла заходами активної протидії зламу")
+    user.send_message("Починаю відновлення активності... зачекайте... процес завершиться не більш ніж за півгодини...")
+    user.requests_made_since_last_purge = 1000
+    user.save()

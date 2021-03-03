@@ -10,13 +10,18 @@ from larp_egov.apps.accounts.bot_commands.introspection import (
 from larp_egov.apps.accounts.selectors import get_user_by_telegram_id
 
 import logging
+from common.utils.throttling import throttling_decorator
+from common.utils.help import get_help_message
 logger = logging.getLogger(__name__)
 
 
+@throttling_decorator
 def help(update, context):
-    safe_message_send(context.bot, update.message.chat_id, text='Help!')
+    help_message = get_help_message(update)
+    safe_message_send(context.bot, update.message.chat_id, text=help_message)
 
 
+@throttling_decorator
 def register(update, context):
     success, result = bind_user(update)
     if not success:
@@ -26,6 +31,7 @@ def register(update, context):
     safe_message_send(context.bot, update.message.chat_id, text="Користувача зарєестровано.")
 
 
+@throttling_decorator
 def verify(update, context):
     success, result = verify_user(update)
     if not success:
@@ -47,18 +53,22 @@ def get_master_data(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_master_user_data(update))
 
 
+@throttling_decorator
 def get_user_introspection(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_introspection(update))
 
 
+@throttling_decorator
 def get_public_record(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_public_data(update))
 
 
+@throttling_decorator
 def get_security_record(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_security_data(update))
 
 
+@throttling_decorator
 def get_police_personal_record(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_police_data(update))
 
@@ -85,6 +95,7 @@ def main():
 
     dp = DjangoTelegramBot.dispatcher
     # on different commands - answer in Telegram
+    dp.add_handler(CommandHandler("start", help))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("register", register))
     dp.add_handler(CommandHandler("verify", verify))

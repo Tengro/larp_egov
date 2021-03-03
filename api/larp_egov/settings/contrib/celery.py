@@ -85,6 +85,12 @@ CELERY_BEAT_SCHEDULE = {
             hour='*/8'
         ),
     },
+    'purge_call_count': {
+        'task': 'larp_egov.apps.common.tasks.purge_call_count',
+        'schedule': crontab(
+            minute='*/30',
+        ),
+    },
     # 'refresh_hook': {
     #     'task': 'larp_egov.apps.common.tasks.refresh_hook',
     #     'schedule': crontab(

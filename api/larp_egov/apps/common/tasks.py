@@ -9,3 +9,8 @@ def refresh_hook():
     token = DjangoTelegramBot.dispatcher.bot.token
     requests.get(f"https://api.telegram.org/bot{token}/setWebhook?url=https://atomlarp.com/bot/{token}/")
     UserAccount.objects.get_service_account().send_message('Hook refreshed')
+
+
+@celery_app.task
+def purge_call_count():
+    UserAccount.objects.all().update(requests_made_since_last_purge=0)

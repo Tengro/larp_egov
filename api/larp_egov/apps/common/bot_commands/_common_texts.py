@@ -14,7 +14,7 @@ HACK_TERMINATED = _("Процес зламу терміновано достро
 
 
 def validate_police(character):
-    return character.is_police or character.is_security or character.is_staff
+    return character.is_police or character.is_staff
 
 
 def validate_security(character):

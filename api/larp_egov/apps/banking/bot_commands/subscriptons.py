@@ -28,7 +28,7 @@ def display_user_subscriptions(update, override_permissions=False):
     user = get_user_by_character_id(code)
     if not user:
         return NO_USER
-    if not validate_police(user):
+    if not validate_police(requester):
         return NO_ACCESS_DATA
     return "\n\n".join([x.display for x in user.bankusersubscriptionintermediary_set.all()])
 

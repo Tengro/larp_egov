@@ -66,3 +66,4 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ("first_name", "last_name", "email", "telegram_id", "character_id")
     ordering = ("email",)
     readonly_fields = ("character_id",)
+    list_filter = ("is_corporate_fiction_account", "is_fiction_account", "is_staff", "is_police", "is_security", )

@@ -34,10 +34,17 @@ class UserAdmin(DjangoUserAdmin):
                 "place_of_work",
                 "bank_account",
                 "defence_level",
+
+            )}
+        ),
+        (
+            gettext_lazy("Hack info"),
+            {"fields": (
                 "system_heat",
                 "has_special_hack_value",
                 "special_hack_pro_price",
                 "is_warned_of_hack_attack",
+                "is_warned_of_hacker",
                 "custom_special_hack_text_field",
                 "custom_hack_beginning_text_field",
             )}

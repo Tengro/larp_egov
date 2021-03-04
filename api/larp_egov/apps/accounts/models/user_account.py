@@ -124,6 +124,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     special_hack_pro_price = models.IntegerField(default=0)
     is_fiction_account = models.BooleanField(default=False)
     is_warned_of_hack_attack = models.BooleanField(default=False)
+    is_warned_of_hacker = models.BooleanField(default=False)
     custom_special_hack_text_field = models.TextField(null=True, blank=True)
     custom_hack_beginning_text_field = models.TextField(null=True, blank=True)
     requests_made_since_last_purge = models.IntegerField(default=0)

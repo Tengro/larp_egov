@@ -31,6 +31,8 @@ class HackingSession(CoreModel):
             hacker.send_message(target.custom_hack_beginning_text_field)
         if target.is_warned_of_hack_attack:
             target.send_message("Зареєстровано хакерську атаку на ваш акаунт!!!")
+            if target.is_warned_of_hacker:
+                target.send_message("Дані про хакера: {data}".format(data=hacker.common_introspect_data))
 
     def finish_hack(self):
         ticks = self.ticks_remaining - HACKER_FINISHING_VALUE

@@ -145,6 +145,8 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         return self.__str__()
 
     def get_short_name(self) -> str:
+        if self.first_name:
+            return str(self.first_name)
         return str(self.email)
 
     def get_full_name(self) -> str:

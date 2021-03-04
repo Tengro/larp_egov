@@ -181,8 +181,6 @@ class BankSubscription(CoreModel):
         return result
 
     def extract_payments(self):
-        if not settings.LIVE_SUBSCRIPTIONS:
-            return
         service_account = UserAccount.objects.get_service_account()
         for user in self.subscribers.all():
             intermediary = BankUserSubscriptionIntermediary.objects.filter(

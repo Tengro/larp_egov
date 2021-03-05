@@ -13,6 +13,6 @@ urlpatterns = [
     path("me/file-report/", FileMisconductReportView.as_view(), name="file_report"),
     path("misconduct-dashboard/", PoliceMisconductDashboard.as_view(), name="misconduct_dashboard"),
     path("registerd-person-list/", SecurityPoliceAllUserAccounts.as_view(), name="account_list"),
-    path("comment/<int:character_id>/police/", PoliceCommentView.as_view(), name="police_comment_edit"),
-    path("comment/<int:character_id>/security/", SecurityCommentView.as_view(), name="security_comment_edit"),
+    path("comment/<str:character_id>/police/", PoliceCommentView.as_view(), name="police_comment_edit"),
+    path("comment/<str:character_id>/security/", SecurityCommentView.as_view(), name="security_comment_edit"),
 ]

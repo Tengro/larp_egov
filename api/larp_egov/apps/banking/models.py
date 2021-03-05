@@ -5,6 +5,7 @@ from larp_egov.apps.common.models import CoreModel, CoreManager, CoreQuerySet
 from larp_egov.apps.accounts.models import UserAccount
 from larp_egov.apps.law_enforcement.models import MisconductReport
 from django_extensions.db.fields import RandomCharField
+from django.utils.translation import ugettext_lazy as _
 
 
 class BankTransactionQuerySet(CoreQuerySet):

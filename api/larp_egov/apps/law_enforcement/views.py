@@ -51,7 +51,7 @@ class PoliceMisconductDashboard(LoginRequiredMixin, UserPassesTestMixin, FilterV
 
 
 class SecurityPoliceAllUserAccounts(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    queryset = UserAccount.objects.exclude(is_corporate_fiction_account=True).exclude(is_superuser=True).exclude(is_fiction_account=True)
+    queryset = UserAccount.objects.exclude(is_corporate_fiction_account=True).exclude(is_fiction_account=True)
 
     template_name = 'law_enforcement/user_dashboard.html'
     context_object_name = 'person_list'
@@ -61,7 +61,7 @@ class SecurityPoliceAllUserAccounts(LoginRequiredMixin, UserPassesTestMixin, Lis
 
 
 class PoliceCommentView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
-    queryset = UserAccount.objects.exclude(is_corporate_fiction_account=True).exclude(is_superuser=True).exclude(is_fiction_account=True)
+    queryset = UserAccount.objects.exclude(is_corporate_fiction_account=True).exclude(is_fiction_account=True)
     fields = ['police_comment_field', ]
     template_name = 'law_enforcement/user_police_comment.html'
     success_url = reverse_lazy("law_enforcement:account_list")
@@ -74,7 +74,7 @@ class PoliceCommentView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageM
 
 
 class SecurityCommentView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
-    queryset = UserAccount.objects.exclude(is_corporate_fiction_account=True).exclude(is_superuser=True).exclude(is_fiction_account=True)
+    queryset = UserAccount.objects.exclude(is_corporate_fiction_account=True).exclude(is_fiction_account=True)
     fields = ['security_comment_field', ]
     template_name = 'law_enforcement/user_security_comment.html'
     success_url = reverse_lazy("law_enforcement:account_list")

@@ -186,13 +186,13 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
 
     def withdraw(self, amount, message):
         self.bank_account = self.bank_account - amount
-        self.send_message(message)
         self.save()
+        self.send_message(message)
 
     def deposit(self, amount, message):
         self.bank_account = self.bank_account + amount
-        self.send_message(message)
         self.save()
+        self.send_message(message)
 
     @property
     def security_comment_string(self):

@@ -128,7 +128,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     custom_special_hack_text_field = models.TextField(null=True, blank=True)
     custom_hack_beginning_text_field = models.TextField(null=True, blank=True)
     requests_made_since_last_purge = models.IntegerField(default=0)
-    video_to_send_to_hacker = models.FileField(null=True)
+    video_to_send_to_hacker = models.FileField(null=True, blank=True)
 
     objects = UserManager()
 

@@ -7,6 +7,7 @@ from fabric_scripts.frontend import frontend_collection
 from fabric_scripts.git import git_collection
 from fabric_scripts.pip_tools import pip_collection
 from fabric_scripts.test import test_collection
+from fabric_scripts.deployment import deploy
 
 
 namespace = Collection(
@@ -20,3 +21,4 @@ namespace = Collection(
 namespace.add_task(backend_run, name="run")
 namespace.add_task(backend_shell, name="shell")
 namespace.add_task(backend_clean_pyc, name="clean-pyc")
+namespace.add_task(deploy, name="deploy")

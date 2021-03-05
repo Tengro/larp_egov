@@ -128,6 +128,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     custom_special_hack_text_field = models.TextField(null=True, blank=True)
     custom_hack_beginning_text_field = models.TextField(null=True, blank=True)
     requests_made_since_last_purge = models.IntegerField(default=0)
+    video_to_send_to_hacker = models.FileField(null=True)
 
     objects = UserManager()
 
@@ -176,6 +177,12 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         if self.telegram_id:
             dp = DjangoTelegramBot.dispatcher.bot
             safe_message_send(dp, self.telegram_id, str(text))
+
+    def _send_video(self, file):
+        if not self.telegram_id:
+            return
+        bot = DjangoTelegramBot.dispatcher.bot
+        bot.send_video(chat_id=self.telegram_id, video=open(file, 'rb'), supports_streaming=True)
 
     def withdraw(self, amount, message):
         self.bank_account = self.bank_account - amount

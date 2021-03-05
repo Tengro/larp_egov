@@ -47,10 +47,11 @@ class UserAdmin(DjangoUserAdmin):
                 "is_warned_of_hacker",
                 "custom_special_hack_text_field",
                 "custom_hack_beginning_text_field",
+                "video_to_send_to_hacker",
             )}
         ),
         (
-            gettext_lazy("Comment fields"), 
+            gettext_lazy("Comment fields"),
             {"fields": ("police_comment_field", "security_comment_field",)}
         ),
         (

@@ -188,7 +188,7 @@ class BankSubscription(CoreModel):
                 subscriber=user,
                 subscription=self
             ).first()
-            if not intermediary or not itermediary.is_approved:
+            if not intermediary or not intermediary.is_approved:
                 continue
             try:
                 BankTransaction.create_transaction(

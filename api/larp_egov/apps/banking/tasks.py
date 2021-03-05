@@ -14,11 +14,13 @@ def collect_six_hours_subscriptions():
     for item in subscriptions:
         item.extract_payments()
 
+
 @celery_app.task
 def collect_twelve_hours_subscriptions():
     subscriptions = BankSubscription.objects.filter(extraction_period=BankSubscriptionPeriodChoices.TWELVE)
     for item in subscriptions:
         item.extract_payments()
+
 
 @celery_app.task
 def collect_twenty_four_hours_subscriptions():

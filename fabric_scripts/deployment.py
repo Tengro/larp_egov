@@ -10,5 +10,5 @@ def deploy(ctx):
     conn = Connection(f"{user}@{host}")
     with conn.cd(project_dir):
         conn.run("git pull --rebase origin master")
-        conn.run("workon larp_egov && ./manage.py migrate")
+        conn.run("source ~/.virtualenvs/larp_egov/bin/activate && ./manage.py migrate")
         conn.run("sudo systemctl restart gunicorn celery nginx celerybeat", pty=True)

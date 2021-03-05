@@ -184,11 +184,11 @@ class BankSubscription(CoreModel):
     def extract_payments(self):
         service_account = UserAccount.objects.get_service_account()
         for user in self.subscribers.all():
-            intermediary = BankUserSubscriptionIntermediary.objects.filter(
+            inertim = BankUserSubscriptionIntermediary.objects.filter(
                 subscriber=user,
                 subscription=self
             ).first()
-            if not intermediary or not intermediary.is_approved:
+            if not inertim or not inertim.is_approved:
                 continue
             try:
                 BankTransaction.create_transaction(

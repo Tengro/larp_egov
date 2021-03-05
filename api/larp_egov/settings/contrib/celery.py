@@ -29,7 +29,7 @@ CELERY_BEAT_SCHEDULE = {
     'per_day_subscriptions': {
         'task': 'larp_egov.apps.banking.tasks.collect_twenty_four_hours_subscriptions',
         'schedule': crontab(
-            minute='45',
+            minute='50',
             hour='23'
         ),
     },

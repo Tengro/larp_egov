@@ -63,8 +63,8 @@ class UserAdmin(DjangoUserAdmin):
         ),
     )
     add_fieldsets = ((None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),)
-    list_display = ("email", "first_name", "last_name", "is_staff", "is_active", 'character_id', "bank_account")
-    search_fields = ("first_name", "last_name", "email", "telegram_id", "character_id")
+    list_display = ("email", "first_name", "last_name", "is_staff", "is_active", 'character_id', "bank_account", "character_id")
+    search_fields = ("first_name", "last_name", "email", "telegram_id", "character_id",)
     ordering = ("email",)
     readonly_fields = ("character_id",)
     list_filter = ("is_corporate_fiction_account", "is_fiction_account", "is_staff", "is_police", "is_security", )

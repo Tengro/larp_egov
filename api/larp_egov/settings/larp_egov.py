@@ -72,6 +72,7 @@ DJANGO_TELEGRAMBOT = {
     'BOTS' : [
         {
            'TOKEN': env.str("LARP_EGOV_BOT_TOKEN"), #Your bot token.
+           'MESSAGEQUEUE_ENABLED': True(Optinal[bool]), # Make this True if you want to use messagequeue
 
            #'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
                                                    #updates you want your bot to receive. For example, specify

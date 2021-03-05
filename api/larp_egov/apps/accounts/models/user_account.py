@@ -182,7 +182,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         if not self.telegram_id:
             return
         bot = DjangoTelegramBot.dispatcher.bot
-        bot.send_video(chat_id=self.telegram_id, video=open(file, 'rb'), supports_streaming=True)
+        bot.send_video(chat_id=self.telegram_id, video=file.open('rb'), supports_streaming=True)
 
     def withdraw(self, amount, message):
         self.bank_account = self.bank_account - amount

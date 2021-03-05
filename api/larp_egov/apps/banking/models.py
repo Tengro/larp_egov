@@ -302,7 +302,7 @@ class Corporation(CoreModel):
         return '\n\n'.join([x.user_transaction_log(user) for x in BankTransaction.objects.get_user_bank_history(self.linked_account).order_by('created')])
 
     def display_account_data(self, user, override_access=False):
-        if not self.check_permission(user, CorporationStatus.EXECUTIVE, override_access=override_access):
+        if not self.check_permission(user, CorporationStatus.MEMBER, override_access=override_access):
             return
         return _("{title}. \nID корпорації {corporation_id}. \nСтан рахунку: {funds}.".format(
             title=self.title, corporation_id=self.corporation_id, funds=self.corporation_bank_account,

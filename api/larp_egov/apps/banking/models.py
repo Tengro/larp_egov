@@ -77,7 +77,7 @@ class BankTransaction(CoreModel):
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):
         if sender.bank_account < amount:
             raise ValueError('Недостатньо коштів на рахунку')
-        if amount <= 0:
+        if amount < 0:
             raise ValueError('Занадто мале значення!')
         transaction = cls.objects.create(
             sender=sender,

@@ -1,12 +1,12 @@
 from larp_egov.apps.banking.models import BankTransaction
-from django.forms import ModelForm, IntegerField
+from django.forms import ModelForm, CharField
 from django.core.exceptions import ValidationError
 from larp_egov.apps.accounts.selectors import get_user_by_character_id
 from django.utils.translation import ugettext_lazy as _
 
 
 class BankTransactionModelForm(ModelForm):
-    reciever = IntegerField()
+    reciever = CharField()
 
     class Meta:
         model = BankTransaction

@@ -96,6 +96,20 @@ class FileMisconductReportView(LoginRequiredMixin, SuccessMessageMixin, CreateVi
         form.instance.reporter = self.request.user
         return super().form_valid(form)
 
-# class EditMisconductReportView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    def get_form_kwargs(self):
+        kwargs = super(FileMisconductReportView, self).get_form_kwargs()
+        kwargs['initial']['reported_person'] = self.request.GET.get('reported_person')
+        return kwargs
 
-# TODO add_report
+
+class PoliceFrozenSumEditView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    queryset = UserAccount.objects.exclude(is_corporate_fiction_account=True).exclude(is_fiction_account=True)
+    fields = ['frozen_sum', ]
+    template_name = 'law_enforcement/user_freeze_police.html'
+    success_url = reverse_lazy("law_enforcement:account_list")
+    success_message = _("Frozen sum successfully updated")
+    slug_field = 'character_id'
+    slug_url_kwarg = 'character_id'
+
+    def test_func(self):
+        return self.request.user.is_police

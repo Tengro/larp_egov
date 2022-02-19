@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Оновлення поліцейського коментаря про особу{% endblock %}
+{% block content %}
+ID особи: {{ object.character_id }}
+<form method="post">{% csrf_token %}
+	{{ form.non_field_errors }}
+	<div class="fieldWrapper">
+	    {{ form.frozen_sum.errors }}
+	    <label for="id_frozen_sum">Заморожені кошти:</label>
+	    {{ form.frozen_sum }}
+	</div>
+    <input type="submit" value="Оновити заморожені кошти">
+</form>
+{% endblock %}

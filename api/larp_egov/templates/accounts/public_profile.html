@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Профіль персонажа: {{ person.full_name }}{% endblock %}
+{% block content %}
+	<h1>Дані про громадянина</h1>
+	<p>Фотокартка: {% if person.photo %}<img src="{{ person.photo.url }}"/>{% endif %}</p>
+	<p>ID громадянина: {{ person.character_id }}</p>
+	<p>Ім’я: {{ person.full_name }}</p>
+	<p>Місце роботи: {{ person.place_of_work }}</p>
+
+	<td><a href="{% url 'banking:create_transaction' %}?reciever={{person.character_id}}">Переказати кошти</a></td>
+	<td><a href="{% url 'law_enforcement:file_report'%}?reported_person={{person.character_id}}">Подати заяву про правопорушення</a></td>
+
+{% endblock %}

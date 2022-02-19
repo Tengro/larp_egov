@@ -8,10 +8,14 @@
 	{% endif %}
 
 	<h1>Дані про громадянина</h1>
+	<p>Фотокартка: {% if user.photo %}<img src="{{ user.photo.url }}"/>{% endif %}</p>
 	<p>ID громадянина: {{ user.character_id }}</p>
 	<p>Ім’я: {{ user.full_name }}</p>
 	<p>Місце роботи: {{ user.place_of_work }}</p>
-	<p>Наявні кошти: {{ user.bank_account }}</p>
+	<p>Наявні кошти: {{ user.available_account }}</p>
+	{% if user.frozen_sum > 0 %}
+		<p>Заморожені кошти: {{ user.frozen_sum }}</p>
+	{% endif %}
 	<p>Рівень захисту особистих даних: {{ user.defence_level }}</p>
 
 	{% comment %}

@@ -74,6 +74,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     character_id = RandomCharField(length=6, include_alpha=False, unique=True, null=True)
     place_of_work = models.CharField(max_length=512, null=True)
     bank_account = models.DecimalField(max_digits=12, decimal_places=1, default=0)
+    frozen_sum = models.DecimalField(max_digits=12, decimal_places=1, default=0)
     is_verified = models.BooleanField(
         gettext_lazy("verified"),
         default=False,
@@ -130,6 +131,11 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     requests_made_since_last_purge = models.IntegerField(default=0)
     video_to_send_to_hacker = models.FileField(null=True, blank=True)
 
+    photo = models.ImageField(upload_to='user_photo', null=True, blank=True)
+
+    minor_secret_field = models.TextField(null=True, blank=True)
+    major_secret_field = models.TextField(null=True, blank=True)
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"
@@ -144,6 +150,10 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
     @property
     def display_data(self):
         return self.__str__()
+
+    @property
+    def available_account(self):
+        return self.bank_account - self.frozen_sum
 
     def get_short_name(self) -> str:
         if self.first_name:
@@ -194,6 +204,12 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         self.save()
         self.send_message(message)
 
+    def freeze(self, amount, message):
+        self.frozen_sum = amount
+        self.save()
+        if message:
+            self.send_message(message)
+
     @property
     def security_comment_string(self):
         return _('Коментар служби безпеки: {security_comment_field}').format(security_comment_field=self.security_comment_field)
@@ -211,7 +227,7 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         return f"{id_string}\n{name_string}\n{work_string}\n{date_of_birth}\n"
 
     def get_user_introspect(self):
-        account_string = _("Кошти на рахунку: {bank_account}").format(bank_account=self.bank_account)
+        account_string = _("Доступні кошти на рахунку: {bank_account}; заморожені кошти: {frozen}").format(bank_account=self.available_account, frozen=self.frozen_sum)
         defence_string = _("Рівень захисту особистих даних: {defence_level}").format(defence_level=self.defence_level)
         result = f"{self.common_introspect_data}{account_string}\n{defence_string}"
         return result
@@ -229,3 +245,8 @@ class UserAccount(PermissionsMixin, CoreModel, AbstractBaseUser):
         introspect = self.get_user_introspect()
         result = f"{introspect}\n{self.security_comment_string}\n{self.police_comment_string}"
         return result
+
+    def image_tag(self):
+        return mark_safe('<img src="m/user_photo/%s"/>' % (self.photo))
+
+    image_tag.short_description = 'Image'

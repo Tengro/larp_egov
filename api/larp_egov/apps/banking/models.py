@@ -75,7 +75,7 @@ class BankTransaction(CoreModel):
 
     @classmethod
     def create_transaction(cls, sender, reciever, amount, is_anonymous=False, comment=''):
-        if sender.bank_account < amount:
+        if sender.available_account < amount:
             raise ValueError('Недостатньо коштів на рахунку')
         if amount < 0:
             raise ValueError('Занадто мале значення!')
@@ -236,11 +236,11 @@ class BankSubscription(CoreModel):
     def process_payment_failure(self, user):
         service_account = UserAccount.objects.get_service_account()
         if self.is_governmental_tax:
-            insufficient_payment = self.amount - user.bank_account
+            insufficient_payment = self.amount - user.available_account
             BankTransaction.create_transaction(
                 user,
                 service_account,
-                user.bank_account,
+                user.available_account,
                 comment=f"Регулярний обов'язковий платіж: {self.title}; частина"
             )
             MisconductReport.create_tax_related_report(user, insufficient_payment)

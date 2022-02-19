@@ -5,19 +5,29 @@
 	<tr>
 		<td>Ім'я</td>
 		<td>Прізвище</td>
+		<td>Фотокартка</td>
 		<td>Дата народження</td>
 		<td>Місце роботи</td>
 		<td>Особистий ID</td>
+		<td>Наявні кошти</td>
+		<td>Заморожені кошти</td>
+		<td>Змінити заморожені кошти</td>
 		<td>Коментар</td>
+		<td>Змінити коментар</td>
 	</tr>
 	{% for person in person_list %}
 	<tr>
 		<td>{{ person.first_name }}</td>
 		<td>{{ person.last_name }}</td>
+		<td>{% if person.photo %}<img src="{{ person.photo.url }}"/>{% endif %}</td>
 		<td>{{ person.date_of_birth }}</td>
 		<td>{{ person.place_of_work }}</td>
 		<td>{{ person.character_id }}</td>
-		<td>{% if user.is_police %}{{ person.police_comment_field }}<a href="{% url 'law_enforcement:police_comment_edit' character_id=person.character_id %}">||ЗМІНИТИ/ДОДАТИ КОМЕНТАР||</a>{% endif %}{% if user.is_security %}{{ person.security_comment_field }}<a href="{% url 'law_enforcement:security_comment_edit' character_id=person.character_id %}">||ЗМІНИТИ/ДОДАТИ КОМЕНТАР||</a>{% endif %}</td>
+		<td>{{ person.available_account }}</td>
+		<td>{{ person.frozen_sum }}</td>
+		<td><a href="{% url 'law_enforcement:police_freeze_edit' character_id=person.character_id %}">||ЗМІНИТИ ЗАМОРОЖЕНУ СУМУ||</a></td>
+		<td>{{ person.police_comment_field }}</td>
+		<td><a href="{% url 'law_enforcement:police_comment_edit' character_id=person.character_id %}">||ЗМІНИТИ/ДОДАТИ КОМЕНТАР||</a></td>
 	</tr>
 	{% endfor %}
 </table>

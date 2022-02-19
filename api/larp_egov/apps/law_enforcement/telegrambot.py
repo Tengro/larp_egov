@@ -20,7 +20,8 @@ from larp_egov.apps.law_enforcement.bot_commands.misconduct_reports import (
     process_assigned_report,
     finish_assigned_report,
     set_penalty_to_report,
-    approve_autopenalty_to_report
+    approve_autopenalty_to_report,
+    freeze_amount
 )
 
 import logging
@@ -122,6 +123,13 @@ def bot_get_all_police_misconduct_reports(update, context):
     safe_message_send(context.bot, update.message.chat_id, text=get_all_police_misconduct_reports(update))
 
 
+@throttling_decorator
+def freeze_account_amount(update, context):
+    result = freeze_amount(update)
+    if result:
+        safe_message_send(context.bot, update.message.chat_id, text=result)
+
+
 def main():
     logger.info("Loading handlers for telegram bot")
 
@@ -149,3 +157,4 @@ def main():
     dp.add_handler(CommandHandler("finish", finish_report))
     dp.add_handler(CommandHandler("set_penalty", set_penalty))
     dp.add_handler(CommandHandler("autopenalty", approve_autopenalty))
+    dp.add_handler(CommandHandler("freeze", freeze_account_amount))

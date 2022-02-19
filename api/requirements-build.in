@@ -10,3 +10,5 @@ pytz
 redis==3.5.3
 sentry-sdk==0.15.1
 django-telegrambot
+Pillow
+whitenoise==5.2.0

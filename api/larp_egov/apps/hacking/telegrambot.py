@@ -5,7 +5,7 @@ from larp_egov.apps.hacking.bot_commands.common import (
     hack_finish_report, hack_inspect_special, hack_perform_special,
     hack_user_corporations, hack_user_subscriptions, hack_user_bank_history,
     hack_user_misconduct_records, hack_user_police_data, hack_user_security_data,
-    perform_active_countermeasures,
+    perform_active_countermeasures, hack_high_secret, hack_low_secret, hack_freeze_amount,
 )
 from larp_egov.apps.hacking.models import HackingSession
 from larp_egov.apps.accounts.selectors import (
@@ -433,6 +433,90 @@ def hack_user_security_data_pro(update, context):
 
 
 @throttling_decorator
+def hack_user_low_secret_noob(update, context):
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_low_secret(hack, 'noob'))
+
+
+@throttling_decorator
+def hack_user_low_secret_mid(update, context):
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_low_secret(hack, 'middle'))
+
+
+@throttling_decorator
+def hack_user_low_secret_pro(update, context):
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_low_secret(hack, 'pro'))
+
+
+@throttling_decorator
+def hack_user_high_secret_noob(update, context):
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_high_secret(hack, 'noob'))
+
+
+@throttling_decorator
+def hack_user_high_secret_mid(update, context):
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_high_secret(hack, 'middle'))
+
+
+@throttling_decorator
+def hack_user_high_secret_pro(update, context):
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_high_secret(hack, 'pro'))
+
+
+@throttling_decorator
+def hack_freeze_user_amount_noob(update, context):
+    amount = update.message.text[20:]
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_security_data(hack, 'noob', amount))
+
+
+@throttling_decorator
+def hack_freeze_user_amount_mid(update, context):
+    amount = update.message.text[20:]
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_user_security_data(hack, 'middle', amount))
+
+
+@throttling_decorator
+def hack_freeze_user_amount_pro(update, context):
+    amount = update.message.text[14:]
+    hack = get_active_hack(update)
+    if not isinstance(hack, HackingSession):
+        safe_message_send(context.bot, update.message.chat_id, text=hack)
+        return
+    safe_message_send(context.bot, update.message.chat_id, text=hack_freeze_amount(hack, 'pro', amount))
+
+
+@throttling_decorator
 def hack_finish_hacking(update, context):
     hack = get_active_hack(update)
     if not isinstance(hack, HackingSession):
@@ -470,6 +554,9 @@ def main():
     dp.add_handler(CommandHandler("hack_report_decline", hack_decline_report_noob))
     dp.add_handler(CommandHandler("hack_report_delete", hack_delete_report_noob))
     dp.add_handler(CommandHandler("hack_report_finish", hack_finish_report_noob))
+    dp.add_handler(CommandHandler("hack_low_secret", hack_user_low_secret_noob))
+    dp.add_handler(CommandHandler("hack_high_secret", hack_user_high_secret_noob))
+    dp.add_handler(CommandHandler("hack_freeze_amount", hack_freeze_user_amount_noob))
     # MIDDLE COMMANDS
     dp.add_handler(CommandHandler("h4ck", initiate_hack_mid))
     dp.add_handler(CommandHandler("h4ck_p0lice", hack_user_police_data_mid))
@@ -485,6 +572,10 @@ def main():
     dp.add_handler(CommandHandler("h4ck_rep0rt_d3cline", hack_decline_report_mid))
     dp.add_handler(CommandHandler("h4ck_rep0rt_d3lete", hack_delete_report_mid))
     dp.add_handler(CommandHandler("h4ck_rep0rt_f1nish", hack_finish_report_mid))
+    dp.add_handler(CommandHandler("h4ck_l0w_s3cr3t", hack_user_low_secret_noob))
+    dp.add_handler(CommandHandler("h4ck_h1gh_secret", hack_user_high_secret_noob))
+    dp.add_handler(CommandHandler("h4ck_freez3_am0unt", hack_freeze_user_amount_noob))
+    # MIDDLE COMMANDS
     # PRO COMMANDS
     dp.add_handler(CommandHandler("xfr", initiate_hack_pro))
     dp.add_handler(CommandHandler("xfr_zdc", hack_user_police_data_pro))
@@ -500,6 +591,10 @@ def main():
     dp.add_handler(CommandHandler("xfr_kzke_bcdt", hack_decline_report_pro))
     dp.add_handler(CommandHandler("xfr_kzke_bde", hack_delete_report_pro))
     dp.add_handler(CommandHandler("xfr_kzke_atir", hack_finish_report_pro))
+    dp.add_handler(CommandHandler("xfr_lw_scrt", hack_user_low_secret_noob))
+    dp.add_handler(CommandHandler("xfr_hgh_scrt", hack_user_high_secret_noob))
+    dp.add_handler(CommandHandler("xft_frz_amnt", hack_freeze_user_amount_noob))
+    # MIDDLE COMMANDS
     # Finish Hack
     dp.add_handler(CommandHandler("finish_hack", hack_finish_hacking))
     dp.add_handler(CommandHandler("counterhack", active_coutermeasures))

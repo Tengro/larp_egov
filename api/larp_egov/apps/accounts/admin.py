@@ -33,8 +33,9 @@ class UserAdmin(DjangoUserAdmin):
                 "date_of_birth",
                 "place_of_work",
                 "bank_account",
+                "frozen_sum",
                 "defence_level",
-
+                "photo",
             )}
         ),
         (
@@ -53,6 +54,10 @@ class UserAdmin(DjangoUserAdmin):
         (
             gettext_lazy("Comment fields"),
             {"fields": ("police_comment_field", "security_comment_field",)}
+        ),
+        (
+            gettext_lazy("Secret fields"),
+            {"fields": ("major_secret_field", "minor_secret_field",)}
         ),
         (
             gettext_lazy("Permissions"),

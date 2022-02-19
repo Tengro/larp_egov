@@ -133,12 +133,12 @@ def hack_create_report(hack, level, reported_id, misconduct_type):
 
 
 def hack_create_transaction(hack, level, reciever_id, amount):
-    OPERATION_VALUE = 5
+    OPERATION_VALUE = 6
     try:
         amount = decimal.Decimal(amount)
     except decimal.InvalidOperation:
         return str(_("Некоректна сума"))
-    if amount > hack.target.bank_account:
+    if amount > hack.target.available_account:
         return str(_('Недостатньо коштів на рахунку'))
     user = get_user_by_character_id(reciever_id)
     if not user:
@@ -193,3 +193,32 @@ def perform_active_countermeasures(user):
     user.send_message("Починаю відновлення активності... зачекайте... процес завершиться не більш ніж за півгодини...")
     user.requests_made_since_last_purge = 1000
     user.save()
+
+
+def hack_freeze_amount(hack, level, amount):
+    OPERATION_VALUE = 4
+    try:
+        amount = decimal.Decimal(amount)
+    except decimal.InvalidOperation:
+        return _("Сума не розпізнана")
+    hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
+    if not hack.is_active:
+        return HACK_TERMINATED
+    police_message = f"Змінено суму заморожених коштів на рахунку {hack.target.full_name}. Нова заморожена сума {amount}."
+    return police_message
+
+
+def hack_low_secret(hack, level):
+    OPERATION_VALUE = 4
+    hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
+    if not hack.is_active:
+        return HACK_TERMINATED
+    return hack.target.minor_secret_field
+
+
+def hack_high_secret(hack, level):
+    OPERATION_VALUE = 6
+    hack.decrease_ticks(OPERATION_VALUE * HACK_LEVEL_COST_MAPPING[level])
+    if not hack.is_active:
+        return HACK_TERMINATED
+    return hack.target.major_sercet_field

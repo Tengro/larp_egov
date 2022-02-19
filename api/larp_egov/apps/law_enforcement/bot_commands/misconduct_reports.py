@@ -104,3 +104,29 @@ def approve_autopenalty_to_report(update):
     if not report:
         return NO_REPORT_FOUND
     report.set_auto_penalty()
+
+
+def freeze_amount(update):
+    requester = get_user_by_telegram_id(update.message.chat_id)
+    if not requester:
+        return UNREGISTERED
+    if not validate_police(requester):
+        return NO_ACCESS_COMMAND
+    message = update.message.text[8:]
+    result_data = message.split(' ')
+    if len(result_data) == 2:
+        user_code, amount = result_data
+    elif len(result_data) > 2:
+        user_code = result_data[0]
+        amount = result_data[1]
+    user = get_user_by_character_id(user_code)
+    if not user:
+        return _("Користувач з таким ID не знайдений. Транзакція не надіслана")
+    try:
+        amount = decimal.Decimal(amount)
+    except decimal.InvalidOperation:
+        return _("Сума не розпізнана")
+    user_message = f"Змінено суму заморожених коштів на вашому рахунку. Нова заморожена сума {amount}. Відповідальний офіцер: {requester.full_name}"
+    police_message = f"Змінено суму заморожених коштів на рахунку {user.full_name}. Нова заморожена сума {amount}."
+    user.freeze(amount, user_message)
+    requester.send_message(police_message)

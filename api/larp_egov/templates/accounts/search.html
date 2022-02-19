@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Пошук громадянина{% endblock %}
+{% block content %}
+    {% for user in all_search_results %}
+        <h3>{{user.full_name}}</h3>
+        <p>{{user.character_id}}</p>
+        <p><a href="{% url 'accounts:public_profile' character_id=user.character_id %}">Публічний профіль громадянина</a></p>
+    {% empty %}
+        <h2>Громадян не знайдено</h2>
+    {% endfor %}
+{% endblock %}

@@ -16,7 +16,7 @@ class BankTransactionModelForm(ModelForm):
         amount = self.cleaned_data['amount']
         if amount <= 0:
             raise ValidationError(_("Занадто мала сума!"))
-        if self.sender.bank_account < amount:
+        if self.sender.available_account < amount:
             raise ValueError('Недостатньо коштів на рахунку')
         return amount
 

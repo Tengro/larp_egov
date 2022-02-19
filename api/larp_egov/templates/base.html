@@ -18,7 +18,6 @@
 			<li><a href="{% url 'banking:subscriptions' %}">Усі підписки, ліцензії та податки</a></li>
 			<li><a href="{% url 'law_enforcement:all_misconducts' %}">Усі типи правопорушень</a></li>
 		</ul>
-
 	<h2>Особисте меню</h2>
 		<ul>
 			<li><a href="{% url 'accounts:profile' %}">Ваш профіль</a></li>
@@ -44,6 +43,10 @@
 				{% endif %}
 			</ul>
 		{% endif %}
+		<form method="GET" action="{% url 'accounts:search' %}" >
+            <input minlength=4 type="search" name="search">
+            <button type="submit"> Шукати користувача за ID </button>
+        </form>
 	{% endif %}
 </div>
 {% if messages %}
